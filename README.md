@@ -1,4 +1,4 @@
-"""Carbon Offsetting Calculator"""
+#Carbon Offsetting Calculator
 
 
 For android devices. 
