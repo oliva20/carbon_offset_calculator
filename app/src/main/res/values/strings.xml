@@ -1,3 +1,16 @@
 <resources>
-    <string name="app_name">Offset Calculator</string>
+    <string name="title">Carbon Offset Calculator</string>
+    <string name="app_name">Carbon Offset Calculator</string>
+    <string name="chooseItem">Personal Vehicle</string>
+    <string name="your_total_emissions">Your total emissions is:</string>
+    <string name="textInCircle">10 lbs CO2e</string>
+    <string name="tvDistance">Distance: </string>
+    <!-- Activity titles -->
+    <string name="homeEnergyTitle">Home Energy</string>
+    <string name="publicTransportTitle">Public Transport</string>
+    <string name="vehicleTitle">Personal Vehicle</string>
+
+    <!-- Buttons -->
+    <string name="btnGo">Done</string>
+
 </resources>

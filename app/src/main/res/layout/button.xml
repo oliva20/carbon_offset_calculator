@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <Button
+        android:id="@+id/button_id"
+        android:layout_height="47dp"
+        android:layout_width="209dp"
+        android:text="@string/btnGo"
+        android:textColor="@color/white"
+        android:background="@color/colorPrimary"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:textSize="25sp"
+        />
+</merge>

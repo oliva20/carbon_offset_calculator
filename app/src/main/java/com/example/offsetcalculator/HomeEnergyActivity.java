@@ -5,25 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class HomeEnergyActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_home_energy);
+        //change the title on the actual app activity instead of displaying a title
+        setTitle(getString(R.string.homeEnergyTitle));
 
-        //LOGS
-        Log.d("@@@", "LOG @@@");
-    }
-
-    public void onClick(View view){
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -34,11 +28,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        if(item.getItemId() == R.id.menuHomeEnergyItem){
-//            Intent intent = new Intent(this, HomeEnergyActivity.class);
-//            startActivity(intent);
-//            return true;
-//        }
         Intent intent;
         switch (item.getItemId()) {
             case R.id.menuHomeEnergyItem:
