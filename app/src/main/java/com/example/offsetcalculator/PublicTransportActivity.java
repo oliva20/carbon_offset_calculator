@@ -30,6 +30,11 @@ public class PublicTransportActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
+            case R.id.menuMainItem:
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
+
             case R.id.menuHomeEnergyItem:
                 intent = new Intent(this, HomeEnergyActivity.class);
                 startActivity(intent);

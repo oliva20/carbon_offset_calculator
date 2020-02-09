@@ -5,5 +5,78 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomeEnergyActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="-26dp"
+        tools:layout_editor_absoluteY="221dp"
+        android:layout_marginTop="70pt">
 
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_horizontal"
+            android:text="@string/tvDistance"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/textColorPrimary"
+            />
+
+        <EditText
+            android:id="@+id/edtCar"
+            android:layout_width="209dp"
+            android:layout_height="47dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:hint="Km"
+            android:layout_marginTop="5pt"
+            android:inputType="number"
+            android:background="@drawable/edit_text_border"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_above="@id/edtCar"
+            android:gravity="center_horizontal"
+            android:text="@string/tvDate"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/textColorPrimary"
+            android:layout_marginTop="5pt"
+            />
+
+
+        <EditText
+            android:id="@+id/edtCar2"
+            android:layout_width="209dp"
+            android:layout_height="47dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:hint="dd/mm"
+            android:layout_marginTop="5pt"
+            android:inputType="date"
+            android:background="@drawable/edit_text_border"
+            />
+
+
+
+        <Button
+            android:id="@+id/button_id"
+            android:layout_width="209dp"
+            android:layout_height="47dp"
+            android:layout_gravity="center"
+            android:background="@color/colorPrimary"
+            android:text="@string/btnGo"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_marginTop="25pt"/>
+
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

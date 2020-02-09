@@ -28,23 +28,17 @@
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="250dp"
-                android:layout_centerInParent="true"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/circle" >
-
-            </ImageView>
 
             <TextView
+                android:id="@+id/tvEmissionsNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:background="@drawable/circle_green"
                 android:text="@string/textInCircle"
+                android:layout_centerInParent="true"
                 android:textColor="@color/textColorPrimary"
-                android:textSize="25sp"/>
+                android:gravity="center"
+                android:textSize="25sp" />
 
         </RelativeLayout>
 
