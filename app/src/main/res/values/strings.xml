@@ -6,6 +6,8 @@
     <string name="textInCircle">10 lbs CO2e</string>
     <string name="tvDistance">Distance: </string>
     <string name="tvDate">Date: </string>
+    <string name="typeEnergy">Type of Energy:</string>
+    <string name="amountEnergy">Amount:</string>
 
     <!-- Activity titles -->
     <string name="homeEnergyTitle">Home Energy</string>
@@ -15,4 +17,11 @@
     <!-- Buttons -->
     <string name="btnGo">Done</string>
 
+
+    <!-- Spinner Energy Activity -->
+    <string-array name="energy_types">
+        <item>Electricity</item>
+        <item>Natural Gas</item>
+        <item>Oil</item>
+    </string-array>
 </resources>

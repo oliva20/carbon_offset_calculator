@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 public class HomeEnergyActivity extends AppCompatActivity {
 
@@ -17,6 +19,20 @@ public class HomeEnergyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home_energy);
         //change the title on the actual app activity instead of displaying a title
         setTitle(getString(R.string.homeEnergyTitle));
+
+
+        /* --------------- spinner --------------------- */
+
+        Spinner spinner = (Spinner) findViewById(R.id.spinnerHomeEnergy);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.energy_types, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+
+        /* --------------- spinner --------------------- */
 
     }
 
