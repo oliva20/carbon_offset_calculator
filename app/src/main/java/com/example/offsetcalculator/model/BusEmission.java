@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
  * @author Andre
  * @version 1.0
  * @since 1.0
+ * CO2 emissions in pounds = (miles travelled per year × public transportation direct emissions) + (public transportation direct emissions × indirect emissions multiplication factor) × gram to pound conversion
  */
 @Entity(tableName = "bus_emissions")
 public class BusEmission implements Emission {

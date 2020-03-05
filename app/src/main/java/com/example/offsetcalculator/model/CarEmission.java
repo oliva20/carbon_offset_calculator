@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
  * @author Andre
  * @version 1.0
  * @since 1.0
+ * CO2 emissions in pounds = ((number of miles driven per week × weeks in a year) ÷ fuel efficiency per vehicle) × pounds of CO2 emitted per gallon × emissions of greenhouse gases other than CO2
  */
 @Entity(tableName = "car_emissions")
 public class CarEmission implements Emission{
@@ -16,8 +17,8 @@ public class CarEmission implements Emission{
     private Integer id;
     private Double emissionTotal; // co2 emissions in pounds
     private Double milesDrivenWeekly;
-    private Double weeksInYear = 54.0;
     private Double vehicleFuelEfficiency;
+    private Double weeksInYear = 54.0;
     private Double carbonEmittedPerGallon = 19.4; // according to carbonglobe.com
     private Double otherEmissions = 1.05; // according to carbonglobe.com
 
