@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:testOnly="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CarActivity"/>
-        <activity android:name=".PublicTransportActivity" />
-        <activity android:name=".HomeEnergyActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.CarActivity"/>
+        <activity android:name=".ui.PublicTransportActivity" />
+        <activity android:name=".ui.HomeEnergyActivity" />
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

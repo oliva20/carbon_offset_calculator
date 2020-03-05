@@ -1,7 +1,12 @@
-package com.example.offsetcalculator;
+package com.example.offsetcalculator.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.room.Room;
+
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -10,6 +15,15 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.example.offsetcalculator.R;
+import com.example.offsetcalculator.dao.BusEmissionDAO;
+import com.example.offsetcalculator.dao.CarEmissionDAO;
+import com.example.offsetcalculator.db.AppDatabase;
+import com.example.offsetcalculator.model.BusEmission;
+import com.example.offsetcalculator.rep.BusEmissionRepository;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -28,15 +42,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void insertData(){
-        //dummy data for illustrative purposes
         TextView tv = (TextView)findViewById(R.id.tvEmissionsNumber);
-        int num = (int) Math.floor(Math.random() * 101);
+        BusEmissionRepository rep = new BusEmissionRepository(this.getApplication());
+
+        BusEmission busEmission = new BusEmission(20.0);
+        rep.insert(busEmission);
+
+        Double num = rep.getLastInsertedBusEmission().getEmissionTotal();
+
         //building this string so that the number is in bold
-        String msg = "<b>" + num + "</b>" + " lbs CO2e";
+        String msg = "<b>" + num + "</b>" + " kg CO2e";
         tv.setText(Html.fromHtml(msg));
     }
-
-
 
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();

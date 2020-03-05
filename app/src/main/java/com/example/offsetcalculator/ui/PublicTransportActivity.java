@@ -1,4 +1,4 @@
-package com.example.offsetcalculator;
+package com.example.offsetcalculator.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.example.offsetcalculator.R;
 
 public class PublicTransportActivity extends AppCompatActivity {
 

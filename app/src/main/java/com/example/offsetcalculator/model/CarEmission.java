@@ -1,25 +1,31 @@
-package dto;
+package com.example.offsetcalculator.model;
+
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import java.text.DecimalFormat;
 
-/** Represents an employee.
- * @author Andre Brasil
- * @version 1.5
+/** Represents and calculates a car emission.
+ * @author Andre
+ * @version 1.0
  * @since 1.0
  */
+@Entity(tableName = "car_emissions")
 public class CarEmission implements Emission{
-
+    @PrimaryKey(autoGenerate = true)
+    private Integer id;
     private Double emissionTotal; // co2 emissions in pounds
     private Double milesDrivenWeekly;
-    private Double weeksInYear;
+    private Double weeksInYear = 54.0;
     private Double vehicleFuelEfficiency;
     private Double carbonEmittedPerGallon = 19.4; // according to carbonglobe.com
     private Double otherEmissions = 1.05; // according to carbonglobe.com
 
-    public CarEmission(Double milesDrivenWeekly, Double weeksInYear, Double vehicleFuelEfficiency) {
+
+    public CarEmission(Double milesDrivenWeekly, Double vehicleFuelEfficiency) {
         this.milesDrivenWeekly = milesDrivenWeekly;
-        this.weeksInYear = weeksInYear;
         this.vehicleFuelEfficiency = vehicleFuelEfficiency;
+        calculateEmission();
     }
 
     @Override
@@ -39,7 +45,19 @@ public class CarEmission implements Emission{
      */
     @Override
     public void calculateEmission() {
-        emissionTotal = ((milesDrivenWeekly * weeksInYear) / vehicleFuelEfficiency) * carbonEmittedPerGallon * otherEmissions;
+        DecimalFormat df = new DecimalFormat("##.##");
+        Double total = ((milesDrivenWeekly * weeksInYear) / vehicleFuelEfficiency) * carbonEmittedPerGallon * otherEmissions;
+        String result = df.format(total);
+        emissionTotal = Double.valueOf(result);
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Double getEmissionTotal() {
@@ -54,36 +72,36 @@ public class CarEmission implements Emission{
         return milesDrivenWeekly;
     }
 
-    public void setMilesDrivenWeekly(Double milesDrivenWeekly) {
-        this.milesDrivenWeekly = milesDrivenWeekly;
-    }
-
     public Double getWeeksInYear() {
         return weeksInYear;
-    }
-
-    public void setWeeksInYear(Double weeksInYear) {
-        this.weeksInYear = weeksInYear;
     }
 
     public Double getVehicleFuelEfficiency() {
         return vehicleFuelEfficiency;
     }
 
-    public void setVehicleFuelEfficiency(Double vehicleFuelEfficiency) {
-        this.vehicleFuelEfficiency = vehicleFuelEfficiency;
-    }
-
     public Double getCarbonEmittedPerGallon() {
         return carbonEmittedPerGallon;
     }
 
-    public void setCarbonEmittedPerGallon(Double carbonEmittedPerGallon) {
-        this.carbonEmittedPerGallon = carbonEmittedPerGallon;
-    }
-
     public Double getOtherEmissions() {
         return otherEmissions;
+    }
+
+    public void setMilesDrivenWeekly(Double milesDrivenWeekly) {
+        this.milesDrivenWeekly = milesDrivenWeekly;
+    }
+
+    public void setWeeksInYear(Double weeksInYear) {
+        this.weeksInYear = weeksInYear;
+    }
+
+    public void setVehicleFuelEfficiency(Double vehicleFuelEfficiency) {
+        this.vehicleFuelEfficiency = vehicleFuelEfficiency;
+    }
+
+    public void setCarbonEmittedPerGallon(Double carbonEmittedPerGallon) {
+        this.carbonEmittedPerGallon = carbonEmittedPerGallon;
     }
 
     public void setOtherEmissions(Double otherEmissions) {
