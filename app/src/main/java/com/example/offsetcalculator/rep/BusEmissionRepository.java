@@ -17,7 +17,7 @@ public class BusEmissionRepository {
 
     public BusEmissionRepository(Application application) {
         AppDatabase db = Room.databaseBuilder(application, AppDatabase.class, "thinkarbon-db")
-                .allowMainThreadQueries().fallbackToDestructiveMigration()   //Allows room to do operation on main thread
+                .allowMainThreadQueries().fallbackToDestructiveMigration()   //Allows room to operate on main thread
                 .build();
         mBusEmissionDao = db.getBusEmissionDAO();
         mAllBusEmissions = mBusEmissionDao.getBusEmissions();
@@ -32,8 +32,11 @@ public class BusEmissionRepository {
         mBusEmissionDao.insert(busEmission);
     }
 
-    public BusEmission getLastInsertedBusEmission(){
-        return mAllBusEmissions.get(mAllBusEmissions.size()-1);
+    public BusEmission getLastInsertedBusEmission() {
+        if (mAllBusEmissions.isEmpty()) {
+            return null;
+        }
+        return mAllBusEmissions.get(mAllBusEmissions.size() - 1);
     }
 
     public void deleteAllEmissions(){

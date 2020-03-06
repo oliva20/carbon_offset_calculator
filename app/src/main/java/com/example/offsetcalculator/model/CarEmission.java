@@ -1,5 +1,6 @@
 package com.example.offsetcalculator.model;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -15,6 +16,7 @@ import java.text.DecimalFormat;
 public class CarEmission implements Emission{
     @PrimaryKey(autoGenerate = true)
     private Integer id;
+    @ColumnInfo(name = "emission_total")
     private Double emissionTotal; // co2 emissions in pounds
     private Double milesDrivenWeekly;
     private Double vehicleFuelEfficiency;

@@ -2,11 +2,7 @@ package com.example.offsetcalculator.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.room.Room;
 
-import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -17,13 +13,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.offsetcalculator.R;
-import com.example.offsetcalculator.dao.BusEmissionDAO;
-import com.example.offsetcalculator.dao.CarEmissionDAO;
-import com.example.offsetcalculator.db.AppDatabase;
 import com.example.offsetcalculator.model.BusEmission;
 import com.example.offsetcalculator.rep.BusEmissionRepository;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -71,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
 
             case R.id.menuTransportItem:
-                intent = new Intent(this, PublicTransportActivity.class);
+                intent = new Intent(this, TransportActivity.class);
                 startActivity(intent);
                 return true;
 

@@ -11,7 +11,7 @@ import com.example.offsetcalculator.model.BusEmission;
 import com.example.offsetcalculator.model.CarEmission;
 
 
-@Database(entities = {CarEmission.class, BusEmission.class, AirEmission.class}, version = 4)
+@Database(entities = {CarEmission.class, BusEmission.class, AirEmission.class}, version = 5)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract CarEmissionDAO getCarEmissionDAO();
     public abstract BusEmissionDAO getBusEmissionDAO();

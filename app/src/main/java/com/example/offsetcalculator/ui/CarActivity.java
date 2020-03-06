@@ -50,7 +50,7 @@ public class CarActivity extends AppCompatActivity {
                 return true;
 
             case R.id.menuTransportItem:
-                intent = new Intent(this, PublicTransportActivity.class);
+                intent = new Intent(this, TransportActivity.class);
                 startActivity(intent);
                 return true;
 

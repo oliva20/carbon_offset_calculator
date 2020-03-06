@@ -22,16 +22,19 @@ public class CarEmissionRepository {
         mAllCarEmissions = mCarEmissionDao.getCarEmissions();
     }
     //must be a public method
-    public List<CarEmission> getAllBusEmissions() {
+    public List<CarEmission> getAllCarEmissions() {
         return mAllCarEmissions;
     }
 
-    public void insert(CarEmission busEmission){
-        mCarEmissionDao.insert(busEmission);
+    public void insert(CarEmission carEmission){
+        mCarEmissionDao.insert(carEmission);
     }
 
-    public CarEmission getLastInsertedBusEmission(){
-        return mAllCarEmissions.get(mAllCarEmissions.size()-1);
+    public CarEmission getLastInsertedCarEmission(){
+        if (mAllCarEmissions.isEmpty()) {
+            return null;
+        }
+        return mAllCarEmissions.get(mAllCarEmissions.size() - 1);
     }
 
     public void deleteAllEmissions(){
