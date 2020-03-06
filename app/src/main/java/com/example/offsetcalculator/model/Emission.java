@@ -5,5 +5,5 @@ public interface Emission {
     Integer getId();
     void calculateEmission();
     Double getTotalEmission();
-    Double emissionToKilograms();
+    Double totalEmissionToTons();
 }

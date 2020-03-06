@@ -5,15 +5,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.TransportActivity">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-    <org.osmdroid.views.MapView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/map1"
-        />
+
+        <org.osmdroid.views.MapView
+            android:id="@+id/map1"
+            android:layout_width="match_parent"
+            android:layout_height="500dp" />
+
+        <EditText
+            android:id="@+id/edtMiles"
+            android:layout_width="209dp"
+            android:layout_height="47dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:hint="miles"
+            android:layout_marginTop="2pt"
+            android:inputType="date"
+            android:background="@drawable/edit_text_border"
+            />
+
+        <EditText
+            android:id="@+id/edtEff"
+            android:layout_width="209dp"
+            android:layout_height="47dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:hint="efficiency"
+            android:layout_marginTop="2pt"
+            android:inputType="date"
+            android:background="@drawable/edit_text_border"
+            />
+
+        <Button
+            android:id="@+id/transport_btn1"
+            android:layout_width="209dp"
+            android:layout_height="47dp"
+            android:layout_gravity="center"
+            android:background="@color/colorPrimary"
+            android:text="@string/btnGo"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_marginTop="2pt"/>
+        <Button
+            android:id="@+id/delete_emissions_btn1"
+            android:layout_width="209dp"
+            android:layout_height="47dp"
+            android:layout_gravity="center"
+            android:background="@color/colorPrimary"
+            android:text="Delete Emissions"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_marginTop="2pt"/>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

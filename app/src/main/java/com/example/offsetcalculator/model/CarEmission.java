@@ -32,10 +32,14 @@ public class CarEmission implements Emission{
     }
 
     @Override
-    public Double emissionToKilograms() {
+    public Double totalEmissionToTons() {
+        //changing to kilos and then to tons.
+        //kilos = pounds / 2.2046
+        //tons = kilos * 0.0001102
+
         //number needs to be rounded to two decimal places.
         DecimalFormat df = new DecimalFormat("##.##");
-        String x = df.format(emissionTotal/2.2046);
+        String x = df.format((emissionTotal/2.2046) * 0.001102);
         return Double.valueOf(x);
     }
 

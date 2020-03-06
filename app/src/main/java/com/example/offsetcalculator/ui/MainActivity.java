@@ -13,43 +13,70 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.offsetcalculator.R;
-import com.example.offsetcalculator.model.BusEmission;
+import com.example.offsetcalculator.rep.AirEmissionRepository;
 import com.example.offsetcalculator.rep.BusEmissionRepository;
+import com.example.offsetcalculator.rep.CarEmissionRepository;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
+    CarEmissionRepository carRep;
+    BusEmissionRepository busRep;
+    AirEmissionRepository airRep;
+    TextView emissionsNumber;
+    TextView numOfEmiss;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
 
-    public void onClick(View view){
+        carRep = new CarEmissionRepository(this.getApplication());
+        busRep = new BusEmissionRepository(this.getApplication());
+        airRep = new AirEmissionRepository(this.getApplication());
+
+        setContentView(R.layout.activity_main);
+        displayCarbonEmissions();
     }
 
     public void onResume(){
         super.onResume();
-        insertData();
+        displayCarbonEmissions();
     }
 
-    public void insertData(){
-        TextView tv = (TextView)findViewById(R.id.tvEmissionsNumber);
-        BusEmissionRepository rep = new BusEmissionRepository(this.getApplication());
+    public void displayCarbonEmissions(){
+        //TODO At the moment is only displaying emissions from car.
+        emissionsNumber = (TextView)findViewById(R.id.tvEmissionsNumber);
+        numOfEmiss = (TextView)findViewById(R.id.tvNumOfEmissionsCreated);
+        String msgCo2 = "<b>0.0</b> Tons CO2e";
+        String msgEmiss = "<b>Emissisons registered:</b> ";
+        emissionsNumber.setText(Html.fromHtml(msgCo2));
+        numOfEmiss.setText(Html.fromHtml(msgEmiss));
 
-        BusEmission busEmission = new BusEmission(20.0);
-        rep.insert(busEmission);
-
-        Double num = rep.getLastInsertedBusEmission().getEmissionTotal();
-
+        try {
+        Double num = carRep.getLastInsertedCarEmission().totalEmissionToTons();
+        Integer numOfEmissionsRegistered = carRep.getAllCarEmissions().size();
+            if(num!=null){
+                msgCo2 = "<b>" + num + "</b>" + " Tons CO2e";
+                emissionsNumber.setText(Html.fromHtml(msgCo2));
+                msgEmiss = "<b>Emissisons registered:</b> " + numOfEmissionsRegistered;
+                numOfEmiss.setText(Html.fromHtml(msgEmiss));
+            } else {
+                msgCo2 = "<b>" + num + "</b>" + " Tons CO2e";
+                emissionsNumber.setText(Html.fromHtml(msgCo2));
+                msgEmiss = "<b>Emissisons registered:</b> " + numOfEmissionsRegistered;
+                numOfEmiss.setText(Html.fromHtml(msgEmiss));
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
         //building this string so that the number is in bold
-        String msg = "<b>" + num + "</b>" + " kg CO2e";
-        tv.setText(Html.fromHtml(msg));
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
+    }
+
+    public void onClick(View v){
+
     }
 
     @Override

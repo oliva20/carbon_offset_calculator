@@ -19,7 +19,7 @@ public class ExampleUnitTest {
         CarEmission carEmission = new CarEmission(20.0,52.0);
         carEmission.calculateEmission();
         Double result = carEmission.getTotalEmission();
-        Double resultInKilos = carEmission.emissionToKilograms();
+        Double resultInKilos = carEmission.totalEmissionToTons();
         System.out.println("@@@ total emissions from a car -> " + result);
         System.out.println("@@@ total emissions in kilograms from a car -> " + resultInKilos);
         System.out.println(carEmission.toString());
@@ -30,11 +30,17 @@ public class ExampleUnitTest {
         BusEmission busEmission = new BusEmission(131.0);
         busEmission.calculateEmission();
         result = busEmission.getEmissionTotal();
-        resultInKilos = busEmission.emissionToKilograms();
+        resultInKilos = busEmission.totalEmissionToTons();
         System.out.println("@@@ total emissions from a bus -> " + result);
         System.out.println("@@@ total emissions in kilograms from a bus -> " + resultInKilos);
         System.out.println(busEmission.toString());
         assertNotNull(result);
 
+    }
+
+    @Test
+    public void testCarEmission(){
+        CarEmission e = new CarEmission(123.2,2.3);
+        System.out.println(e.totalEmissionToTons().toString());
     }
 }
