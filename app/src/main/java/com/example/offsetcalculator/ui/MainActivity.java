@@ -19,6 +19,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle(R.string.main_screen_title);
+
         bottomNavigationView = findViewById(R.id.navigation_bar);
         //start the app in main screen
         if(savedInstanceState == null) {

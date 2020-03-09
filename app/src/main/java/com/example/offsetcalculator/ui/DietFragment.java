@@ -21,6 +21,7 @@ public class DietFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        getActivity().setTitle(R.string.food_title);
         return inflater.inflate(R.layout.fragment_diet, container, false);
     }
 

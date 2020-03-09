@@ -24,24 +24,20 @@ public class HomeEnergyFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+        getActivity().setTitle(R.string.home_energy_title);
+        View view = inflater.inflate(R.layout.fragment_home, container,false);
 
         /* --------------- spinner --------------------- */
-
-/*
-        Spinner spinner = (Spinner) findViewById(R.id.spinnerHomeEnergy);
+        Spinner spinner = (Spinner) view.findViewById(R.id.spinnerHomeEnergy);
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.energy_types, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
-*/
-
         /* --------------- spinner --------------------- */
 
-        return inflater.inflate(R.layout.fragment_home, container,false);
+        return view;
     }
 }

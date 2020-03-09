@@ -14,21 +14,21 @@ import com.example.offsetcalculator.model.CarEmission;
 @Dao
 public interface CarEmissionDAO {
     @Insert
-    public void insert(CarEmission... emissions);
+    void insert(CarEmission... emissions);
 
     @Update
-    public void update(CarEmission... emissions);
+    void update(CarEmission... emissions);
 
     @Delete
-    public void delete(CarEmission emission);
+    void delete(CarEmission emission);
 
     @Query("SELECT * FROM car_emissions")
-    public List<CarEmission> getCarEmissions();
+    List<CarEmission> getCarEmissions();
 
     @Query("SELECT * FROM car_emissions WHERE id = :id")
-    public CarEmission getCarEmissionById(Integer id);
+    CarEmission getCarEmissionById(Integer id);
 
     @Query("DELETE FROM car_emissions")
-    public void deleteAllCarEmissions();
+    void deleteAllCarEmissions();
 }
 

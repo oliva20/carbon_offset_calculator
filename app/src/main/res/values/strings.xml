@@ -1,5 +1,9 @@
 <resources>
-    <string name="title">Carbon Offset Calculator</string>
+    <string name="title">ThinKarbon</string>
+    <string name="main_screen_title">Carbon Footprint</string>
+    <string name="transport_screen_title">Transport Emissions</string>
+    <string name="home_energy_title">Home Energy Emissions</string>
+    <string name="food_title">Food Emissions</string>
     <string name="app_name">Carbon Offset Calculator</string>
     <string name="chooseItem">Personal Vehicle</string>
     <string name="your_total_emissions">Your total emissions is:</string>

@@ -13,20 +13,20 @@ import java.util.List;
 @Dao
 public interface AirEmissionDAO {
     @Insert
-    public void insert(AirEmission... emissions);
+    void insert(AirEmission... emissions);
 
     @Update
-    public void update(AirEmission... emissions);
+    void update(AirEmission... emissions);
 
     @Delete
-    public void delete(AirEmission emission);
+    void delete(AirEmission emission);
 
     @Query("SELECT * FROM air_emissions")
-    public List<AirEmission> getAirEmissions();
+    List<AirEmission> getAirEmissions();
 
     @Query("SELECT * FROM air_emissions WHERE id = :id")
-    public AirEmission getAirEmissionById(Integer id);
+    AirEmission getAirEmissionById(Integer id);
 
     @Query("DELETE FROM air_emissions")
-    public void deleteAllAirEmissions();
+    void deleteAllAirEmissions();
 }

@@ -47,6 +47,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        getActivity().setTitle(R.string.transport_screen_title);
         //Since it's a fragment we are dealing with we need to get the activity in order to get the application
         carRep = new CarEmissionRepository(getActivity().getApplication());
         busRep = new BusEmissionRepository(getActivity().getApplication());
@@ -75,12 +76,12 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
                 Double miles = Double.valueOf(edtMiles.getText().toString());
                 Double eff = Double.valueOf(edtEff.getText().toString());
 
+                //clear the text boxes
+                edtEff.getText().clear();
+                edtMiles.getText().clear();
+
                 CarEmission carEmission = new CarEmission(miles,eff);
                 carRep.insert(carEmission);
-
-                String msg = carRep.getLastInsertedCarEmission().toString();
-                System.out.println("@@@ -> " + msg);
-
                 dismissKeyboard(getActivity());
                 break;
             case R.id.delete_emissions_btn1:

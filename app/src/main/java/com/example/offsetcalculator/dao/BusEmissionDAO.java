@@ -14,20 +14,20 @@ import com.example.offsetcalculator.model.BusEmission;
 @Dao
 public interface BusEmissionDAO {
     @Insert
-    public void insert(BusEmission... emissions);
+    void insert(BusEmission... emissions);
 
     @Update
-    public void update(BusEmission... emissions);
+    void update(BusEmission... emissions);
 
     @Delete
-    public void delete(BusEmission emission);
+    void delete(BusEmission emission);
 
     @Query("SELECT * FROM bus_emissions")
-    public List<BusEmission> getBusEmissions();
+    List<BusEmission> getBusEmissions();
 
     @Query("SELECT * FROM bus_emissions WHERE id = :id")
-    public BusEmission getBusEmissionById(Integer id);
+    BusEmission getBusEmissionById(Integer id);
 
     @Query("DELETE FROM bus_emissions")
-    public void deleteAllBusEmissions();
+    void deleteAllBusEmissions();
 }
