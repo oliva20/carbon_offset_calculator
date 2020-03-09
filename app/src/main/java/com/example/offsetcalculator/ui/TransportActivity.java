@@ -1,6 +1,7 @@
 package com.example.offsetcalculator.ui;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -16,26 +17,31 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toolbar;
 
 import com.example.offsetcalculator.R;
 import com.example.offsetcalculator.model.BusEmission;
 import com.example.offsetcalculator.model.CarEmission;
 import com.example.offsetcalculator.model.Emission;
 import com.example.offsetcalculator.rep.CarEmissionRepository;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
-public class TransportActivity extends AppCompatActivity implements LocationListener, View.OnClickListener {
+public class TransportActivity extends AppCompatActivity implements LocationListener, View.OnClickListener, NavigationView.OnNavigationItemSelectedListener{
     MapView map = null;
     LocationManager locationManager;
     CarEmissionRepository carRep;
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         carRep = new CarEmissionRepository(this.getApplication());
 
         setTitle(getString(R.string.publicTransportTitle));
@@ -43,6 +49,10 @@ public class TransportActivity extends AppCompatActivity implements LocationList
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         setContentView(R.layout.activity_transport);
+        //bottom navigation baR
+        actionBar = getSupportActionBar();
+        final BottomNavigationView bottomNavigationView = findViewById(R.id.navigationView);
+
 
 
         map = (MapView) findViewById(R.id.map1);
@@ -51,7 +61,7 @@ public class TransportActivity extends AppCompatActivity implements LocationList
         map.getController().setZoom(16.0);
         map.getController().setCenter(new GeoPoint(51.05,-0.72));
 
-        //TODO: delete this. Just for testing.
+        //TODO: For testing
         Button button = (Button) findViewById(R.id.transport_btn1);
         Button button2 = (Button) findViewById(R.id.delete_emissions_btn1);
         button.setOnClickListener(this);
@@ -59,11 +69,6 @@ public class TransportActivity extends AppCompatActivity implements LocationList
 
     }
 
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
 
     @Override
     protected void onPause() {
@@ -75,33 +80,6 @@ public class TransportActivity extends AppCompatActivity implements LocationList
     protected void onResume(){
         super.onResume();
         map.onResume();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Intent intent;
-        switch (item.getItemId()) {
-            case R.id.menuMainItem:
-                intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;
-
-            case R.id.menuHomeEnergyItem:
-                intent = new Intent(this, HomeEnergyActivity.class);
-                startActivity(intent);
-                return true;
-
-            case R.id.menuTransportItem:
-                intent = new Intent(this, TransportActivity.class);
-                startActivity(intent);
-                return true;
-
-            case R.id.menuVehicleItem:
-                intent = new Intent(this, CarActivity.class);
-                startActivity(intent);
-                return true;
-        }
-        return false;
     }
 
     //location stuff
@@ -155,5 +133,24 @@ public class TransportActivity extends AppCompatActivity implements LocationList
             startActivity(intent);
         }
     }
+
+    //TODO: This is not working. There should be another way to implement this.
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()){
+            case R.id.navigation_home:
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
+
+            case R.id.navigation_home_energy:
+                intent = new Intent(this, HomeEnergyActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return false;
+    }
+
 
 }

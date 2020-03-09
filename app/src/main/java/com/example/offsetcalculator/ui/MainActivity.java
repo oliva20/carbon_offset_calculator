@@ -1,6 +1,7 @@
 package com.example.offsetcalculator.ui;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -16,6 +17,7 @@ import com.example.offsetcalculator.R;
 import com.example.offsetcalculator.rep.AirEmissionRepository;
 import com.example.offsetcalculator.rep.BusEmissionRepository;
 import com.example.offsetcalculator.rep.CarEmissionRepository;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     CarEmissionRepository carRep;
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     AirEmissionRepository airRep;
     TextView emissionsNumber;
     TextView numOfEmiss;
+    ActionBar actionBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +37,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.activity_main);
         displayCarbonEmissions();
+
+        //bottom navigation bar
+        actionBar = getSupportActionBar();
+        final BottomNavigationView bottomNavigationView = findViewById(R.id.navigationView);
     }
 
     public void onResume(){
@@ -69,12 +77,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //building this string so that the number is in bold
     }
 
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
     public void onClick(View v){
 
     }
@@ -82,19 +84,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Intent intent;
-        switch (item.getItemId()) {
-            case R.id.menuHomeEnergyItem:
-                intent = new Intent(this, HomeEnergyActivity.class);
-                startActivity(intent);
-                return true;
-
-            case R.id.menuTransportItem:
+        switch (item.getItemId()){
+            case R.id.navigation_transport:
                 intent = new Intent(this, TransportActivity.class);
                 startActivity(intent);
                 return true;
 
-            case R.id.menuVehicleItem:
-                intent = new Intent(this, CarActivity.class);
+            case R.id.navigation_home_energy:
+                intent = new Intent(this, HomeEnergyActivity.class);
                 startActivity(intent);
                 return true;
         }
