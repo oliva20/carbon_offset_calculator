@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.TransportActivity">
+    tools:context=".ui.TransportFragment">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         <org.osmdroid.views.MapView
             android:id="@+id/map1"
             android:layout_width="match_parent"
-            android:layout_height="500dp" />
+            android:layout_height="400dp" />
 
         <EditText
             android:id="@+id/edtMiles"

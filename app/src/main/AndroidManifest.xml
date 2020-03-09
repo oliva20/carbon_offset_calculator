@@ -12,9 +12,9 @@
         android:supportsRtl="true"
         android:testOnly="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.CarActivity" />
-        <activity android:name=".ui.TransportActivity" />
-        <activity android:name=".ui.HomeEnergyActivity" />
+        <activity android:name=".ui.DietFragment" />
+        <activity android:name=".ui.TransportFragment" />
+        <activity android:name=".ui.HomeEnergyFragment" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

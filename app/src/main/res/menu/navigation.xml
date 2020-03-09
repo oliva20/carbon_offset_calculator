@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/action_main"
         android:icon="@drawable/ic_home"
         android:title="Home"/>
 
     <item
-        android:id="@+id/navigation_transport"
+        android:id="@+id/action_transport"
         android:icon="@drawable/ic_transport"
         android:title="Transport"/>
 
     <item
-        android:id="@+id/navigation_food"
+        android:id="@+id/action_diet"
         android:icon="@drawable/ic_food"
         android:title="Diet"/>
 
     <item
-        android:id="@+id/navigation_home_energy"
+        android:id="@+id/action_home"
         android:icon="@drawable/ic_home_energy"
         android:title="Energy"/>
 </menu>

@@ -6,56 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/tv1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="100sp"
-                android:gravity="center_horizontal"
-                android:text="@string/your_total_emissions"
-                android:textColor="@color/textColorPrimary"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-
-            <TextView
-                android:id="@+id/tvEmissionsNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/circle_green"
-                android:text="@string/textInCircle"
-                android:layout_centerInParent="true"
-                android:textColor="@color/textColorPrimary"
-                android:gravity="center"
-                android:textSize="25sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Emissions registered: "
-                android:textSize="25sp"
-                android:id="@+id/tvNumOfEmissionsCreated"/>
-
-        </RelativeLayout>
-
-    </LinearLayout>
     <FrameLayout
-        android:id="@+id/container"
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        />
 
+<!--    TODO: There should be some kind of feedback for the user when they press an icon. Showing that they have selected the item.-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/navigationView"
+        android:id="@+id/navigation_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
@@ -65,7 +24,9 @@
         app:itemBackground="@color/colorPrimary"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
-        app:menu="@menu/navigation"/>
+        app:menu="@menu/navigation"
+        app:labelVisibilityMode="labeled"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
