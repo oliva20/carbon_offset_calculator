@@ -47,8 +47,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        getActivity().setTitle(R.string.transport_screen_title);
-        //Since it's a fragment we are dealing with we need to get the activity in order to get the application
         carRep = new CarEmissionRepository(getActivity().getApplication());
         busRep = new BusEmissionRepository(getActivity().getApplication());
         airRep = new AirEmissionRepository(getActivity().getApplication());
