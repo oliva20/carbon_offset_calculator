@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,57 +12,24 @@
 
         <org.osmdroid.views.MapView
             android:id="@+id/map1"
+            android:enabled="true"
+            android:clickable="true"
             android:layout_width="match_parent"
-            android:layout_height="400dp" />
-
-        <EditText
-            android:id="@+id/edtMiles"
-            android:layout_width="209dp"
-            android:layout_height="47dp"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:hint="miles"
-            android:layout_marginTop="2pt"
-            android:inputType="date"
-            android:background="@drawable/edit_text_border"
-            />
-
-        <EditText
-            android:id="@+id/edtEff"
-            android:layout_width="209dp"
-            android:layout_height="47dp"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:hint="efficiency"
-            android:layout_marginTop="2pt"
-            android:inputType="date"
-            android:background="@drawable/edit_text_border"
-            />
+            android:layout_height="550dp"
+            tilesource="Mapnik"/>
 
         <Button
             android:id="@+id/transport_btn1"
-            android:layout_width="209dp"
-            android:layout_height="47dp"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
             android:layout_gravity="center"
             android:background="@color/colorPrimary"
-            android:text="@string/btnGo"
+            android:text="@string/btnStartTracking"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="25sp"
             android:textStyle="bold"
-            android:layout_marginTop="2pt"/>
-        <Button
-            android:id="@+id/delete_emissions_btn1"
-            android:layout_width="209dp"
-            android:layout_height="47dp"
-            android:layout_gravity="center"
-            android:background="@color/colorPrimary"
-            android:text="Delete Emissions"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:layout_marginTop="2pt"/>
+            android:layout_marginTop="7pt"/>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

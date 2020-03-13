@@ -10,7 +10,6 @@ import android.view.MenuItem;
 
 import com.example.offsetcalculator.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     BottomNavigationView bottomNavigationView;

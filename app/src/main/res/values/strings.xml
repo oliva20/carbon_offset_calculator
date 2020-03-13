@@ -19,7 +19,8 @@
     <string name="vehicleTitle">Personal Vehicle</string>
 
     <!-- Buttons -->
-    <string name="btnGo">Done</string>
+    <string name="btnStartTracking">Start tracking</string>
+    <string name="btnStopTracking">Stop tracking</string>
 
 
     <!-- Spinner Energy Activity -->

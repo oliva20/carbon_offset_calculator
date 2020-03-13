@@ -6,7 +6,7 @@ import androidx.room.Room;
 
 import com.example.offsetcalculator.dao.AirEmissionDAO;
 import com.example.offsetcalculator.db.AppDatabase;
-import com.example.offsetcalculator.model.AirEmission;
+import com.example.offsetcalculator.model.emission.AirEmission;
 
 import java.util.List;
 

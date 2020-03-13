@@ -73,7 +73,7 @@
             android:layout_height="47dp"
             android:layout_gravity="center"
             android:background="@color/colorPrimary"
-            android:text="@string/btnGo"
+            android:text="Go"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="25sp"

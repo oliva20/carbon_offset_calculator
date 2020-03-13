@@ -2,48 +2,37 @@ package com.example.offsetcalculator.ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 
 import com.example.offsetcalculator.R;
-import com.example.offsetcalculator.model.CarEmission;
+import com.example.offsetcalculator.model.workers.LocationWorker;
 import com.example.offsetcalculator.rep.AirEmissionRepository;
 import com.example.offsetcalculator.rep.BusEmissionRepository;
 import com.example.offsetcalculator.rep.CarEmissionRepository;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
 
-import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
+import java.util.concurrent.TimeUnit;
+
 public class TransportFragment extends Fragment implements View.OnClickListener {
-    MapView map = null;
+    MapView map;
     CarEmissionRepository carRep;
     BusEmissionRepository busRep;
     AirEmissionRepository airRep;
-    Button btnInsert;
-    Button btnDelete;
-
-
+    Button insert;
+    PeriodicWorkRequest pWorkRequest;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,49 +42,30 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
 
         View view = inflater.inflate(R.layout.fragment_transport, container, false);
 
+        //worker
+        pWorkRequest = new PeriodicWorkRequest.Builder(LocationWorker.class, 10, TimeUnit.MINUTES).build();
         //click listeners
-        btnInsert = (Button) view.findViewById(R.id.transport_btn1);
-        btnDelete = (Button) view.findViewById(R.id.delete_emissions_btn1);
-        btnInsert.setOnClickListener(this);
-        btnDelete.setOnClickListener(this);
+        insert = (Button) view.findViewById(R.id.transport_btn1);
+        insert.setOnClickListener(this);
+
+        map = (MapView) view.findViewById(R.id.map1);
+        map.getTileProvider().clearTileCache();
+        map.setTileSource(TileSourceFactory.MAPNIK);
+        map.setMultiTouchControls(true);
+        map.getController().setZoom(16.0);
+        map.getController().setCenter(new GeoPoint(41.42, -9.3));
 
         return view;
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.transport_btn1:
-                EditText edtEff = (EditText) getActivity().findViewById(R.id.edtEff);
-                EditText edtMiles = (EditText) getActivity().findViewById(R.id.edtMiles);
-
-                System.out.println("@@@ edit text -> " + edtMiles.getText().toString());
-
-                Double miles = Double.valueOf(edtMiles.getText().toString());
-                Double eff = Double.valueOf(edtEff.getText().toString());
-
-                //clear the text boxes
-                edtEff.getText().clear();
-                edtMiles.getText().clear();
-
-                CarEmission carEmission = new CarEmission(miles,eff);
-                carRep.insert(carEmission);
-                dismissKeyboard(getActivity());
-                break;
-            case R.id.delete_emissions_btn1:
-                String msg1 = "Delete button called";
-                System.out.println("@@@ -> " + msg1);
-                carRep.deleteAllEmissions();
-                dismissKeyboard(getActivity());
-                break;
+        if(v.getId() == R.id.transport_btn1){
+            WorkManager.getInstance().enqueueUniquePeriodicWork(
+                "test",
+                ExistingPeriodicWorkPolicy.REPLACE, //Existing Periodic Work policy
+                pWorkRequest //work request
+        );
         }
-    }
-
-    //should dismiss keyboard when hitting a button
-    public void dismissKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (null != activity.getCurrentFocus())
-            imm.hideSoftInputFromWindow(activity.getCurrentFocus()
-                    .getApplicationWindowToken(), 0);
     }
 }

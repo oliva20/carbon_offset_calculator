@@ -4,7 +4,7 @@
         android:id="@+id/button_id"
         android:layout_height="47dp"
         android:layout_width="209dp"
-        android:text="@string/btnGo"
+        android:text="Button"
         android:textColor="@color/white"
         android:background="@color/colorPrimary"
         android:textStyle="bold"

@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.offsetcalculator.R;
-import com.example.offsetcalculator.model.CarEmission;
 import com.example.offsetcalculator.rep.AirEmissionRepository;
 import com.example.offsetcalculator.rep.BusEmissionRepository;
 import com.example.offsetcalculator.rep.CarEmissionRepository;
