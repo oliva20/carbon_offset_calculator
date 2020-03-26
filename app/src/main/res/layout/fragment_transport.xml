@@ -12,24 +12,38 @@
 
         <org.osmdroid.views.MapView
             android:id="@+id/map1"
-            android:enabled="true"
-            android:clickable="true"
+            tilesource="Mapnik"
             android:layout_width="match_parent"
-            android:layout_height="550dp"
-            tilesource="Mapnik"/>
+            android:layout_height="500dp"
+            android:clickable="true"
+            android:enabled="true"
+            android:focusable="true" />
 
         <Button
             android:id="@+id/transport_btn1"
             android:layout_width="@dimen/button_width"
             android:layout_height="@dimen/button_height"
             android:layout_gravity="center"
+            android:layout_marginTop="7pt"
             android:background="@color/colorPrimary"
             android:text="@string/btnStartTracking"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="25sp"
-            android:textStyle="bold"
-            android:layout_marginTop="7pt"/>
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/transport_btn2"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:layout_gravity="center"
+            android:layout_marginTop="7pt"
+            android:background="@color/design_default_color_error"
+            android:text="@string/btnStopTracking"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

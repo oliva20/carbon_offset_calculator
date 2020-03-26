@@ -41,15 +41,17 @@ public class LocationWorker extends Worker implements LocationListener{
         Log.d("doWork() CALLED", "Started doing work");
 
         try {
+
             //TODO: This is not getting the updated coordinates, it's just getting the first coordinates
             if (provider != null){
                 location = locationManager.getLastKnownLocation(provider);
             } else {
                 Log.d("ERROR", "Provider is null");
                 //tell the user to allow the app to use location services
-                alertError("Please allow location; Provider is null");
+                alertError("Please allow app to use location; Provider is null");
                 return Result.failure();
             }
+
         } catch (SecurityException e) {
             Log.d("Location Access Error: ", e.toString());
         }
@@ -61,11 +63,13 @@ public class LocationWorker extends Worker implements LocationListener{
             lon = location.getLongitude();
             Log.d("LON", lon.toString());
         }
+
         return Result.success();
+
     }
 
     public void alertError(final CharSequence text){
-        //TODO: This must be sent to the UI thread, not the background thread.
+        //This must be sent to the UI thread, there for we use handler to post a runnable.
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable r = new Runnable() {
             @Override
@@ -93,10 +97,10 @@ public class LocationWorker extends Worker implements LocationListener{
     }
 
 
-
     @Override
     public void onStopped() {
         super.onStopped();
+        Log.d("onStoped()", "on stopped function was called");
     }
 
     @Override
