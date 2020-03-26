@@ -3,10 +3,6 @@ import android.content.Context;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.work.Data;
-import androidx.work.ListenableWorker;
-import androidx.work.Worker;
-import androidx.work.testing.TestWorkerBuilder;
 
 import com.example.offsetcalculator.model.workers.LocationWorker;
 
@@ -34,19 +30,6 @@ public class WorkerTest {
 
     @Test
     public void testSleepWorker() {
-        Data inputData = new Data.Builder()
-                .putLong("SLEEP_DURATION", 10_000L)
-                .build();
-
-        LocationWorker worker =
-                (LocationWorker) TestWorkerBuilder.from(mContext,
-                        LocationWorker.class,
-                        mExecutor)
-                        .setInputData(inputData)
-                        .build();
-
-        Worker.Result result = worker.doWork();
-        assertThat(result, is(Worker.Result.success()));
     }
 
 }

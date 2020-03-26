@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ListenableWorker;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -24,6 +25,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class TransportFragment extends Fragment implements View.OnClickListener {
@@ -33,6 +35,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
     AirEmissionRepository airRep;
     Button insert;
     PeriodicWorkRequest pWorkRequest;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,10 +65,20 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
     public void onClick(View v) {
         if(v.getId() == R.id.transport_btn1){
             WorkManager.getInstance().enqueueUniquePeriodicWork(
-                "test",
+                "trackLocation",
                 ExistingPeriodicWorkPolicy.REPLACE, //Existing Periodic Work policy
                 pWorkRequest //work request
-        );
+            );
+
+            WorkManager.getInstance(getContext()).
+
+            if(){
+                insert.setText(R.string.btnStartTracking);
+            } else {
+                //only set the button to stop tracking if the work request hasn't failed
+                insert.setText(R.string.btnStopTracking);
+            }
+
         }
     }
 }
