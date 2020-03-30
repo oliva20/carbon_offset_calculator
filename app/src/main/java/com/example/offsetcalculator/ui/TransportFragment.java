@@ -2,37 +2,25 @@ package com.example.offsetcalculator.ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 
 import com.example.offsetcalculator.R;
-import com.example.offsetcalculator.model.CarEmission;
 import com.example.offsetcalculator.rep.AirEmissionRepository;
 import com.example.offsetcalculator.rep.BusEmissionRepository;
 import com.example.offsetcalculator.rep.CarEmissionRepository;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
+import com.example.offsetcalculator.services.LocationService;
 
-import org.osmdroid.config.Configuration;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 
 public class TransportFragment extends Fragment implements View.OnClickListener {
@@ -42,7 +30,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
     AirEmissionRepository airRep;
     Button btnInsert;
     Button btnDelete;
-
+    private Activity activity = getActivity();
 
     @Nullable
     @Override
@@ -54,8 +42,8 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
         View view = inflater.inflate(R.layout.fragment_transport, container, false);
 
         //click listeners
-        btnInsert = (Button) view.findViewById(R.id.transport_btn1);
-        btnDelete = (Button) view.findViewById(R.id.delete_emissions_btn1);
+        btnInsert = (Button) view.findViewById(R.id.start_tracking);
+        btnDelete = (Button) view.findViewById(R.id.stop_tracking);
         btnInsert.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
 
@@ -65,34 +53,18 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.transport_btn1:
-                EditText edtEff = (EditText) getActivity().findViewById(R.id.edtEff);
-                EditText edtMiles = (EditText) getActivity().findViewById(R.id.edtMiles);
-
-                System.out.println("@@@ edit text -> " + edtMiles.getText().toString());
-
-                Double miles = Double.valueOf(edtMiles.getText().toString());
-                Double eff = Double.valueOf(edtEff.getText().toString());
-
-                //clear the text boxes
-                edtEff.getText().clear();
-                edtMiles.getText().clear();
-
-                CarEmission carEmission = new CarEmission(miles,eff);
-                carRep.insert(carEmission);
-                dismissKeyboard(getActivity());
+            case R.id.start_tracking:
+                Log.d("Button", "Button pressed to start the service");
+                //@@@ This varies between API level. Only use this with 25 or uinder
+                getActivity().startService(new Intent(getActivity(),LocationService.class));
                 break;
-            case R.id.delete_emissions_btn1:
-                String msg1 = "Delete button called";
-                System.out.println("@@@ -> " + msg1);
-                carRep.deleteAllEmissions();
-                dismissKeyboard(getActivity());
+            case R.id.stop_tracking:
                 break;
         }
     }
 
     //should dismiss keyboard when hitting a button
-    public void dismissKeyboard(Activity activity) {
+    public void dismissKeyboard() {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (null != activity.getCurrentFocus())
             imm.hideSoftInputFromWindow(activity.getCurrentFocus()
