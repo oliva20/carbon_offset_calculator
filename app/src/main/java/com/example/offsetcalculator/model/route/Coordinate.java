@@ -63,7 +63,7 @@ public class Coordinate {
     public String toString() {
         return "Coordinate{" +
                 "coordinateId=" + coordinateId +
-                "latitude=" + latitude +
+                ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 '}';
     }

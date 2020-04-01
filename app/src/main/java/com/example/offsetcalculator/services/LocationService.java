@@ -18,17 +18,26 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
+import com.example.offsetcalculator.model.route.Coordinate;
+import com.example.offsetcalculator.model.route.Route;
+import com.example.offsetcalculator.rep.RouteRepository;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LocationService extends Service {
 
     private FusedLocationProviderClient mFusedLocationClient;
     private final static long UPDATE_INTERVAL = (60 * 1000) * 5;  /* UPDATE EVERY 5 MINS */
     private final static long FASTEST_INTERVAL = 2000; /* 2 sec */
+    private Route route;
+    private RouteRepository routeRepository;
+    private List<Coordinate> mCoordinates;
 
     @Nullable
     @Override
@@ -40,8 +49,11 @@ public class LocationService extends Service {
     public void onCreate() {
         super.onCreate();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        routeRepository = new RouteRepository(getApplication());
+        //TODO: Need to figure out the id side of routes. Maybe create a method in the rep to generate an id. This method gets the idea from the previous route and increments it.
+        route = new Route(998); //initialize a route here because it needs be initialized before the coordinates
 
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= 26) { // android demands that api levels above 26 require that the user is notified with the service.
             String CHANNEL_ID = "my_channel_01";
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
                     "My Channel",
@@ -62,6 +74,12 @@ public class LocationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        //save the coords in the route
+        routeRepository.insert(route, mCoordinates);
+        Log.d("Service", "Service has stopped");
+        for(Coordinate coordinate : mCoordinates) {
+            Log.d("Service", coordinate.toString());
+        }
     }
 
     @Override
@@ -90,6 +108,9 @@ public class LocationService extends Service {
             return;
         }
         Log.d("Location", "getLocation: getting location information.");
+
+        final List<Coordinate> coordinates = new ArrayList<>();
+
         mFusedLocationClient.requestLocationUpdates(mLocationRequestHighAccuracy, new LocationCallback() {
                     @Override
                     public void onLocationResult(LocationResult locationResult) {
@@ -97,19 +118,17 @@ public class LocationService extends Service {
                         Log.d("Result", "onLocationResult: got location result.");
 
                         Location location = locationResult.getLastLocation();
-
                         if (location != null) {
-                            //store your locations here.
-                            Log.d("Location lat", String.valueOf(location.getLatitude()));
-                            Log.d("Location lon", String.valueOf(location.getLongitude()));
+
+                            Coordinate coordinate = new Coordinate(location.getLatitude(), location.getLongitude(), route.getId());
+                            Log.d("Location", coordinate.toString());
+                            coordinates.add(coordinate);
                         }
                     }
                 },
                 Looper.myLooper()); // Looper.myLooper tells this to repeat forever until thread is destroyed
+
+        //set the global scope list to be equal to the generated list on the method
+        mCoordinates = coordinates;
     }
-
-    private void saveUserLocation(){
-
-    }
-
 }
