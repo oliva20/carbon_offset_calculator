@@ -1,4 +1,4 @@
-package com.example.offsetcalculator.model;
+package com.example.offsetcalculator.model.emission;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

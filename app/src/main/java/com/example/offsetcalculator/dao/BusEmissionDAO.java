@@ -1,6 +1,5 @@
 package com.example.offsetcalculator.dao;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -9,7 +8,7 @@ import androidx.room.Update;
 
 import java.util.List;
 
-import com.example.offsetcalculator.model.BusEmission;
+import com.example.offsetcalculator.model.emission.BusEmission;
 
 @Dao
 public interface BusEmissionDAO {
