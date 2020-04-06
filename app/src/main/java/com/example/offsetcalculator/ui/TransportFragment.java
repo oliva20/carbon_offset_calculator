@@ -16,8 +16,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import com.example.offsetcalculator.R;
-import com.example.offsetcalculator.model.route.Coordinate;
-import com.example.offsetcalculator.model.route.Route;
 import com.example.offsetcalculator.rep.AirEmissionRepository;
 import com.example.offsetcalculator.rep.BusEmissionRepository;
 import com.example.offsetcalculator.rep.CarEmissionRepository;
@@ -25,9 +23,6 @@ import com.example.offsetcalculator.rep.RouteRepository;
 import com.example.offsetcalculator.services.LocationService;
 
 import org.osmdroid.views.MapView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TransportFragment extends Fragment implements View.OnClickListener {
     MapView map = null;
@@ -67,6 +62,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
                 getActivity().startService(new Intent(getActivity(),LocationService.class));
                 break;
             case R.id.stop_tracking:
+                Log.d("@@@ Button", "Stop button pressed");
                 getActivity().stopService(new Intent(getActivity(),LocationService.class));
                 break;
         }

@@ -17,6 +17,7 @@ import java.util.List;
 public class RouteRepository {
     private RouteDAO mRouteDao;
     private CoordinateDAO mCoodinateDao;
+    private List<Route> mAllRoutes;
 
     public RouteRepository(Application application){
         AppDatabase db = Room.databaseBuilder(application, AppDatabase.class, "thinkarbon-db")
@@ -24,6 +25,7 @@ public class RouteRepository {
                 .build();
         mRouteDao = db.getRouteDAO();
         mCoodinateDao = db.getCoordinateDAO();
+        mAllRoutes = mRouteDao.getAllRoutes();
     }
 
     public void insert(Route route, List<Coordinate> coordinates) {
@@ -47,6 +49,19 @@ public class RouteRepository {
         mRouteDao.delete(route);
     }
 
+    public Route getLastInsertedRoute(){
+        if(mAllRoutes != null) {
+            if (!mAllRoutes.isEmpty()){
+                return mAllRoutes.get(mAllRoutes.size() - 1);
+            } else {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
+    }
+
     public Route getRouteById(Integer id) {
        return mRouteDao.getRouteById(id);
     }
@@ -68,9 +83,8 @@ public class RouteRepository {
         for(int i=0; i < coordinates.size(); i++){
 
             if(i+1 != coordinates.size()){ //if we are not dealing with last the coordinate of the array
-
                 Coordinate cord = coordinates.get(i);
-                Location loc1 = new Location("Point A");
+                Location loc1 = new Location("Point A"); //we must translate the coordinate object to location object so that it can be used in fused location client
                 loc1.setLatitude(cord.getLatitude());
                 loc1.setLongitude(cord.getLongitude());
 
@@ -84,6 +98,14 @@ public class RouteRepository {
         }
 
         return (double) total;
+    }
+
+    public Integer generateId(){
+        if(getLastInsertedRoute() != null){
+            return getLastInsertedRoute().getId() + 1;
+        } else {
+            return  1;
+        }
     }
 
 }

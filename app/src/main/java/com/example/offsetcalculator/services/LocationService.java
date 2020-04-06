@@ -50,8 +50,7 @@ public class LocationService extends Service {
         super.onCreate();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         routeRepository = new RouteRepository(getApplication());
-        //TODO: Need to figure out the id side of routes. Maybe create a method in the rep to generate an id. This method gets the idea from the previous route and increments it.
-        route = new Route(998); //initialize a route here because it needs be initialized before the coordinates
+        route = new Route(routeRepository.generateId()); //initialize a route here because it needs be initialized before the coordinates this method increments the id
 
         if (Build.VERSION.SDK_INT >= 26) { // android demands that api levels above 26 require that the user is notified with the service.
             String CHANNEL_ID = "my_channel_01";
@@ -71,6 +70,7 @@ public class LocationService extends Service {
 
     }
 
+    //TODO is this method called when the user cancels the service?
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -79,6 +79,7 @@ public class LocationService extends Service {
         Log.d("Service", "Service has stopped");
         for(Coordinate coordinate : mCoordinates) {
             Log.d("Service", coordinate.toString());
+            Log.d("Route ID", String.valueOf(route.getId()));
         }
     }
 
@@ -119,7 +120,6 @@ public class LocationService extends Service {
 
                         Location location = locationResult.getLastLocation();
                         if (location != null) {
-
                             Coordinate coordinate = new Coordinate(location.getLatitude(), location.getLongitude(), route.getId());
                             Log.d("Location", coordinate.toString());
                             coordinates.add(coordinate);

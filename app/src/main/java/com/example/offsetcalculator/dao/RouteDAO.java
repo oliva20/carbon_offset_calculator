@@ -9,6 +9,8 @@ import androidx.room.Update;
 import com.example.offsetcalculator.model.route.Coordinate;
 import com.example.offsetcalculator.model.route.Route;
 
+import java.util.List;
+
 @Dao
 public interface RouteDAO {
     @Insert
@@ -29,4 +31,6 @@ public interface RouteDAO {
     @Query("SELECT * FROM route WHERE id=:id")
     Route getRouteById(Integer id);
 
+    @Query("SELECT * FROM route")
+    List<Route> getAllRoutes();
 }
