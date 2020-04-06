@@ -6,7 +6,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.offsetcalculator.model.AirEmission;
+import com.example.offsetcalculator.model.emission.AirEmission;
 
 import java.util.List;
 
