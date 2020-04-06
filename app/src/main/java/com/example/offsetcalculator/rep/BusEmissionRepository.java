@@ -2,12 +2,11 @@ package com.example.offsetcalculator.rep;
 
 import android.app.Application;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 
 import com.example.offsetcalculator.dao.BusEmissionDAO;
 import com.example.offsetcalculator.db.AppDatabase;
-import com.example.offsetcalculator.model.BusEmission;
+import com.example.offsetcalculator.model.emission.BusEmission;
 
 import java.util.List;
 

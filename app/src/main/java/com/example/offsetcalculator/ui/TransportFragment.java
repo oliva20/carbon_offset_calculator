@@ -19,6 +19,7 @@ import com.example.offsetcalculator.R;
 import com.example.offsetcalculator.rep.AirEmissionRepository;
 import com.example.offsetcalculator.rep.BusEmissionRepository;
 import com.example.offsetcalculator.rep.CarEmissionRepository;
+import com.example.offsetcalculator.rep.RouteRepository;
 import com.example.offsetcalculator.services.LocationService;
 
 import org.osmdroid.views.MapView;
@@ -28,6 +29,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
     CarEmissionRepository carRep;
     BusEmissionRepository busRep;
     AirEmissionRepository airRep;
+    RouteRepository routeRep;
     Button btnInsert;
     Button btnDelete;
     private Activity activity = getActivity();
@@ -55,13 +57,17 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
         switch (v.getId()){
             case R.id.start_tracking:
                 Log.d("Button", "Button pressed to start the service");
-                //@@@ This varies between API level. Only use this with 25 or uinder
+                //TODO: add checks for api differences here.
+                //@@@ This varies between API level. Only use this with 25 or under
                 getActivity().startService(new Intent(getActivity(),LocationService.class));
                 break;
             case R.id.stop_tracking:
+                Log.d("@@@ Button", "Stop button pressed");
+                getActivity().stopService(new Intent(getActivity(),LocationService.class));
                 break;
         }
     }
+
 
     //should dismiss keyboard when hitting a button
     public void dismissKeyboard() {

@@ -6,7 +6,7 @@ import androidx.room.Room;
 
 import com.example.offsetcalculator.dao.CarEmissionDAO;
 import com.example.offsetcalculator.db.AppDatabase;
-import com.example.offsetcalculator.model.CarEmission;
+import com.example.offsetcalculator.model.emission.CarEmission;
 
 import java.util.List;
 

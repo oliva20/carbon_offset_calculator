@@ -2,8 +2,8 @@ package com.example.offsetcalculator;
 
 import org.junit.Test;
 
-import com.example.offsetcalculator.model.BusEmission;
-import com.example.offsetcalculator.model.CarEmission;
+import com.example.offsetcalculator.model.emission.BusEmission;
+import com.example.offsetcalculator.model.emission.CarEmission;
 
 import static junit.framework.TestCase.assertNotNull;
 

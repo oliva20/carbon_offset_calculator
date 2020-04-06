@@ -2,6 +2,7 @@ package com.example.offsetcalculator.ui;
 
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +13,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.offsetcalculator.R;
-import com.example.offsetcalculator.model.CarEmission;
+import com.example.offsetcalculator.model.route.Coordinate;
 import com.example.offsetcalculator.rep.AirEmissionRepository;
 import com.example.offsetcalculator.rep.BusEmissionRepository;
 import com.example.offsetcalculator.rep.CarEmissionRepository;
+import com.example.offsetcalculator.rep.RouteRepository;
+
+import java.util.List;
 
 public class MainScreenFragment extends Fragment {
     CarEmissionRepository carRep;
     BusEmissionRepository busRep;
     AirEmissionRepository airRep;
+    RouteRepository routeRep;
     TextView emissionsNumber;
     TextView numOfEmiss;
 
@@ -28,10 +33,12 @@ public class MainScreenFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getActivity().setTitle(R.string.main_screen_title);
+
         //Since it's a fragment we are dealing with we need to get the activity in order to get the application
         carRep = new CarEmissionRepository(getActivity().getApplication());
         busRep = new BusEmissionRepository(getActivity().getApplication());
         airRep = new AirEmissionRepository(getActivity().getApplication());
+        routeRep = new RouteRepository(getActivity().getApplication());
 
         return inflater.inflate(R.layout.fragment_main_screen, container, false);
     }
@@ -57,8 +64,14 @@ public class MainScreenFragment extends Fragment {
         emissionsNumber.setText(Html.fromHtml(msgCo2));
         numOfEmiss.setText(Html.fromHtml(msgEmiss));
 
+        //TODO use routeRep to display the current emissions.
+
         try {
-            Double num = carRep.getLastInsertedCarEmission().totalEmissionToTons();
+            // get last coordinates
+            List<Coordinate> coordinates = routeRep.getCoordinatesFromRoute(routeRep.getLastInsertedRoute());
+            Double num = routeRep.calculateDistance(coordinates);
+            Log.d("@@@ NUMBER ", String.valueOf(num));
+            //            Double num = carRep.getLastInsertedCarEmission().totalEmissionToTons();
             Integer numOfEmissionsRegistered = carRep.getAllCarEmissions().size();
             if(num!=null){
                 msgCo2 = "<b>" + num + "</b>" + " Tons CO2e";
