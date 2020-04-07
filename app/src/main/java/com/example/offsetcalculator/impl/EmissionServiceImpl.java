@@ -13,14 +13,21 @@ import com.example.offsetcalculator.rep.BusEmissionRepository;
 import com.example.offsetcalculator.rep.CarEmissionRepository;
 import com.example.offsetcalculator.rep.RouteRepository;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-
+/*
+    To convert a pound measurement to a ton measurement, divide the weight by the conversion ratio. One ton is equal to 2,000 pounds, so use this simple formula to convert:
+    tons = pounds ÷ 2,000
+    source: https://www.inchcalculator.com/convert/pound-to-ton/
+ */
 public class EmissionServiceImpl implements EmissionService {
 
+    private static final Double POUNDS_TO_TONS = 2000.0;
     private CarEmissionRepository mCarRep;
     private BusEmissionRepository mBusRep;
     private AirEmissionRepository mAirRep;
+    private RouteRepository mRouteRep;
 
     private List<AirEmission> airEmissions;
     private List<BusEmission> busEmissions;
@@ -32,6 +39,7 @@ public class EmissionServiceImpl implements EmissionService {
         mAirRep = new AirEmissionRepository(application);
         mBusRep = new BusEmissionRepository(application);
         mCarRep = new CarEmissionRepository(application);
+        mRouteRep = new RouteRepository(application);
 
         airEmissions = mAirRep.getAllAirEmissions();
         busEmissions = mBusRep.getAllBusEmissions();
@@ -43,7 +51,8 @@ public class EmissionServiceImpl implements EmissionService {
     @Override
     public Double getTotalEmissions() {
 
-        Double total = 0.0;
+        Double total = 0.0; //total in pounds NOT TONS
+        DecimalFormat df = new DecimalFormat("##.##");
 
         if(!airEmissions.isEmpty()) {
             for (Emission emission : airEmissions) {
@@ -60,11 +69,13 @@ public class EmissionServiceImpl implements EmissionService {
         if(!carEmissions.isEmpty()) {
             for (Emission emission : carEmissions) {
                 total += emission.getTotal();
+
             }
         }
 
+        total = total / POUNDS_TO_TONS;
 
-        return total;
+        return Double.valueOf(df.format(total));
     }
 
     @Override
@@ -88,5 +99,13 @@ public class EmissionServiceImpl implements EmissionService {
     @Override
     public Integer getNumRegisteredEmissions() {
         return numOfEmissions;
+    }
+
+    @Override
+    public void deleteAllEmissions() {
+        mBusRep.deleteAllEmissions();
+        mCarRep.deleteAllEmissions();
+        mAirRep.deleteAllEmissions();
+        mRouteRep.deleteAll();
     }
 }

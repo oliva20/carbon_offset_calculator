@@ -6,4 +6,5 @@ public interface EmissionService {
     Double getAvgEmissions();
     void insertHomeEmission();
     void insertDietEmission();
+    void deleteAllEmissions();
 }

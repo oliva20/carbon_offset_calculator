@@ -49,6 +49,10 @@ public class RouteRepository {
         mRouteDao.delete(route);
     }
 
+    public void deleteAll() {
+        mRouteDao.deleteAllRoutes();
+    }
+
     public Route getLastInsertedRoute(){
         if(mAllRoutes != null) {
             if (!mAllRoutes.isEmpty()){
@@ -96,8 +100,7 @@ public class RouteRepository {
 
             }
         }
-
-        return (double) total;
+        return Math.rint(total);
     }
 
     public Integer generateId(){
@@ -107,5 +110,6 @@ public class RouteRepository {
             return  1;
         }
     }
+
 
 }

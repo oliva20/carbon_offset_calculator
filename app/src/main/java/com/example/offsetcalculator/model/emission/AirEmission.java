@@ -72,6 +72,13 @@ public class AirEmission implements Emission {
 
     public void setGramToPound(Double gramToPound) { this.gramToPound = gramToPound; }
 
+    public static AirEmission[] populateData() {
+        return new AirEmission[] {
+                new AirEmission(12.2),
+                new AirEmission(32.2)
+        };
+    }
+
     @Override
     public String toString() {
         return "AirEmission{" +

@@ -104,6 +104,14 @@ public class BusEmission implements Emission {
         this.otherEmissions = otherEmissions;
     }
 
+    public static BusEmission[] populateData() {
+        return new BusEmission[] {
+                new BusEmission(12.2),
+                new BusEmission(21.2),
+                new BusEmission(64.2)
+        };
+    }
+
     @Override
     public String toString() {
         return "BusEmission{" +

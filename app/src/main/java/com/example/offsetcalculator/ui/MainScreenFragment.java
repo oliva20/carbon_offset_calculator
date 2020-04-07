@@ -59,6 +59,7 @@ public class MainScreenFragment extends Fragment {
         numOfEmiss.setText(Html.fromHtml(msgEmiss));
 
         try {
+            //get the emissions
             Double num = emissionService.getTotalEmissions();
 
             Log.d("@@@ NUMBER ", String.valueOf(num));

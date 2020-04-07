@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
+import com.example.offsetcalculator.BuildConfig;
 import com.example.offsetcalculator.R;
 import com.example.offsetcalculator.rep.AirEmissionRepository;
 import com.example.offsetcalculator.rep.BusEmissionRepository;
@@ -22,6 +23,7 @@ import com.example.offsetcalculator.rep.CarEmissionRepository;
 import com.example.offsetcalculator.rep.RouteRepository;
 import com.example.offsetcalculator.services.LocationService;
 
+import org.osmdroid.config.Configuration;
 import org.osmdroid.views.MapView;
 
 public class TransportFragment extends Fragment implements View.OnClickListener {
@@ -41,6 +43,8 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
         busRep = new BusEmissionRepository(getActivity().getApplication());
         airRep = new AirEmissionRepository(getActivity().getApplication());
 
+        Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
+
         View view = inflater.inflate(R.layout.fragment_transport, container, false);
 
         //click listeners
@@ -49,15 +53,20 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
         btnInsert.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
 
+        //map
+        map.setMultiTouchControls(true);
+        map.getController().setZoom(16.0);
+
         return view;
     }
 
+    //add a boolean that checks if the button has been clicked.
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.start_tracking:
                 Log.d("Button", "Button pressed to start the service");
-                //TODO: add checks for api differences here.
+                //TODO: add checks for device api differences here.
                 //@@@ This varies between API level. Only use this with 25 or under
                 getActivity().startService(new Intent(getActivity(),LocationService.class));
                 break;

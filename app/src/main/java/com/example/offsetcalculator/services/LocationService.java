@@ -18,8 +18,10 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
+import com.example.offsetcalculator.model.emission.CarEmission;
 import com.example.offsetcalculator.model.route.Coordinate;
 import com.example.offsetcalculator.model.route.Route;
+import com.example.offsetcalculator.rep.CarEmissionRepository;
 import com.example.offsetcalculator.rep.RouteRepository;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -34,8 +36,10 @@ import java.util.List;
 public class LocationService extends Service {
 
     private FusedLocationProviderClient mFusedLocationClient;
-    private final static long UPDATE_INTERVAL = (60 * 1000) * 5;  /* UPDATE EVERY 5 MINS */
+    //TODO change it back to five
+    private final static long UPDATE_INTERVAL = (60 * 1000) * 1;  /* UPDATE EVERY 5 MINS */
     private final static long FASTEST_INTERVAL = 2000; /* 2 sec */
+    private final static double MILES_CONVERSATION = 0.00062137;
     private Route route;
     private RouteRepository routeRepository;
     private List<Coordinate> mCoordinates;
@@ -82,6 +86,16 @@ public class LocationService extends Service {
             Log.d("Service", coordinate.toString());
             Log.d("Route ID", String.valueOf(route.getId()));
         }
+
+        //create some emissions to test the service
+        Double distanceResult  = routeRepository.calculateDistance(mCoordinates); //distance is on meters and needs to be converted to miles. m * 0.00062137 to get miles
+        Double distance = distanceResult * MILES_CONVERSATION;
+
+        Log.d("@@@ Distance", distance.toString());
+
+        CarEmissionRepository carEmissionRepository = new CarEmissionRepository(getApplication());
+        carEmissionRepository.insert(new CarEmission(distance, 2.0));
+
     }
 
     @Override
