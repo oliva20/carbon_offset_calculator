@@ -28,6 +28,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class LocationService extends Service {
@@ -50,7 +51,7 @@ public class LocationService extends Service {
         super.onCreate();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         routeRepository = new RouteRepository(getApplication());
-        route = new Route(routeRepository.generateId()); //initialize a route here because it needs be initialized before the coordinates this method increments the id
+        route = new Route(routeRepository.generateId(), new Date().toString()); //initialize a route here because it needs be initialized before the coordinates this method increments the id
 
         if (Build.VERSION.SDK_INT >= 26) { // android demands that api levels above 26 require that the user is notified with the service.
             String CHANNEL_ID = "my_channel_01";

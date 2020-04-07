@@ -40,4 +40,8 @@ public class AirEmissionRepository {
     public void deleteAllEmissions(){
         mAirEmissionDao.deleteAllAirEmissions();
     }
+
+    public Integer getNumOfEmissions(){
+        return mAllAirEmissions.size();
+    }
 }

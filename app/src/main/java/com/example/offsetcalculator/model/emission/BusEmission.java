@@ -28,7 +28,10 @@ public class BusEmission implements Emission {
     public BusEmission(Double milesPerYear) {
         this.milesPerYear = milesPerYear;
         //calculate method should be called everytime a emission object is initialized
-        calculateEmission();
+        DecimalFormat df = new DecimalFormat("##.##");
+        Double total = ((milesPerYear * publicTranspDirectEmiss) + (publicTranspDirectEmiss * publicTranspIndirEmiss)) * gramToPound;
+        String result = df.format(total);
+        emissionTotal = Double.valueOf(result);
     }
 
     @Override
@@ -41,15 +44,7 @@ public class BusEmission implements Emission {
     }
 
     @Override
-    public void calculateEmission() {
-        DecimalFormat df = new DecimalFormat("##.##");
-        Double total = ((milesPerYear * publicTranspDirectEmiss) + (publicTranspDirectEmiss * publicTranspIndirEmiss)) * gramToPound;
-        String result = df.format(total);
-        emissionTotal = Double.valueOf(result);
-    }
-
-    @Override
-    public Double getTotalEmission() {
+    public Double getTotal() {
         return emissionTotal;
     }
 

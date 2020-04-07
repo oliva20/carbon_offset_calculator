@@ -11,8 +11,10 @@ import com.example.offsetcalculator.model.emission.CarEmission;
 import java.util.List;
 
 public class CarEmissionRepository {
+
     private CarEmissionDAO mCarEmissionDao;
     private List<CarEmission> mAllCarEmissions;
+    private Integer numOfEmissions;
 
     public CarEmissionRepository(Application application) {
         AppDatabase db = Room.databaseBuilder(application, AppDatabase.class, "thinkarbon-db")
@@ -21,7 +23,7 @@ public class CarEmissionRepository {
         mCarEmissionDao = db.getCarEmissionDAO();
         mAllCarEmissions = mCarEmissionDao.getCarEmissions();
     }
-    //must be a public method
+
     public List<CarEmission> getAllCarEmissions() {
         return mAllCarEmissions;
     }
@@ -39,6 +41,10 @@ public class CarEmissionRepository {
 
     public void deleteAllEmissions(){
         mCarEmissionDao.deleteAllCarEmissions();
+    }
+
+    public Integer getNumOfEmissions(){
+        return mAllCarEmissions.size();
     }
 
 }

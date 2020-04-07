@@ -24,11 +24,15 @@ public class CarEmission implements Emission{
     private Double carbonEmittedPerGallon = 19.4; // according to carbonglobe.com
     private Double otherEmissions = 1.05; // according to carbonglobe.com
 
-
+    /** Calculates the Co2 emissions in pounds per week.
+     */
     public CarEmission(Double milesDrivenWeekly, Double vehicleFuelEfficiency) {
         this.milesDrivenWeekly = milesDrivenWeekly;
         this.vehicleFuelEfficiency = vehicleFuelEfficiency;
-        calculateEmission();
+        DecimalFormat df = new DecimalFormat("##.##");
+        Double total = ((milesDrivenWeekly * weeksInYear) / vehicleFuelEfficiency) * carbonEmittedPerGallon * otherEmissions;
+        String result = df.format(total);
+        emissionTotal = Double.valueOf(result);
     }
 
     @Override
@@ -44,19 +48,10 @@ public class CarEmission implements Emission{
     }
 
     @Override
-    public Double getTotalEmission() {
+    public Double getTotal() {
         return emissionTotal;
     }
 
-    /** Calculates the Co2 emissions in pounds per week.
-     */
-    @Override
-    public void calculateEmission() {
-        DecimalFormat df = new DecimalFormat("##.##");
-        Double total = ((milesDrivenWeekly * weeksInYear) / vehicleFuelEfficiency) * carbonEmittedPerGallon * otherEmissions;
-        String result = df.format(total);
-        emissionTotal = Double.valueOf(result);
-    }
 
     @Override
     public Integer getId() {
