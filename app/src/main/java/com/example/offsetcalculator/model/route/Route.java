@@ -7,24 +7,26 @@ import androidx.room.TypeConverters;
 
 import com.example.offsetcalculator.converters.TimestampConverter;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /** Represents and calculates the route from user coordinates.
  * @author Andre
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  *
  * ROOM does not store lists, refer to this stack overflow problem -> https://stackoverflow.com/questions/44736604/how-to-store-objects-in-android-room
  */
-//TODO: This needs testing as well as the DAO
 @Entity
 public class Route {
     @PrimaryKey
     public Integer id;
-    @TypeConverters({TimestampConverter.class})
-    private Long timestamp;
 
-    public Route(Integer id){
+    private String timestamp; //timestamp must string otherwise room won't persist it
+
+    public Route(Integer id, String timestamp){
+        this.timestamp = timestamp.toString();
         this.id = id;
     }
 
@@ -36,11 +38,11 @@ public class Route {
         this.id = id;
     }
 
-    public Long getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Long timestamp) {
-        this.timestamp = timestamp;
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp.toString();
     }
 }

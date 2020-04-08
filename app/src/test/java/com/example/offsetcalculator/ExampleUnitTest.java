@@ -17,8 +17,7 @@ public class ExampleUnitTest {
     public void testDto(){
         System.out.println("############### Car ###################");
         CarEmission carEmission = new CarEmission(20.0,52.0);
-        carEmission.calculateEmission();
-        Double result = carEmission.getTotalEmission();
+        Double result = carEmission.getTotal();
         Double resultInKilos = carEmission.totalEmissionToTons();
         System.out.println("@@@ total emissions from a car -> " + result);
         System.out.println("@@@ total emissions in kilograms from a car -> " + resultInKilos);
@@ -28,7 +27,6 @@ public class ExampleUnitTest {
         System.out.println("############### Bus ###################");
         // bus emissions test
         BusEmission busEmission = new BusEmission(131.0);
-        busEmission.calculateEmission();
         result = busEmission.getEmissionTotal();
         resultInKilos = busEmission.totalEmissionToTons();
         System.out.println("@@@ total emissions from a bus -> " + result);

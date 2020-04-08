@@ -41,4 +41,8 @@ public class BusEmissionRepository {
     public void deleteAllEmissions(){
         mBusEmissionDao.deleteAllBusEmissions();
     }
+
+    public Integer getNumOfEmissions(){
+        return mAllBusEmissions.size();
+    }
 }

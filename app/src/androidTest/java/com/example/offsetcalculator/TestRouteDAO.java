@@ -18,6 +18,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
@@ -58,8 +61,9 @@ public class TestRouteDAO {
     @Test
     public void writeRouteAndRetrieve() throws Exception {
         //create a route
-        Route r1 = new Route(1);
-        Route r2 = new Route(2);
+        Route r1 = new Route(1, new Date().toString());
+        r1.setTimestamp(new Date());
+        Route r2 = new Route(2, new Date().toString());
 
         //create coordinates for r1
         coordinateDao.insert(new Coordinate(0.1,0.2, r1.getId()));

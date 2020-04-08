@@ -24,11 +24,6 @@ public class AirEmission implements Emission {
 
     public AirEmission(Double milesPerYear) {
         this.milesPerYear = milesPerYear;
-        calculateEmission();
-    }
-
-    @Override
-    public void calculateEmission() {
         DecimalFormat df = new DecimalFormat("##.##");
         Double total = (milesPerYear * (avgEmissMile * wellToPump * indirRadiForcingFactor)) * gramToPound;
         String result = df.format(total);
@@ -36,7 +31,7 @@ public class AirEmission implements Emission {
     }
 
     @Override
-    public Double getTotalEmission() {
+    public Double getTotal() {
         return null;
     }
 
@@ -76,6 +71,13 @@ public class AirEmission implements Emission {
     public Double getGramToPound() { return gramToPound; }
 
     public void setGramToPound(Double gramToPound) { this.gramToPound = gramToPound; }
+
+    public static AirEmission[] populateData() {
+        return new AirEmission[] {
+                new AirEmission(12.2),
+                new AirEmission(32.2)
+        };
+    }
 
     @Override
     public String toString() {

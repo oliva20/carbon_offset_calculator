@@ -18,17 +18,21 @@ public class CarEmission implements Emission{
     private Integer id;
     @ColumnInfo(name = "emission_total")
     private Double emissionTotal; // co2 emissions in pounds
-    private Double milesDrivenWeekly;
+    private Double milesDrivenWeekly; // would it be ok to divide this by number of days in a week to get the emission for a day?
     private Double vehicleFuelEfficiency;
     private Double weeksInYear = 54.0;
     private Double carbonEmittedPerGallon = 19.4; // according to carbonglobe.com
     private Double otherEmissions = 1.05; // according to carbonglobe.com
 
-
+    /** Calculates the Co2 emissions in pounds per week.
+     */
     public CarEmission(Double milesDrivenWeekly, Double vehicleFuelEfficiency) {
         this.milesDrivenWeekly = milesDrivenWeekly;
         this.vehicleFuelEfficiency = vehicleFuelEfficiency;
-        calculateEmission();
+        DecimalFormat df = new DecimalFormat("##.##");
+        Double total = ((milesDrivenWeekly * weeksInYear) / vehicleFuelEfficiency) * carbonEmittedPerGallon * otherEmissions;
+        String result = df.format(total);
+        emissionTotal = Double.valueOf(result);
     }
 
     @Override
@@ -44,19 +48,10 @@ public class CarEmission implements Emission{
     }
 
     @Override
-    public Double getTotalEmission() {
+    public Double getTotal() {
         return emissionTotal;
     }
 
-    /** Calculates the Co2 emissions in pounds per week.
-     */
-    @Override
-    public void calculateEmission() {
-        DecimalFormat df = new DecimalFormat("##.##");
-        Double total = ((milesDrivenWeekly * weeksInYear) / vehicleFuelEfficiency) * carbonEmittedPerGallon * otherEmissions;
-        String result = df.format(total);
-        emissionTotal = Double.valueOf(result);
-    }
 
     @Override
     public Integer getId() {
@@ -113,6 +108,15 @@ public class CarEmission implements Emission{
 
     public void setOtherEmissions(Double otherEmissions) {
         this.otherEmissions = otherEmissions;
+    }
+
+    //used in to populate the database
+    public static CarEmission[] populateData() {
+        return new CarEmission[] {
+                new CarEmission(12.2, 6.0),
+                new CarEmission(21.2, 6.0),
+                new CarEmission(64.2, 6.0)
+        };
     }
 
     @Override
