@@ -43,6 +43,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
         busRep = new BusEmissionRepository(getActivity().getApplication());
         airRep = new AirEmissionRepository(getActivity().getApplication());
 
+        // this is for the map to work
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
 
         View view = inflater.inflate(R.layout.fragment_transport, container, false);
@@ -52,10 +53,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
         btnDelete = (Button) view.findViewById(R.id.stop_tracking);
         btnInsert.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
-
-        //map
-        map.setMultiTouchControls(true);
-        map.getController().setZoom(16.0);
 
         return view;
     }
