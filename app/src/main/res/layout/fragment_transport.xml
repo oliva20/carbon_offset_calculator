@@ -14,7 +14,7 @@
         <org.osmdroid.views.MapView
             android:id="@+id/map1"
             android:layout_width="match_parent"
-            android:layout_height="500dp" />
+            android:layout_height="550dp" />
 
         <Button
             android:id="@+id/start_tracking"
@@ -24,19 +24,6 @@
             android:layout_marginTop="5pt"
             android:background="@color/colorPrimary"
             android:text="@string/btnStartTracking"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/stop_tracking"
-            android:layout_width="209dp"
-            android:layout_height="47dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="2pt"
-            android:background="#FB0303"
-            android:text="Stop"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="25sp"

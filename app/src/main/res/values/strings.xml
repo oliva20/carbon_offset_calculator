@@ -21,6 +21,7 @@
     <!-- Buttons -->
     <string name="btnGo">Done</string>
     <string name="btnStartTracking">Start</string>
+    <string name="btnStopTracking">Stop</string>
 
 
     <!-- Spinner Energy Activity -->
