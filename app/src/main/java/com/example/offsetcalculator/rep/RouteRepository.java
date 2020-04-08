@@ -28,6 +28,10 @@ public class RouteRepository {
         mAllRoutes = mRouteDao.getAllRoutes();
     }
 
+    public List<Route> getmAllRoutes(){
+        return mAllRoutes;
+    }
+
     public void insert(Route route, List<Coordinate> coordinates) {
         if(route != null) {
             mRouteDao.insert(route); // route must be inserted first.

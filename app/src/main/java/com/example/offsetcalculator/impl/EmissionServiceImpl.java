@@ -6,6 +6,7 @@ import com.example.offsetcalculator.model.emission.AirEmission;
 import com.example.offsetcalculator.model.emission.BusEmission;
 import com.example.offsetcalculator.model.emission.CarEmission;
 import com.example.offsetcalculator.model.emission.Emission;
+import com.example.offsetcalculator.model.route.Coordinate;
 import com.example.offsetcalculator.model.route.Route;
 import com.example.offsetcalculator.model.service.EmissionService;
 import com.example.offsetcalculator.rep.AirEmissionRepository;
@@ -107,5 +108,20 @@ public class EmissionServiceImpl implements EmissionService {
         mCarRep.deleteAllEmissions();
         mAirRep.deleteAllEmissions();
         mRouteRep.deleteAll();
+    }
+
+    @Override
+    public List<Route> getAllRoutes() {
+        return mRouteRep.getmAllRoutes();
+    }
+
+    @Override
+    public List<Coordinate> getCoordinatesFromRoute(Route route) { //might change this to get coordinates from the last route
+        return mRouteRep.getCoordinatesFromRoute(route);
+    }
+
+    @Override
+    public Route getLastInsertedRoute() {
+        return mRouteRep.getLastInsertedRoute();
     }
 }
