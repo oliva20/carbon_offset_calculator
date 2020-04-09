@@ -5,10 +5,12 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
@@ -29,25 +31,36 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class LocationService extends Service {
+public class LocationService extends Service  {
 
+    // Binder given to clients
+    private final IBinder binder = new LocalBinder();
     private FusedLocationProviderClient mFusedLocationClient;
-    //TODO change it back to five
-    private final static long UPDATE_INTERVAL = (60 * 1000) * 1;  /* UPDATE EVERY 5 MINS */
+
+    //    private final static long UPDATE_INTERVAL = (60 * 1000) * 1;  /* UPDATE EVERY 5 MINS */
+    private final static long UPDATE_INTERVAL = 5000 ;  /* UPDATE EVERY 5 SECS FOR TESTING*/
     private final static long FASTEST_INTERVAL = 2000; /* 2 sec */
     private final static double MILES_CONVERSATION = 0.00062137;
     private Route route;
     private RouteRepository routeRepository;
     private List<Coordinate> mCoordinates;
+    private LocationCallback locationCallback;
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+
+    /**
+     * Class used for the client Binder.  Because we know this service always
+     * runs in the same process as its clients, we don't need to deal with IPC.
+     */
+    public class LocalBinder extends Binder {
+        public LocationService getService() {
+            // Return this instance of LocalService so clients can call public methods
+            return LocationService.this;
+        }
     }
 
     @Override
@@ -55,8 +68,8 @@ public class LocationService extends Service {
         super.onCreate();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         routeRepository = new RouteRepository(getApplication());
-        route = new Route(routeRepository.generateId(), new Date().toString()); //initialize a route here because it needs be initialized before the coordinates this method increments the id
 
+        //initialize a route here because it needs be initialized before the coordinates this method increments the id
         if (Build.VERSION.SDK_INT >= 26) { // android demands that api levels above 26 require that the user is notified with the service.
             String CHANNEL_ID = "my_channel_01";
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
@@ -75,37 +88,26 @@ public class LocationService extends Service {
 
     }
 
-    //TODO is this method called when the user cancels the service?
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //save the coords in the route
-        routeRepository.insert(route, mCoordinates);
-        Log.d("Service", "Service has stopped");
-        for(Coordinate coordinate : mCoordinates) {
-            Log.d("Service", coordinate.toString());
-            Log.d("Route ID", String.valueOf(route.getId()));
-        }
-
-        //create some emissions to test the service
-        Double distanceResult  = routeRepository.calculateDistance(mCoordinates); //distance is on meters and needs to be converted to miles. m * 0.00062137 to get miles
-        Double distance = distanceResult * MILES_CONVERSATION;
-
-        Log.d("@@@ Distance", distance.toString());
-
-        CarEmissionRepository carEmissionRepository = new CarEmissionRepository(getApplication());
-        carEmissionRepository.insert(new CarEmission(distance, 2.0));
-
+        Log.d("LocationService", "Service has been destroyed!");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("OnStartCommand", "Service has started!");
-        getLocation();
+        Log.d("LocationService", "Service has started!");
         return START_NOT_STICKY;
     }
 
-    private void getLocation() {
+    public void startLocationTracking() {
+        //create a new rooute and generate an id
+        route = new Route(routeRepository.generateId(), new Date().toString());
 
         // ---------------------------------- LocationRequest ------------------------------------
         // Create the location request to start receiving updates
@@ -127,23 +129,48 @@ public class LocationService extends Service {
 
         final List<Coordinate> coordinates = new ArrayList<>();
 
-        mFusedLocationClient.requestLocationUpdates(mLocationRequestHighAccuracy, new LocationCallback() {
+        locationCallback = new LocationCallback() {
                     @Override
                     public void onLocationResult(LocationResult locationResult) {
-
-                        Log.d("Result", "onLocationResult: got location result.");
-
                         Location location = locationResult.getLastLocation();
                         if (location != null) {
                             Coordinate coordinate = new Coordinate(location.getLatitude(), location.getLongitude(), route.getId());
-                            Log.d("Location", coordinate.toString());
-                            coordinates.add(coordinate);
+                            //if it doesn't have the coordinate then add it to the list
+                            if(!coordinates.contains(coordinate)) coordinates.add(coordinate);
+                            if(coordinates.size() != 1)
+                            {
+                                Log.d("Location", coordinates.get(coordinates.size()-1).toString());
+                            } else {
+                                Log.d("Location", coordinates.get(0).toString());
+                            }
                         }
                     }
-                },
-                Looper.myLooper()); // Looper.myLooper tells this to repeat forever until thread is destroyed
+                };
+
+        mFusedLocationClient.requestLocationUpdates(mLocationRequestHighAccuracy, locationCallback, Looper.myLooper());
 
         //set the global scope list to be equal to the generated list on the method
         mCoordinates = coordinates;
+    }
+
+    public void stopTrackingAndSave(){
+        System.out.println("LOCATION SERVICE LOGGING");
+        Log.d("NEW ROUTE", route.toString());
+
+        for(Coordinate coordinate : mCoordinates) {
+            Log.d("Got", coordinate.toString());
+        }
+
+        //create some emissions to test the service
+        Double distanceResult  = routeRepository.calculateDistance(mCoordinates); //distance is on meters and needs to be converted to miles. m * 0.00062137 to get miles
+        Double distance = distanceResult * MILES_CONVERSATION;
+        CarEmissionRepository carEmissionRepository = new CarEmissionRepository(getApplication());
+        carEmissionRepository.insert(new CarEmission(distance, 2.0));
+
+        //Stop location client from getting updates
+        mFusedLocationClient.removeLocationUpdates(locationCallback);
+
+        //save the coords in the route
+        routeRepository.insert(route, mCoordinates);
     }
 }

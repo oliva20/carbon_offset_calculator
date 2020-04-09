@@ -17,7 +17,7 @@ public class Coordinate {
     @PrimaryKey(autoGenerate = true)
     private Integer coordinateId;
     @ForeignKey(entity = Route.class,parentColumns = "id", childColumns = "parentRouteId", onDelete = CASCADE) //delete coordinate if parent route gets deleted
-    private Integer parentRouteId; //route foreign key
+    private Integer parentRouteId; //route primary key
     private Double latitude;
     private Double longitude;
 
@@ -62,8 +62,7 @@ public class Coordinate {
     @Override
     public String toString() {
         return "Coordinate{" +
-                "coordinateId=" + coordinateId +
-                ", latitude=" + latitude +
+                "latitude=" + latitude +
                 ", longitude=" + longitude +
                 '}';
     }

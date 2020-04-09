@@ -13,6 +13,7 @@ import com.example.offsetcalculator.R;
 import com.example.offsetcalculator.db.AppDatabase;
 import com.example.offsetcalculator.impl.EmissionServiceImpl;
 import com.example.offsetcalculator.model.service.EmissionService;
+import com.example.offsetcalculator.rep.RouteRepository;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 
@@ -28,9 +29,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setTitle(R.string.main_screen_title);
         bottomNavigationView = findViewById(R.id.navigation_bar);
 
-        // clear the database
+        // TODO clear the database
         EmissionService emissionService = new EmissionServiceImpl(getApplication());
         emissionService.deleteAllEmissions();
+
+        RouteRepository routeRepository = new RouteRepository(getApplication());
+        routeRepository.deleteAll();
 
         //start the app in main screen
         if(savedInstanceState == null) {

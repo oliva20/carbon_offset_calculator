@@ -1,6 +1,7 @@
 package com.example.offsetcalculator.impl;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.example.offsetcalculator.model.emission.AirEmission;
 import com.example.offsetcalculator.model.emission.BusEmission;
@@ -110,18 +111,4 @@ public class EmissionServiceImpl implements EmissionService {
         mRouteRep.deleteAll();
     }
 
-    @Override
-    public List<Route> getAllRoutes() {
-        return mRouteRep.getmAllRoutes();
-    }
-
-    @Override
-    public List<Coordinate> getCoordinatesFromRoute(Route route) { //might change this to get coordinates from the last route
-        return mRouteRep.getCoordinatesFromRoute(route);
-    }
-
-    @Override
-    public Route getLastInsertedRoute() {
-        return mRouteRep.getLastInsertedRoute();
-    }
 }

@@ -14,14 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.offsetcalculator.R;
 import com.example.offsetcalculator.impl.EmissionServiceImpl;
-import com.example.offsetcalculator.model.route.Coordinate;
 import com.example.offsetcalculator.model.service.EmissionService;
-import com.example.offsetcalculator.rep.AirEmissionRepository;
-import com.example.offsetcalculator.rep.BusEmissionRepository;
-import com.example.offsetcalculator.rep.CarEmissionRepository;
-import com.example.offsetcalculator.rep.RouteRepository;
-
-import java.util.List;
 
 public class MainScreenFragment extends Fragment {
     private EmissionService emissionService;

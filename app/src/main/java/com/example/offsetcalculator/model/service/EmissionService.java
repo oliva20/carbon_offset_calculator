@@ -12,7 +12,4 @@ public interface EmissionService {
     void insertHomeEmission();
     void insertDietEmission();
     void deleteAllEmissions();
-    List<Route> getAllRoutes();
-    List<Coordinate> getCoordinatesFromRoute(Route route);
-    Route getLastInsertedRoute();
 }
