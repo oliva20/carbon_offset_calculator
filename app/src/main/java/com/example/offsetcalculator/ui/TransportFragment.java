@@ -9,6 +9,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -28,7 +30,10 @@ import com.example.offsetcalculator.services.LocationService;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.Polyline;
+import org.osmdroid.views.overlay.advancedpolyline.MonochromaticPaintList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +42,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
 
     private Boolean clicked = false;
     private MapView map;
-    private EmissionService emissionService;
     private RouteRepository routeRepository;
     private Button btn;
 
@@ -49,13 +53,11 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // this is for the map to work
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
-        emissionService = new EmissionServiceImpl(getActivity().getApplication());
         routeRepository = new RouteRepository(getActivity().getApplication());
         View view = inflater.inflate(R.layout.fragment_transport, container, false);
 
-
         //click listeners
-        btn = (Button) view.findViewById(R.id.start_tracking);
+        btn = view.findViewById(R.id.start_tracking);
         btn.setOnClickListener(this);
 
         return view;
@@ -74,7 +76,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
         // Bind to LocalService
         Intent intent = new Intent(this.getActivity(), LocationService.class);
         getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
-
     }
 
     @Override
@@ -129,8 +130,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
         }
     };
 
-
-
     private void changeButtonStyle(Boolean isClicked) {
         if(isClicked) {
             btn.setText(R.string.btnStopTracking);
@@ -145,26 +144,56 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
         try {
             map = activity.findViewById(R.id.map1);
             map.setMultiTouchControls(true);
-            map.getController().setZoom(10.0);
-            map.getController().setCenter(new GeoPoint(51.05,-0.72));
+            map.getController().setZoom(15.0);
+
+            if(mService.getCurrentLocation() != null){
+                map.getController().setCenter(mService.getCurrentLocation());
+            } else {
+                map.getController().setCenter(new GeoPoint(50.90, -1.4015));
+            }
+
         } catch (Exception e){
             Log.d("Exception", e.toString());
         }
     }
 
     private void drawRoute() {
+
+        map.getOverlays().clear();
+        map.getOverlayManager().clear();
+
         Polyline line = new Polyline();
+        Paint paintBorder = new Paint();
+        //represents a layer of markers
+        ItemizedIconOverlay<OverlayItem> items = new ItemizedIconOverlay<OverlayItem>(getActivity(), new ArrayList<OverlayItem>(), null);
+
+        paintBorder.setStrokeWidth(5);
+        paintBorder.setStyle(Paint.Style.FILL_AND_STROKE);
+        paintBorder.setColor(Color.BLUE);
+        paintBorder.setStrokeCap(Paint.Cap.ROUND);
+        paintBorder.setAntiAlias(true);
+
+        line.getOutlinePaintLists().add(new MonochromaticPaintList(paintBorder));
+
         List<GeoPoint> geoPoints = new ArrayList<>();
         List<Coordinate> coordinates = routeRepository.getCoordinatesFromRoute(routeRepository.getLastInsertedRoute().getId());
 
+
+        //this is getting to many coordinates that are duplicated.
         for(Coordinate coordinate : coordinates) {
             Log.d("Loaded coordinate", coordinate.toString());
             // transform coordinates into geo points. Lat/Lon
             geoPoints.add(new GeoPoint(coordinate.getLatitude(), coordinate.getLongitude()));
+            if(coordinates.size() != 1){
+                items.addItem(new OverlayItem("Point", "Coordinate", new GeoPoint(coordinate.getLatitude(), coordinate.getLongitude())));
+            }
         }
 
         line.setPoints(geoPoints);
+
         map.getOverlayManager().add(line);
+        map.getOverlays().add(items);
+
     }
 
 }

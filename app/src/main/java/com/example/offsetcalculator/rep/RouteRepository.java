@@ -37,7 +37,7 @@ public class RouteRepository {
     public void insert(Route route, List<Coordinate> coordinates) {
         if(route != null) {
             mRouteDao.insert(route); // route must be inserted first.
-            Log.d("@@@ RouteRep", "Inserted route" + route.toString());
+            Log.d("@@@ RouteRep", "Inserted route " + route.toString());
 
             //loop through the coordinates and insert them with the route's id
             for (int i = 0; i < coordinates.size(); i++) {
@@ -60,6 +60,7 @@ public class RouteRepository {
 
     public void deleteAll() {
         mRouteDao.deleteAllRoutes();
+        mCoodinateDao.deleteAll();
     }
 
 
@@ -78,7 +79,7 @@ public class RouteRepository {
     }
 
     public List<Coordinate> getCoordinatesFromRoute(int routeId) {
-            Log.d("RouteRep", "Getting coorinates from route with id =" + routeId);
+            Log.d("RouteRep", "Getting coorinates from route with id = " + routeId);
             return  mCoodinateDao.findCoordinatesForRoute(routeId);
     }
 

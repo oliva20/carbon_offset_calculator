@@ -32,6 +32,8 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 
+import org.osmdroid.util.GeoPoint;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,15 +44,17 @@ public class LocationService extends Service  {
     private final IBinder binder = new LocalBinder();
     private FusedLocationProviderClient mFusedLocationClient;
 
-    //    private final static long UPDATE_INTERVAL = (60 * 1000) * 1;  /* UPDATE EVERY 5 MINS */
-    private final static long UPDATE_INTERVAL = 5000 ;  /* UPDATE EVERY 5 SECS FOR TESTING*/
+//    private final static long UPDATE_INTERVAL = (60 * 1000) * 5;  /* UPDATE EVERY 5 MINS */
+    private final static long UPDATE_INTERVAL = 10 * 1000;  /* UPDATE EVERY 10 SECS TESTING*/
     private final static long FASTEST_INTERVAL = 2000; /* 2 sec */
     private final static double MILES_CONVERSATION = 0.00062137;
+
     private Route route;
     private RouteRepository routeRepository;
     private List<Coordinate> mCoordinates;
     private LocationCallback locationCallback;
 
+    private GeoPoint currentLocation;
 
     /**
      * Class used for the client Binder.  Because we know this service always
@@ -105,6 +109,32 @@ public class LocationService extends Service  {
         return START_NOT_STICKY;
     }
 
+    public GeoPoint getCurrentLocation() {
+        LocationRequest mLocationRequestHighAccuracy = new LocationRequest();
+        mLocationRequestHighAccuracy.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequestHighAccuracy.setInterval(UPDATE_INTERVAL);
+        mLocationRequestHighAccuracy.setFastestInterval(FASTEST_INTERVAL);
+
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d("Location", "getLocation: stopping the location service.");
+            stopSelf();
+            return null;
+        }
+
+        locationCallback = new LocationCallback(){
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                currentLocation = new GeoPoint(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
+            }
+        };
+
+        mFusedLocationClient.requestLocationUpdates(mLocationRequestHighAccuracy, locationCallback, Looper.myLooper());
+
+        return currentLocation;
+    }
+
     public void startLocationTracking() {
         //create a new rooute and generate an id
         route = new Route(routeRepository.generateId(), new Date().toString());
@@ -134,15 +164,13 @@ public class LocationService extends Service  {
                     public void onLocationResult(LocationResult locationResult) {
                         Location location = locationResult.getLastLocation();
                         if (location != null) {
+
                             Coordinate coordinate = new Coordinate(location.getLatitude(), location.getLongitude(), route.getId());
-                            //if it doesn't have the coordinate then add it to the list
-                            if(!coordinates.contains(coordinate)) coordinates.add(coordinate);
-                            if(coordinates.size() != 1)
-                            {
-                                Log.d("Location", coordinates.get(coordinates.size()-1).toString());
-                            } else {
-                                Log.d("Location", coordinates.get(0).toString());
+                            if(!coordinates.contains(coordinate)) {
+                                coordinates.add(coordinate);
+                                Log.d("LocationService", coordinate.toString());
                             }
+
                         }
                     }
                 };
@@ -172,5 +200,8 @@ public class LocationService extends Service  {
 
         //save the coords in the route
         routeRepository.insert(route, mCoordinates);
+
+        //Always clear the coordinate list because the service does not get killed!
+        mCoordinates.clear();
     }
 }
