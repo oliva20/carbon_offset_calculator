@@ -2,15 +2,18 @@ package com.example.offsetcalculator.ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -21,9 +24,7 @@ import android.widget.Button;
 
 import com.example.offsetcalculator.BuildConfig;
 import com.example.offsetcalculator.R;
-import com.example.offsetcalculator.impl.EmissionServiceImpl;
 import com.example.offsetcalculator.model.route.Coordinate;
-import com.example.offsetcalculator.model.service.EmissionService;
 import com.example.offsetcalculator.rep.RouteRepository;
 import com.example.offsetcalculator.services.LocationService;
 
@@ -31,6 +32,7 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.advancedpolyline.MonochromaticPaintList;
@@ -38,15 +40,38 @@ import org.osmdroid.views.overlay.advancedpolyline.MonochromaticPaintList;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransportFragment extends Fragment implements View.OnClickListener {
+public class TransportFragment extends Fragment implements View.OnClickListener, LocationListener {
 
     private Boolean clicked = false;
     private MapView map;
     private RouteRepository routeRepository;
     private Button btn;
+    private Marker currentLocationMarker; //marker responsible for the current location in the map
+    private ItemizedIconOverlay<OverlayItem> items;
+    private Polyline line;
+    private GeoPoint currentLocation;
 
-    LocationService mService;
-    boolean mBound = false;
+
+    private LocationService mService;
+    private boolean mBound = false;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //get the current user's location before starting anything so that the map knows where to center
+        LocationManager locationManager=(LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        try {
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,this);
+            if( location != null ) {
+                currentLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
+                Log.d("Current location", currentLocation.toString());
+            }
+        } catch (SecurityException e) {
+            System.out.println(e.toString());
+        }
+    }
 
     @Nullable
     @Override
@@ -67,15 +92,15 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupMap(getActivity());
+        setupMap();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        // Bind to LocalService
         Intent intent = new Intent(this.getActivity(), LocationService.class);
         getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        Log.d("ON START", "trasnport fragment" );
     }
 
     @Override
@@ -100,7 +125,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
 
                 } else {
                     Log.d("@@@ Button", "Location service has started");
-//                    getActivity().startService(new Intent(getActivity(),LocationService.class));
 
                     mService.startLocationTracking();
 
@@ -111,6 +135,42 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
         }
 
      }
+
+     //this is used to center the map based on user location
+    @Override
+    public void onLocationChanged(Location location) {
+        //this does not work
+        //TODO FIX THIS: It is calling a null pointer error.
+        // THE PROBLEM: when you go to another fragment it keeps trying get the map when it doens't exist because we are not in the transport fragment.
+        // TODO: We need to find out a way to identify which overlay to delete beacause it is deleting the route overlays as well.
+        try {
+            map.getOverlays().remove(currentLocationMarker);
+            currentLocationMarker = new Marker(map);
+            currentLocationMarker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_navigation_black_24dp, null));
+            currentLocationMarker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
+
+            // add it at index 0 so that later on it can be eleminated and updated
+            map.getOverlays().add(currentLocationMarker);
+
+        } catch (Exception e){
+            System.out.println(e.toString());
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection connection = new ServiceConnection() {
@@ -140,32 +200,32 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
         }
     }
 
-    private void setupMap(Activity activity) {
+    private void setupMap() {
         try {
-            map = activity.findViewById(R.id.map1);
+            map = getActivity().findViewById(R.id.map1);
             map.setMultiTouchControls(true);
-            map.getController().setZoom(15.0);
-
-            if(mService.getCurrentLocation() != null){
-                map.getController().setCenter(mService.getCurrentLocation());
-            } else {
-                map.getController().setCenter(new GeoPoint(50.90, -1.4015));
-            }
-
+            map.getController().setCenter(currentLocation);
+            map.getController().setZoom(10);
         } catch (Exception e){
             Log.d("Exception", e.toString());
         }
     }
 
     private void drawRoute() {
-
-        map.getOverlays().clear();
-        map.getOverlayManager().clear();
-
-        Polyline line = new Polyline();
         Paint paintBorder = new Paint();
+
+        try {
+            //TODO: This is also going to delete the marker for the current location
+            map.getOverlays().remove(items);
+            map.getOverlayManager().remove(line);
+            
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+
+        line = new Polyline();
         //represents a layer of markers
-        ItemizedIconOverlay<OverlayItem> items = new ItemizedIconOverlay<OverlayItem>(getActivity(), new ArrayList<OverlayItem>(), null);
+        items = new ItemizedIconOverlay<OverlayItem>(getActivity(), new ArrayList<OverlayItem>(), null);
 
         paintBorder.setStrokeWidth(5);
         paintBorder.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -191,9 +251,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener 
 
         line.setPoints(geoPoints);
 
-        map.getOverlayManager().add(line);
-        map.getOverlays().add(items);
-
+        map.getOverlayManager().add(1,line);
+        map.getOverlays().add(2,items);
     }
-
 }

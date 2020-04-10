@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class LocationService extends Service  {
+public class LocationService extends Service {
 
     // Binder given to clients
     private final IBinder binder = new LocalBinder();
