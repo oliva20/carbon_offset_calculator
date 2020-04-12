@@ -27,6 +27,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+import org.osmdroid.util.GeoPoint;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,15 +39,18 @@ public class LocationService extends Service {
     private final IBinder binder = new LocalBinder();
     private FusedLocationProviderClient mFusedLocationClient;
 
-//    private final static long UPDATE_INTERVAL = (60 * 1000) * 5;  /* UPDATE EVERY 5 MINS */
-    private final static long UPDATE_INTERVAL = 10 * 1000;  /* UPDATE EVERY 10 SECS TESTING*/
-    private final static long FASTEST_INTERVAL = 2000; /* 2 sec */
+    private final static long UPDATE_INTERVAL = (60 * 1000) * 5;  /* UPDATE EVERY 5 MINS */
+    private final static long FASTEST_INTERVAL = 2000; /* 2 seconds */
     private final static double MILES_CONVERSATION = 0.00062137;
+    private final static int COORDINATE_INTERVAL = 15; //every 15 location updates, save one coordinate
 
     private Route route;
     private RouteRepository routeRepository;
     private List<Coordinate> mCoordinates;
     private LocationCallback locationCallback;
+
+    private int count = 0; //count how many times the locatin has been requested
+    private List<GeoPoint> geoPoints;
 
     /**
      * Class used for the client Binder.  Because we know this service always
@@ -101,6 +106,9 @@ public class LocationService extends Service {
     }
 
     public void startLocationTracking() {
+
+        geoPoints = new ArrayList<GeoPoint>();
+
         //create a new rooute and generate an id
         route = new Route(routeRepository.generateId(), new Date().toString());
 
@@ -129,13 +137,22 @@ public class LocationService extends Service {
                     public void onLocationResult(LocationResult locationResult) {
                         Location location = locationResult.getLastLocation();
                         if (location != null) {
-
                             Coordinate coordinate = new Coordinate(location.getLatitude(), location.getLongitude(), route.getId());
-                            if(!coordinates.contains(coordinate)) {
-                                coordinates.add(coordinate);
-                                Log.d("LocationService", coordinate.toString());
-                            }
 
+                            //here we should create a new live list of coordinates being retrived to send to the fragment
+                            geoPoints.add(new GeoPoint(location.getLatitude(), location.getLongitude()));
+
+                            if(!coordinates.contains(coordinate)) {
+                                //here we only want to add the coordinate evey 5 requests. Otherwise there will be too many.
+                                if(count == COORDINATE_INTERVAL) {
+                                    coordinates.add(coordinate);
+                                    Log.d("Coordinate added", coordinate.toString());
+                                    count = 0;
+                                } else {
+                                    count++;
+                                    Log.d("Coordinate", "Not added");
+                                }
+                            }
                         }
                     }
                 };
@@ -146,7 +163,7 @@ public class LocationService extends Service {
         mCoordinates = coordinates;
     }
 
-    public void stopTrackingAndSave(){
+    public List<GeoPoint> stopTrackingAndSave(){
 
         System.out.println("LOCATION SERVICE LOGGING");
 
@@ -162,5 +179,7 @@ public class LocationService extends Service {
 
         //Always clear the coordinate list because the service does not get killed!
         mCoordinates.clear();
+
+        return geoPoints;
     }
 }
