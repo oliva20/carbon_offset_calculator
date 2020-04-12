@@ -11,9 +11,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -47,10 +49,10 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
     private RouteRepository routeRepository;
     private Button btn;
     private Marker currentLocationMarker; //marker responsible for the current location in the map
-    private ItemizedIconOverlay<OverlayItem> items;
-    private Polyline line;
+    private Drawable coordinateMarker; //marker responsible for the current location in the map
+    private ItemizedIconOverlay<OverlayItem> mapPoints; //markers in the map that correspond to different coordinate points taken every so often
     private GeoPoint currentLocation;
-
+    private Polyline line;
 
     private LocationService mService;
     private boolean mBound = false;
@@ -139,19 +141,13 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
      //this is used to center the map based on user location
     @Override
     public void onLocationChanged(Location location) {
-        //this does not work
-        //TODO FIX THIS: It is calling a null pointer error.
-        // THE PROBLEM: when you go to another fragment it keeps trying get the map when it doens't exist because we are not in the transport fragment.
-        // TODO: We need to find out a way to identify which overlay to delete beacause it is deleting the route overlays as well.
+        // when you go to another fragment it keeps trying get the map when it doens't exist because we are not in the transport fragment.
         try {
             map.getOverlays().remove(currentLocationMarker);
             currentLocationMarker = new Marker(map);
-            currentLocationMarker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_navigation_black_24dp, null));
+            currentLocationMarker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_localization, null));
             currentLocationMarker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
-
-            // add it at index 0 so that later on it can be eleminated and updated
             map.getOverlays().add(currentLocationMarker);
-
         } catch (Exception e){
             System.out.println(e.toString());
         }
@@ -213,19 +209,19 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
 
     private void drawRoute() {
         Paint paintBorder = new Paint();
+        OverlayItem overlayItem;
+        line = new Polyline(); //@@@ This was global scoped before
 
         try {
-            //TODO: This is also going to delete the marker for the current location
-            map.getOverlays().remove(items);
+            map.getOverlays().remove(mapPoints);
             map.getOverlayManager().remove(line);
-            
+
         } catch (Exception e) {
             System.out.println(e.toString());
         }
 
-        line = new Polyline();
         //represents a layer of markers
-        items = new ItemizedIconOverlay<OverlayItem>(getActivity(), new ArrayList<OverlayItem>(), null);
+        mapPoints = new ItemizedIconOverlay<OverlayItem>(getActivity(), new ArrayList<OverlayItem>(), null);
 
         paintBorder.setStrokeWidth(5);
         paintBorder.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -236,22 +232,51 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         line.getOutlinePaintLists().add(new MonochromaticPaintList(paintBorder));
 
         List<GeoPoint> geoPoints = new ArrayList<>();
+        //get the coordinates here
         List<Coordinate> coordinates = routeRepository.getCoordinatesFromRoute(routeRepository.getLastInsertedRoute().getId());
 
 
         //this is getting to many coordinates that are duplicated.
         for(Coordinate coordinate : coordinates) {
+
             Log.d("Loaded coordinate", coordinate.toString());
             // transform coordinates into geo points. Lat/Lon
             geoPoints.add(new GeoPoint(coordinate.getLatitude(), coordinate.getLongitude()));
+
+            //maybe refactor this into another function
             if(coordinates.size() != 1){
-                items.addItem(new OverlayItem("Point", "Coordinate", new GeoPoint(coordinate.getLatitude(), coordinate.getLongitude())));
+                //this will not working on api's lower than lolipop, instead we can use getResources.getDrawable
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    // here we need to check whether it is the first or last coordinate
+                    if(coordinate.equals(coordinates.get(0))) { //the first coordinate
+                        //this is not gettig the starting point correctly.
+                        coordinateMarker = getActivity().getDrawable(R.drawable.ic_start_point);
+                    } else if (coordinate.equals(coordinates.get(coordinates.size() -1))) { //last coordinate
+                        coordinateMarker = getActivity().getDrawable(R.drawable.ic_end_point);
+                    } else {
+                        coordinateMarker = getActivity().getDrawable(R.drawable.ic_point);
+                    }
+                } else {
+                    // here we need to check whether it is the first or last coordinate
+                    if(coordinate.equals(coordinates.get(0))) { //the first coordinate
+                        coordinateMarker = getActivity().getResources().getDrawable(R.drawable.ic_start_point);
+                    } else if (coordinate.equals(coordinates.get(coordinates.size() -1))) { //last coordinate
+                        coordinateMarker = getActivity().getResources().getDrawable(R.drawable.ic_end_point);
+                    } else {
+                        coordinateMarker = getActivity().getResources().getDrawable(R.drawable.ic_point);
+                    }
+                }
+
+                // we update the coordinate fields here. What type of transport was used?
+                overlayItem = new OverlayItem("Point", "Coordinate", new GeoPoint(coordinate.getLatitude(), coordinate.getLongitude()));
+                overlayItem.setMarker(coordinateMarker);
+                mapPoints.addItem(overlayItem);
             }
+
         }
 
         line.setPoints(geoPoints);
-
         map.getOverlayManager().add(1,line);
-        map.getOverlays().add(2,items);
+        map.getOverlays().add(2,mapPoints); //
     }
 }

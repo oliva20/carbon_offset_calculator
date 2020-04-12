@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setTitle(R.string.main_screen_title);
         bottomNavigationView = findViewById(R.id.navigation_bar);
 
-        // TODO clear the database
+        // TODO This clears the database remember to take it off when sending to testing
         EmissionService emissionService = new EmissionServiceImpl(getApplication());
         emissionService.deleteAllEmissions();
 

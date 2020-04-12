@@ -12,7 +12,6 @@
         android:layout_height="match_parent"
         />
 
-<!--    TODO: There should be some kind of feedback for the user when they press an icon. Showing that they have selected the item.-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation_bar"
         android:layout_width="match_parent"

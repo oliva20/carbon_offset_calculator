@@ -5,26 +5,21 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
-import com.example.offsetcalculator.model.emission.CarEmission;
 import com.example.offsetcalculator.model.route.Coordinate;
 import com.example.offsetcalculator.model.route.Route;
-import com.example.offsetcalculator.rep.CarEmissionRepository;
 import com.example.offsetcalculator.rep.RouteRepository;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -32,16 +27,13 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
-
-import org.osmdroid.util.GeoPoint;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class LocationService extends Service {
 
-    // Binder given to clients
+    // Binder given to clients of this service
     private final IBinder binder = new LocalBinder();
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -54,8 +46,6 @@ public class LocationService extends Service {
     private RouteRepository routeRepository;
     private List<Coordinate> mCoordinates;
     private LocationCallback locationCallback;
-
-    private GeoPoint currentLocation;
 
     /**
      * Class used for the client Binder.  Because we know this service always
@@ -110,32 +100,6 @@ public class LocationService extends Service {
         return START_NOT_STICKY;
     }
 
-    public GeoPoint getCurrentLocation() {
-        LocationRequest mLocationRequestHighAccuracy = new LocationRequest();
-        mLocationRequestHighAccuracy.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequestHighAccuracy.setInterval(UPDATE_INTERVAL);
-        mLocationRequestHighAccuracy.setFastestInterval(FASTEST_INTERVAL);
-
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d("Location", "getLocation: stopping the location service.");
-            stopSelf();
-            return null;
-        }
-
-        locationCallback = new LocationCallback(){
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                currentLocation = new GeoPoint(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude());
-            }
-        };
-
-        mFusedLocationClient.requestLocationUpdates(mLocationRequestHighAccuracy, locationCallback, Looper.myLooper());
-
-        return currentLocation;
-    }
-
     public void startLocationTracking() {
         //create a new rooute and generate an id
         route = new Route(routeRepository.generateId(), new Date().toString());
@@ -183,23 +147,17 @@ public class LocationService extends Service {
     }
 
     public void stopTrackingAndSave(){
+
         System.out.println("LOCATION SERVICE LOGGING");
+
         Log.d("NEW ROUTE", route.toString());
 
         for(Coordinate coordinate : mCoordinates) {
             Log.d("Got", coordinate.toString());
         }
 
-        //create some emissions to test the service
-        Double distanceResult  = routeRepository.calculateDistance(mCoordinates); //distance is on meters and needs to be converted to miles. m * 0.00062137 to get miles
-        Double distance = distanceResult * MILES_CONVERSATION;
-        CarEmissionRepository carEmissionRepository = new CarEmissionRepository(getApplication());
-        carEmissionRepository.insert(new CarEmission(distance, 2.0));
-
         //Stop location client from getting updates
         mFusedLocationClient.removeLocationUpdates(locationCallback);
-
-        //save the coords in the route
         routeRepository.insert(route, mCoordinates);
 
         //Always clear the coordinate list because the service does not get killed!
