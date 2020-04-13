@@ -53,7 +53,7 @@ public class MainScreenFragment extends Fragment {
 
         try {
             //get the emissions
-            Double num = emissionService.getTotalEmissions();
+            Double num = emissionService.getEmissionsTotalDay();
 
             Log.d("@@@ NUMBER ", String.valueOf(num));
             //            Double num = carRep.getLastInsertedCarEmission().totalEmissionToTons();

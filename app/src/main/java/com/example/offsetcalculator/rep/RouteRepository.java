@@ -54,6 +54,10 @@ public class RouteRepository {
         mRouteDao.update(route);
     }
 
+    public void updateCoordinate(Coordinate coordinate) {
+        mCoodinateDao.update(coordinate);
+    }
+
     public void delete(Route route) {
         mRouteDao.delete(route);
     }

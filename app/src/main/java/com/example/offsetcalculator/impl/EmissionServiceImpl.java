@@ -1,14 +1,12 @@
 package com.example.offsetcalculator.impl;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.example.offsetcalculator.model.emission.AirEmission;
 import com.example.offsetcalculator.model.emission.BusEmission;
 import com.example.offsetcalculator.model.emission.CarEmission;
 import com.example.offsetcalculator.model.emission.Emission;
 import com.example.offsetcalculator.model.route.Coordinate;
-import com.example.offsetcalculator.model.route.Route;
 import com.example.offsetcalculator.model.service.EmissionService;
 import com.example.offsetcalculator.rep.AirEmissionRepository;
 import com.example.offsetcalculator.rep.BusEmissionRepository;
@@ -16,7 +14,6 @@ import com.example.offsetcalculator.rep.CarEmissionRepository;
 import com.example.offsetcalculator.rep.RouteRepository;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 /*
     To convert a pound measurement to a ton measurement, divide the weight by the conversion ratio. One ton is equal to 2,000 pounds, so use this simple formula to convert:
@@ -51,8 +48,8 @@ public class EmissionServiceImpl implements EmissionService {
     }
 
     @Override
-    public Double getTotalEmissions() {
-
+    public Double getEmissionsTotalDay() {
+        //TODO We should use the scaluclate distance method here and s
         Double total = 0.0; //total in pounds NOT TONS
         DecimalFormat df = new DecimalFormat("##.##");
 
@@ -81,21 +78,9 @@ public class EmissionServiceImpl implements EmissionService {
     }
 
     @Override
-    public Double getAvgEmissions() {
-        Double size = Double.valueOf(numOfEmissions); //get the average emissions from all emissions registered total/size
-
-        return getTotalEmissions() / size;
-    }
-
-    @Override
-    public void insertHomeEmission() {
-        throw new UnsupportedOperationException();
-
-    }
-
-    @Override
-    public void insertDietEmission() {
-        throw new UnsupportedOperationException();
+    public void createEmissionsFromCoordinates(List<Coordinate> coordinates) {
+        //TODO this will use routerep to calculate the latest route coordinates and based on their transport type
+        //TODO then we insert the new emissions.
     }
 
     @Override
@@ -104,7 +89,7 @@ public class EmissionServiceImpl implements EmissionService {
     }
 
     @Override
-    public void deleteAllEmissions() {
+    public void deleteAllEmissionsAndRoutes() {
         mBusRep.deleteAllEmissions();
         mCarRep.deleteAllEmissions();
         mAirRep.deleteAllEmissions();

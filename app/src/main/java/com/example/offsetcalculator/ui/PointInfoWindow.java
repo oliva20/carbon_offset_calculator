@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.offsetcalculator.R;
 import com.example.offsetcalculator.model.route.Coordinate;
+import com.example.offsetcalculator.rep.RouteRepository;
 
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
@@ -20,13 +21,16 @@ import org.osmdroid.views.overlay.infowindow.InfoWindow;
 
 public class PointInfoWindow extends InfoWindow implements AdapterView.OnItemSelectedListener {
 
-    Coordinate coordinate;
-    Activity activity;
+    private Coordinate coordinate;
+    private Activity activity;
+    private RouteRepository mRouteRep;
 
-    PointInfoWindow(int layoutResId, MapView mapView, Coordinate coordinate, Activity activity) {
+
+    PointInfoWindow(int layoutResId, MapView mapView, Coordinate coordinate, Activity activity, RouteRepository routeRep) {
         super(layoutResId, mapView);
         this.coordinate = coordinate;
         this.activity = activity;
+        this.mRouteRep = routeRep;
     }
 
     public void onClose() {
@@ -36,8 +40,6 @@ public class PointInfoWindow extends InfoWindow implements AdapterView.OnItemSel
 
         LinearLayout layout = (LinearLayout) mView.findViewById(R.id.bubble_layout);
         TextView txtTitle = (TextView) mView.findViewById(R.id.bubble_title);
-
-        /* --------------- spinner --------------------- */
         Spinner spinner = (Spinner) mView.findViewById(R.id.bubble_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(activity,
@@ -47,7 +49,6 @@ public class PointInfoWindow extends InfoWindow implements AdapterView.OnItemSel
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-        /* --------------- spinner --------------------- */
 
         Button btnMoreInfo = (Button) mView.findViewById(R.id.bubble_moreinfo);
 
@@ -58,7 +59,6 @@ public class PointInfoWindow extends InfoWindow implements AdapterView.OnItemSel
                 // Override Marker's onClick behaviour here
             }
         });
-
         //this code closes the already opened info window when we click on another marker
         for(int i=0; i<mMapView.getOverlays().size(); ++i){
             Overlay o = mMapView.getOverlays().get(i);
@@ -73,26 +73,34 @@ public class PointInfoWindow extends InfoWindow implements AdapterView.OnItemSel
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        //TODO Find out to know which option was selected here.
+
         String itemSelected = parent.getItemAtPosition(position).toString();
 
         if(itemSelected.equals(activity.getResources().getString(R.string.foot))){
-            System.out.println("You selected foot"); //TODO Maybe update the coordinate here to know which type of emission.
+            coordinate.setTransportType("foot"); // DO NOT USE STRING RESOURCES TO SET THE PROP
+            coordinate.setTransportType(activity.getResources().getString(R.string.foot));
+            mRouteRep.updateCoordinate(coordinate);
 
         } else if (itemSelected.equals(activity.getResources().getString(R.string.car))) {
-            System.out.println("You selected car"); //TODO Maybe update the coordinate here to know which type of emission.
+            coordinate.setTransportType("car");
+            mRouteRep.updateCoordinate(coordinate);
 
         } else if (itemSelected.equals(activity.getResources().getString(R.string.bicycle))) {
-            System.out.println("You selected bicycle"); //TODO Maybe update the coordinate here to know which type of emission.
+            coordinate.setTransportType("bicycle");
+            mRouteRep.updateCoordinate(coordinate);
 
         } else if (itemSelected.equals(activity.getResources().getString(R.string.bus))) {
-            System.out.println("You selected bus"); //TODO Maybe update the coordinate here to know which type of emission.
+            coordinate.setTransportType("bus");
+            mRouteRep.updateCoordinate(coordinate);
 
         } else if (itemSelected.equals(activity.getResources().getString(R.string.other))) {
-            System.out.println("You selected other"); //TODO Maybe update the coordinate here to know which type of emission.
+            coordinate.setTransportType("other");
+            mRouteRep.updateCoordinate(coordinate);
 
         } else if (itemSelected.equals(activity.getResources().getString(R.string.airplane))) {
-            System.out.println("You selected airplane"); //TODO Maybe update the coordinate here to know which type of emission.
+            coordinate.setTransportType("airplane");
+            mRouteRep.updateCoordinate(coordinate);
+
         } else {
           Log.d("Item", "No item selected");
         }
