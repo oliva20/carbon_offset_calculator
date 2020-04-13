@@ -9,9 +9,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -23,6 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.offsetcalculator.BuildConfig;
 import com.example.offsetcalculator.R;
@@ -35,11 +35,13 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.advancedpolyline.MonochromaticPaintList;
+import org.osmdroid.views.overlay.infowindow.InfoWindow;
+import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TransportFragment extends Fragment implements View.OnClickListener, LocationListener {
@@ -153,7 +155,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         locationManager.removeUpdates(this);
     }
 
-    //this is used to center the map based on user location
+    //this is used to set the current location the map based on user location
     @Override
     public void onLocationChanged(Location location) {
         // when you go to another fragment it keeps trying get the map when it doens't exist because we are not in the transport fragment.
@@ -164,6 +166,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
             currentLocationMarker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_localization, null));
             currentLocationMarker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
             map.getOverlays().add(currentLocationMarker);
+            map.invalidate(); //This refreshes the map so we can see the location marker moving.
 
         } catch (Exception e){
             System.out.println(e.toString());
@@ -228,6 +231,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         Paint paintBorder = new Paint();
 
         try {
+            //TODO when starting a new route, it leaves the start marker from the previous route but it blue.
             map.getOverlays().remove(coordinateMarker);
             map.getOverlays().remove(beginMarker);
             map.getOverlays().remove(endMarker);
@@ -239,7 +243,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         //function this maybe
         paintBorder.setStrokeWidth(5);
         paintBorder.setStyle(Paint.Style.FILL_AND_STROKE);
-        paintBorder.setColor(Color.BLUE);
+        paintBorder.setColor(getResources().getColor(R.color.route_line_color));
         paintBorder.setStrokeCap(Paint.Cap.ROUND);
         paintBorder.setAntiAlias(true);
 
@@ -249,21 +253,29 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         List<Coordinate> coordinates = routeRepository.getCoordinatesFromRoute(routeRepository.getLastInsertedRoute().getId());
 
         //this is getting to many coordinates that are duplicated.
-        for(Coordinate coordinate : coordinates) {
+        for(final Coordinate coordinate : coordinates) {
             Log.d("Loaded coordinate", coordinate.toString());
 
             //maybe refactor this into another function
             if(coordinates.size() != 1){
+
                 //this will not working on api's lower than lolipop, instead we can use getResources.getDrawable
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         coordinateMarker = new Marker(map);
+                        //set on event listeners and update the coordinate field of type of transport here.
                         coordinateMarker.setIcon(getActivity().getDrawable(R.drawable.ic_point));
                         coordinateMarker.setPosition(new GeoPoint(coordinate.getLatitude(), coordinate.getLongitude()));
+                        InfoWindow infoWindow = new PointInfoWindow(R.layout.bonuspack_bubble, map, coordinate);
+                        coordinateMarker.setInfoWindow(infoWindow);
+
                 } else {
-                        coordinateMarker = new Marker(map);
-                        coordinateMarker.setIcon(getActivity().getResources().getDrawable(R.drawable.ic_point));
-                        coordinateMarker.setPosition(new GeoPoint(coordinate.getLatitude(), coordinate.getLongitude()));
+                         coordinateMarker = new Marker(map);
+                         coordinateMarker.setIcon(getActivity().getResources().getDrawable(R.drawable.ic_point));
+                         coordinateMarker.setPosition(new GeoPoint(coordinate.getLatitude(), coordinate.getLongitude()));
+                         InfoWindow infoWindow = new PointInfoWindow(R.layout.bonuspack_bubble, map, coordinate);
+                         coordinateMarker.setInfoWindow(infoWindow);
                 }
+
                 map.getOverlays().add(coordinateMarker);
            }
 
@@ -271,23 +283,35 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
 
         //set beginning and end markers
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            /* Begin marker setup */
             beginMarker = new Marker(map);
-            endMarker = new Marker(map);
+            beginMarker.setTitle(getString(R.string.start_marker));
 
-            //it is giving an index out of bound because the list is empty when drawing anther route
+            /* End marker setup */
+            endMarker = new Marker(map);
+            endMarker.setTitle(getString(R.string.end_marker));
+
+            Log.d("Start Marker ", routePoints.get(0).toString());
             beginMarker.setPosition(routePoints.get(0));
             beginMarker.setIcon(getActivity().getDrawable(R.drawable.ic_start_point));
 
+            Log.d("End Marker ", routePoints.get(routePoints.size() - 1).toString());
             endMarker.setPosition(routePoints.get(routePoints.size() - 1));
             endMarker.setIcon(getActivity().getDrawable(R.drawable.ic_end_point));
         } else {
+            /* Begin marker setup */
             beginMarker = new Marker(map);
-            endMarker = new Marker(map);
+            beginMarker.setTitle(getString(R.string.start_marker));
 
-            //TODO it is not setting marker the coordinate in the rigth position
+            /* End marker setup */
+            endMarker = new Marker(map);
+            endMarker.setTitle(getString(R.string.end_marker));
+
+            Log.d("Start Marker ", routePoints.get(0).toString());
             beginMarker.setPosition(routePoints.get(0));
             beginMarker.setIcon(getActivity().getResources().getDrawable(R.drawable.ic_start_point));
 
+            Log.d("End Marker ", routePoints.get(routePoints.size() - 1).toString());
             endMarker.setPosition(routePoints.get(routePoints.size() - 1)); //last point in the list might return null.
             endMarker.setIcon(getActivity().getResources().getDrawable(R.drawable.ic_end_point));
         }

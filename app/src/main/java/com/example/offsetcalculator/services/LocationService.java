@@ -42,7 +42,7 @@ public class LocationService extends Service {
     private final static long UPDATE_INTERVAL = (60 * 1000) * 5;  /* UPDATE EVERY 5 MINS */
     private final static long FASTEST_INTERVAL = 2000; /* 2 seconds */
     private final static double MILES_CONVERSATION = 0.00062137;
-    private final static int COORDINATE_INTERVAL = 15; //every 15 location updates, save one coordinate
+    private final static int COORDINATE_INTERVAL = 5; //every 15 location updates, save one coordinate
 
     private Route route;
     private RouteRepository routeRepository;
@@ -50,7 +50,7 @@ public class LocationService extends Service {
     private LocationCallback locationCallback;
 
     private int count = 0; //count how many times the locatin has been requested
-    private List<GeoPoint> geoPoints;
+    private List<GeoPoint> routePoints;
 
     /**
      * Class used for the client Binder.  Because we know this service always
@@ -107,7 +107,7 @@ public class LocationService extends Service {
 
     public void startLocationTracking() {
 
-        geoPoints = new ArrayList<GeoPoint>();
+        routePoints = new ArrayList<GeoPoint>();
 
         //create a new rooute and generate an id
         route = new Route(routeRepository.generateId(), new Date().toString());
@@ -138,10 +138,8 @@ public class LocationService extends Service {
                         Location location = locationResult.getLastLocation();
                         if (location != null) {
                             Coordinate coordinate = new Coordinate(location.getLatitude(), location.getLongitude(), route.getId());
-
                             //here we should create a new live list of coordinates being retrived to send to the fragment
-                            geoPoints.add(new GeoPoint(location.getLatitude(), location.getLongitude()));
-
+                            routePoints.add(new GeoPoint(location.getLatitude(), location.getLongitude()));
                             if(!coordinates.contains(coordinate)) {
                                 //here we only want to add the coordinate evey 5 requests. Otherwise there will be too many.
                                 if(count == COORDINATE_INTERVAL) {
@@ -180,6 +178,6 @@ public class LocationService extends Service {
         //Always clear the coordinate list because the service does not get killed!
         mCoordinates.clear();
 
-        return geoPoints;
+        return routePoints;
     }
 }

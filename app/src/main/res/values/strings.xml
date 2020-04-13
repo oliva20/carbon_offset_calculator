@@ -34,4 +34,11 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <!-- Map strings -->
+    <string name="start_marker">Start Point</string>
+    <string name="end_marker">End Point</string>
+    <string name="coordinate_marker">Rout Point</string>
+    <string name="mark_info_window_title">What were you on here?</string>
+
 </resources>
