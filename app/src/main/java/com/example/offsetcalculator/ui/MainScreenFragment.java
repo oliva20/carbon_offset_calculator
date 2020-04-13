@@ -14,14 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.offsetcalculator.R;
 import com.example.offsetcalculator.impl.EmissionServiceImpl;
-import com.example.offsetcalculator.model.route.Coordinate;
 import com.example.offsetcalculator.model.service.EmissionService;
-import com.example.offsetcalculator.rep.AirEmissionRepository;
-import com.example.offsetcalculator.rep.BusEmissionRepository;
-import com.example.offsetcalculator.rep.CarEmissionRepository;
-import com.example.offsetcalculator.rep.RouteRepository;
-
-import java.util.List;
 
 public class MainScreenFragment extends Fragment {
     private EmissionService emissionService;
@@ -60,7 +53,7 @@ public class MainScreenFragment extends Fragment {
 
         try {
             //get the emissions
-            Double num = emissionService.getTotalEmissions();
+            Double num = emissionService.getEmissionsTotalDay();
 
             Log.d("@@@ NUMBER ", String.valueOf(num));
             //            Double num = carRep.getLastInsertedCarEmission().totalEmissionToTons();

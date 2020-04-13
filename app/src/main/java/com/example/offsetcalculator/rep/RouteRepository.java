@@ -12,6 +12,8 @@ import com.example.offsetcalculator.db.AppDatabase;
 import com.example.offsetcalculator.model.route.Coordinate;
 import com.example.offsetcalculator.model.route.Route;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class RouteRepository {
@@ -28,21 +30,32 @@ public class RouteRepository {
         mAllRoutes = mRouteDao.getAllRoutes();
     }
 
+    public List<Route> getmAllRoutes(){
+        return mAllRoutes;
+    }
+
     public void insert(Route route, List<Coordinate> coordinates) {
         if(route != null) {
             mRouteDao.insert(route); // route must be inserted first.
+            Log.d("@@@ RouteRep", "Inserted route " + route.toString());
+
             //loop through the coordinates and insert them with the route's id
             for (int i = 0; i < coordinates.size(); i++) {
                 mCoodinateDao.insert(coordinates.get(i));
+                Log.d("@@@ RouteRep", "Inserted coordinate" + coordinates.get(i).toString());
             }
         } else {
             Log.d("ERROR", "Route must not be null!");
-            throw new RuntimeException();
+            throw new NullPointerException();
         }
     }
 
     public void update(Route route) {
         mRouteDao.update(route);
+    }
+
+    public void updateCoordinate(Coordinate coordinate) {
+        mCoodinateDao.update(coordinate);
     }
 
     public void delete(Route route) {
@@ -51,33 +64,27 @@ public class RouteRepository {
 
     public void deleteAll() {
         mRouteDao.deleteAllRoutes();
+        mCoodinateDao.deleteAll();
     }
 
+
     public Route getLastInsertedRoute(){
-        if(mAllRoutes != null) {
-            if (!mAllRoutes.isEmpty()){
-                return mAllRoutes.get(mAllRoutes.size() - 1);
-            } else {
-                return null;
-            }
-        }
-        else {
-            return null;
-        }
+         List<Route> l =  mRouteDao.getAllRoutes();
+         try {
+             return l.get(l.size() - 1);
+         } catch (Exception e){
+             System.out.println(e);
+             return null;
+         }
     }
 
     public Route getRouteById(Integer id) {
        return mRouteDao.getRouteById(id);
     }
 
-    public List<Coordinate> getCoordinatesFromRoute(Route route) {
-        if(route.getId() != null ){
-            Log.d("SUCCESS", "Coordinates have been loaded");
-            return  mCoodinateDao.findCoordinatesForRoute(route.getId());
-        } else {
-            Log.d("FAILURE", "Route has no id");
-            throw new RuntimeException();
-        }
+    public List<Coordinate> getCoordinatesFromRoute(int routeId) {
+            Log.d("RouteRep", "Getting coorinates from route with id = " + routeId);
+            return  mCoodinateDao.findCoordinatesForRoute(routeId);
     }
 
     public Double calculateDistance(List<Coordinate> coordinates) {

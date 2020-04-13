@@ -3,20 +3,16 @@ package com.example.offsetcalculator.ui;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.room.Room;
 
 import android.os.Bundle;
 import android.view.View;
 import android.view.MenuItem;
 
 import com.example.offsetcalculator.R;
-import com.example.offsetcalculator.db.AppDatabase;
 import com.example.offsetcalculator.impl.EmissionServiceImpl;
 import com.example.offsetcalculator.model.service.EmissionService;
+import com.example.offsetcalculator.rep.RouteRepository;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.bottomnavigation.LabelVisibilityMode;
-
-import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     BottomNavigationView bottomNavigationView;
@@ -28,9 +24,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setTitle(R.string.main_screen_title);
         bottomNavigationView = findViewById(R.id.navigation_bar);
 
-        // clear the database
+        // TODO This clears the database remember to take it off when sending to testing
         EmissionService emissionService = new EmissionServiceImpl(getApplication());
-        emissionService.deleteAllEmissions();
+        emissionService.deleteAllEmissionsAndRoutes();
+
+        RouteRepository routeRepository = new RouteRepository(getApplication());
+        routeRepository.deleteAll();
 
         //start the app in main screen
         if(savedInstanceState == null) {

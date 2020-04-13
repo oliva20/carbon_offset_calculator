@@ -33,4 +33,7 @@ public interface RouteDAO {
 
     @Query("SELECT * FROM route")
     List<Route> getAllRoutes();
+
+//    @Query("SELECT * FROM route WHERE id = (SELECT MAX(id) FROM route)")
+//    Route getLastInsertedRoute();
 }

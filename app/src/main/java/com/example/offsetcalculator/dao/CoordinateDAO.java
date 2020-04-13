@@ -27,4 +27,7 @@ public interface CoordinateDAO {
 
     @Query("SELECT * FROM coordinate WHERE parentRouteId=:parentRouteId")
     List<Coordinate> findCoordinatesForRoute(final int parentRouteId);
+
+    @Query("DELETE FROM coordinate")
+    void deleteAll();
 }

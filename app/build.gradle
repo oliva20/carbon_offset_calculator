@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "com.example.offsetcalculator"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -58,4 +58,5 @@ dependencies {
 
     implementation "com.google.android.gms:play-services-location:17.0.0"
 
+    implementation 'com.github.MKergall:osmbonuspack:6.6.0'
 }

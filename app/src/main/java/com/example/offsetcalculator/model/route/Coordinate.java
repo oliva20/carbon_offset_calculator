@@ -17,9 +17,10 @@ public class Coordinate {
     @PrimaryKey(autoGenerate = true)
     private Integer coordinateId;
     @ForeignKey(entity = Route.class,parentColumns = "id", childColumns = "parentRouteId", onDelete = CASCADE) //delete coordinate if parent route gets deleted
-    private Integer parentRouteId; //route foreign key
+    private Integer parentRouteId; //route primary key
     private Double latitude;
     private Double longitude;
+    private String transportType = "Foot"; //this prop will be used to find out what type of emission to be calculated
 
     public Coordinate(Double latitude, Double longitude, Integer parentRouteId) {
         this.latitude = latitude;
@@ -59,12 +60,16 @@ public class Coordinate {
         this.longitude = longitude;
     }
 
+    public void setTransportType(String transportType){this.transportType = transportType;}
+
+    public String getTransportType(){return transportType;}
+
     @Override
     public String toString() {
         return "Coordinate{" +
-                "coordinateId=" + coordinateId +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
+                "latitude = " + latitude +
+                ", longitude = " + longitude +
+                ", transportType = " + transportType +
                 '}';
     }
 }

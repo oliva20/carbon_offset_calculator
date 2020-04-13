@@ -23,7 +23,7 @@ import com.example.offsetcalculator.model.route.Route;
 import java.util.concurrent.Executors;
 
 
-@Database(entities = {CarEmission.class, BusEmission.class, AirEmission.class, Route.class, Coordinate.class}, version = 9,exportSchema = false)
+@Database(entities = {CarEmission.class, BusEmission.class, AirEmission.class, Route.class, Coordinate.class}, version = 12,exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract CarEmissionDAO getCarEmissionDAO();
     public abstract BusEmissionDAO getBusEmissionDAO();
