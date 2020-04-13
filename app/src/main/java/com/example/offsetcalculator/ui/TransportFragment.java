@@ -265,14 +265,14 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
                         //set on event listeners and update the coordinate field of type of transport here.
                         coordinateMarker.setIcon(getActivity().getDrawable(R.drawable.ic_point));
                         coordinateMarker.setPosition(new GeoPoint(coordinate.getLatitude(), coordinate.getLongitude()));
-                        InfoWindow infoWindow = new PointInfoWindow(R.layout.bonuspack_bubble, map, coordinate);
+                        InfoWindow infoWindow = new PointInfoWindow(R.layout.bonuspack_bubble, map, coordinate, getActivity());
                         coordinateMarker.setInfoWindow(infoWindow);
 
                 } else {
                          coordinateMarker = new Marker(map);
                          coordinateMarker.setIcon(getActivity().getResources().getDrawable(R.drawable.ic_point));
                          coordinateMarker.setPosition(new GeoPoint(coordinate.getLatitude(), coordinate.getLongitude()));
-                         InfoWindow infoWindow = new PointInfoWindow(R.layout.bonuspack_bubble, map, coordinate);
+                         InfoWindow infoWindow = new PointInfoWindow(R.layout.bonuspack_bubble, map, coordinate, getActivity());
                          coordinateMarker.setInfoWindow(infoWindow);
                 }
 

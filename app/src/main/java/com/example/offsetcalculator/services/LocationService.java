@@ -42,7 +42,7 @@ public class LocationService extends Service {
     private final static long UPDATE_INTERVAL = (60 * 1000) * 5;  /* UPDATE EVERY 5 MINS */
     private final static long FASTEST_INTERVAL = 2000; /* 2 seconds */
     private final static double MILES_CONVERSATION = 0.00062137;
-    private final static int COORDINATE_INTERVAL = 5; //every 15 location updates, save one coordinate
+    private final static int COORDINATE_INTERVAL = 2; //every 15 location updates, save one coordinate
 
     private Route route;
     private RouteRepository routeRepository;
