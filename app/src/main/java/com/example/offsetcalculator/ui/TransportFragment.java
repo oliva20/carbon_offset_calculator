@@ -117,7 +117,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupMap(savedInstanceState);
+        setupMap();
     }
 
     @Override
@@ -233,14 +233,12 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         }
     }
 
-    private void setupMap(Bundle savedInstanceState) {
+    private void setupMap() {
         try {
-
             map = getActivity().findViewById(R.id.map1);
             map.setMultiTouchControls(true);
-            map.setMinZoomLevel(15.0);
+            map.setMinZoomLevel(10.0);
             map.getController().setCenter(currentLocation);
-
         } catch (Exception e){
             Log.d("Exception", e.toString());
         }

@@ -18,8 +18,8 @@ import com.example.offsetcalculator.model.service.EmissionService;
 
 public class MainScreenFragment extends Fragment {
     private EmissionService emissionService;
-    TextView emissionsNumber;
-    TextView numOfEmiss;
+    private TextView emissionsNumber;
+    private TextView numOfEmiss;
 
     @Nullable
     @Override
@@ -41,7 +41,7 @@ public class MainScreenFragment extends Fragment {
         displayCarbonEmissions(getView());
     }
 
-    public void displayCarbonEmissions(View view){
+    private void displayCarbonEmissions(View view){
 
         emissionsNumber = (TextView) getView().findViewById(R.id.tvEmissionsNumber);
         numOfEmiss = (TextView) getView().findViewById(R.id.tvNumOfEmissionsCreated);
