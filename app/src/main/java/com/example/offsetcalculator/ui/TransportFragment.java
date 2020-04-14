@@ -121,6 +121,8 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
+        //maybe there should be a button here to calculate the missions and then send the user back to the main screen fragment.
+
         if(v.getId() == R.id.start_tracking){
 
                 //TODO: add checks for device api differences here.

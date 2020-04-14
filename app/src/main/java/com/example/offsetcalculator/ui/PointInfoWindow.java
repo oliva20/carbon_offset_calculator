@@ -24,7 +24,7 @@ public class PointInfoWindow extends InfoWindow implements AdapterView.OnItemSel
     private Coordinate coordinate;
     private Activity activity;
     private RouteRepository mRouteRep;
-
+    private int currentItemPosition; //current item selected in the spinner.
 
     PointInfoWindow(int layoutResId, MapView mapView, Coordinate coordinate, Activity activity, RouteRepository routeRep) {
         super(layoutResId, mapView);
@@ -49,6 +49,7 @@ public class PointInfoWindow extends InfoWindow implements AdapterView.OnItemSel
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+        spinner.setSelection(currentItemPosition);
 
         Button btnMoreInfo = (Button) mView.findViewById(R.id.bubble_moreinfo);
 
@@ -59,6 +60,7 @@ public class PointInfoWindow extends InfoWindow implements AdapterView.OnItemSel
                 // Override Marker's onClick behaviour here
             }
         });
+
         //this code closes the already opened info window when we click on another marker
         for(int i=0; i<mMapView.getOverlays().size(); ++i){
             Overlay o = mMapView.getOverlays().get(i);
@@ -80,26 +82,38 @@ public class PointInfoWindow extends InfoWindow implements AdapterView.OnItemSel
             coordinate.setTransportType("foot"); // DO NOT USE STRING RESOURCES TO SET THE PROP
             coordinate.setTransportType(activity.getResources().getString(R.string.foot));
             mRouteRep.updateCoordinate(coordinate);
+            currentItemPosition = position;
+            mMapView.invalidate();
 
         } else if (itemSelected.equals(activity.getResources().getString(R.string.car))) {
             coordinate.setTransportType("car");
             mRouteRep.updateCoordinate(coordinate);
+            currentItemPosition = position;
+            mMapView.invalidate();
 
         } else if (itemSelected.equals(activity.getResources().getString(R.string.bicycle))) {
             coordinate.setTransportType("bicycle");
             mRouteRep.updateCoordinate(coordinate);
+            currentItemPosition = position;
+            mMapView.invalidate();
 
         } else if (itemSelected.equals(activity.getResources().getString(R.string.bus))) {
             coordinate.setTransportType("bus");
             mRouteRep.updateCoordinate(coordinate);
+            currentItemPosition = position;
+            mMapView.invalidate();
 
         } else if (itemSelected.equals(activity.getResources().getString(R.string.other))) {
             coordinate.setTransportType("other");
             mRouteRep.updateCoordinate(coordinate);
+            currentItemPosition = position;
+            mMapView.invalidate();
 
         } else if (itemSelected.equals(activity.getResources().getString(R.string.airplane))) {
             coordinate.setTransportType("airplane");
             mRouteRep.updateCoordinate(coordinate);
+            currentItemPosition = position;
+            mMapView.invalidate();
 
         } else {
           Log.d("Item", "No item selected");
