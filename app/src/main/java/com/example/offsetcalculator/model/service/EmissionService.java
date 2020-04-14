@@ -8,6 +8,6 @@ import java.util.List;
 public interface EmissionService {
     Integer getNumRegisteredEmissions();
     Double getEmissionsTotalDay();
-    void createEmissionsFromCoordinates(List<Coordinate> coordinates);
+    void createEmissionsFromCoordinates();
     void deleteAllEmissionsAndRoutes();
 }

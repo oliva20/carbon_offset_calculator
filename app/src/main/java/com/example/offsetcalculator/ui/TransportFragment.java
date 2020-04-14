@@ -5,8 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Paint;
@@ -21,12 +23,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.offsetcalculator.BuildConfig;
 import com.example.offsetcalculator.R;
+import com.example.offsetcalculator.impl.EmissionServiceImpl;
 import com.example.offsetcalculator.model.route.Coordinate;
+import com.example.offsetcalculator.model.service.EmissionService;
 import com.example.offsetcalculator.rep.RouteRepository;
 import com.example.offsetcalculator.services.LocationService;
 
@@ -35,21 +37,22 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.Marker;
-import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.advancedpolyline.MonochromaticPaintList;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
-import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 
 import java.util.List;
 
 public class TransportFragment extends Fragment implements View.OnClickListener, LocationListener {
 
-    private Boolean clicked = false;
     private MapView map;
-    private RouteRepository routeRepository;
     private Button btn;
+    private Boolean clicked = false;
+
+    private RouteRepository routeRepository;
+    private EmissionService emissionService;
+
 
     private Marker currentLocationMarker; //marker responsible for the current location in the map
     private Marker coordinateMarker; //marker responsible for the current location in the map
@@ -63,6 +66,8 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
     private LocationService mService;
     private boolean mBound = false;
     private List<GeoPoint> routePoints;
+
+    private boolean isRouteCreated = false; //checks whether user has created a route and can leave the fragment without an alertdialog popping up.
 
 
     @Override
@@ -84,12 +89,21 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         }
     }
 
+    //Here we store the variables that we want to keep when the user leaves the fragment
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //TODO this could be useful to store the zoom of the map
+        outState.putDouble("ZOOM", map.getZoomLevelDouble()); //remember the zoom level
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // this is for the map to work
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
         routeRepository = new RouteRepository(getActivity().getApplication());
+        emissionService = new EmissionServiceImpl(getActivity().getApplication());
         View view = inflater.inflate(R.layout.fragment_transport, container, false);
 
         //click listeners
@@ -99,11 +113,11 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         return view;
     }
 
-    // map config must be after the view is created
+    // map config must be done after the view is created
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupMap();
+        setupMap(savedInstanceState);
     }
 
     @Override
@@ -121,8 +135,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
-        //maybe there should be a button here to calculate the missions and then send the user back to the main screen fragment.
-
         if(v.getId() == R.id.start_tracking){
 
                 //TODO: add checks for device api differences here.
@@ -155,6 +167,9 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         super.onPause();
         //stop the location manager from getting updates when user leaves the fragment
         locationManager.removeUpdates(this);
+        if(isRouteCreated) { // don't display the dialog unless a route has been created
+            alertAndCalcEmission();
+        }
     }
 
     //this is used to set the current location the map based on user location
@@ -187,7 +202,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onProviderDisabled(String provider) {
-
+            //TODO Here we need to alert the user that they must allow location permission
     }
 
     /** Defines callbacks for service binding, passed to bindService() */
@@ -218,18 +233,21 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         }
     }
 
-    private void setupMap() {
+    private void setupMap(Bundle savedInstanceState) {
         try {
+
             map = getActivity().findViewById(R.id.map1);
             map.setMultiTouchControls(true);
+            map.setMinZoomLevel(15.0);
             map.getController().setCenter(currentLocation);
-            map.getController().setZoom(10);
+
         } catch (Exception e){
             Log.d("Exception", e.toString());
         }
     }
 
     private void drawRoute() {
+        isRouteCreated = true;
         Paint paintBorder = new Paint();
 
         try {
@@ -323,4 +341,33 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         map.getOverlays().add(endMarker);
         map.getOverlayManager().add(1,line);
     }
+
+    private void alertAndCalcEmission() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Calculate emissions for this route?"); //TODO Hardcoded strings here.
+        builder.setCancelable(true);
+        builder.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //no need to pass the coordinates as a param because they are going to be updated.
+                        emissionService.createEmissionsFromCoordinates();
+                        dialog.cancel();
+                    }
+                });
+
+        builder.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
 }

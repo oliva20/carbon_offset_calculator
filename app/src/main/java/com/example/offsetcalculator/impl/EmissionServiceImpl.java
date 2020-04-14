@@ -1,6 +1,8 @@
 package com.example.offsetcalculator.impl;
 
 import android.app.Application;
+import android.location.Location;
+import android.util.Log;
 
 import com.example.offsetcalculator.model.emission.AirEmission;
 import com.example.offsetcalculator.model.emission.BusEmission;
@@ -78,9 +80,41 @@ public class EmissionServiceImpl implements EmissionService {
     }
 
     @Override
-    public void createEmissionsFromCoordinates(List<Coordinate> coordinates) {
+    public void createEmissionsFromCoordinates() {
         //TODO this will use routerep to calculate the latest route coordinates and based on their transport type
         //TODO then we insert the new emissions.
+        //TODO coordiantes must be called here because they are going to be updated from the transport fragment.
+        List<Coordinate> coordinates = mRouteRep.getCoordinatesFromRoute(mRouteRep.getLastInsertedRoute().getId());
+
+        for(int i=0; i < coordinates.size(); i++){
+            if(i+1 != coordinates.size()){ //if we are not dealing with last the coordinate of the array
+                Coordinate cord = coordinates.get(i);
+                Location loc1 = new Location("Point A"); //we must translate the coordinate object to location object so that it can be used in fused location client
+                loc1.setLatitude(cord.getLatitude());
+                loc1.setLongitude(cord.getLongitude());
+
+                Coordinate cord2 = coordinates.get(i+1);
+                Location loc2 = new Location("Point B");
+                loc2.setLatitude(cord2.getLatitude());
+                loc2.setLongitude(cord2.getLongitude());
+
+                switch (cord.getTransportType()){
+                    case "car":
+                        CarEmission carEmission = new CarEmission(getMiles(loc1.distanceTo(loc2)), 2.0);
+                        mCarRep.insert(carEmission);
+                        break;
+                    case "bus":
+                        BusEmission busEmission = new BusEmission(getMiles(loc1.distanceTo(loc2)));
+                        mBusRep.insert(busEmission);
+                        break;
+                    case "airplane":
+                        AirEmission airEmission = new AirEmission(getMiles(loc1.distanceTo(loc2)));
+                        mAirRep.insert(airEmission);
+                        break;
+                }
+            }
+        }
+
     }
 
     @Override
@@ -96,4 +130,8 @@ public class EmissionServiceImpl implements EmissionService {
         mRouteRep.deleteAll();
     }
 
+    private Double getMiles(float m) {
+    // miles = meters × 0.000621
+        return m * 0.000621;
+    }
 }

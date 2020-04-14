@@ -20,7 +20,7 @@ public class Coordinate {
     private Integer parentRouteId; //route primary key
     private Double latitude;
     private Double longitude;
-    private String transportType = "Foot"; //this prop will be used to find out what type of emission to be calculated
+    private String transportType = "foot"; //this prop will be used to find out what type of emission to be calculated
 
     public Coordinate(Double latitude, Double longitude, Integer parentRouteId) {
         this.latitude = latitude;
@@ -73,3 +73,4 @@ public class Coordinate {
                 '}';
     }
 }
+
