@@ -8,11 +8,13 @@ import com.example.offsetcalculator.model.emission.AirEmission;
 import com.example.offsetcalculator.model.emission.BusEmission;
 import com.example.offsetcalculator.model.emission.CarEmission;
 import com.example.offsetcalculator.model.emission.Emission;
+import com.example.offsetcalculator.model.emission.EmissionTotal;
 import com.example.offsetcalculator.model.route.Coordinate;
 import com.example.offsetcalculator.model.service.EmissionService;
 import com.example.offsetcalculator.rep.AirEmissionRepository;
 import com.example.offsetcalculator.rep.BusEmissionRepository;
 import com.example.offsetcalculator.rep.CarEmissionRepository;
+import com.example.offsetcalculator.rep.EmissionTotalRepository;
 import com.example.offsetcalculator.rep.RouteRepository;
 
 import java.text.DecimalFormat;
@@ -29,6 +31,7 @@ public class EmissionServiceImpl implements EmissionService {
     private BusEmissionRepository mBusRep;
     private AirEmissionRepository mAirRep;
     private RouteRepository mRouteRep;
+    private EmissionTotalRepository mEmissionRep;
 
     private List<AirEmission> airEmissions;
     private List<BusEmission> busEmissions;
@@ -41,6 +44,7 @@ public class EmissionServiceImpl implements EmissionService {
         mBusRep = new BusEmissionRepository(application);
         mCarRep = new CarEmissionRepository(application);
         mRouteRep = new RouteRepository(application);
+        mEmissionRep = new EmissionTotalRepository(application);
 
         airEmissions = mAirRep.getAllAirEmissions();
         busEmissions = mBusRep.getAllBusEmissions();
@@ -51,32 +55,14 @@ public class EmissionServiceImpl implements EmissionService {
 
     @Override
     public Double getEmissionsTotalDay() {
-        //TODO We should use the scaluclate distance method here and s
-        Double total = 0.0; //total in pounds NOT TONS
-        DecimalFormat df = new DecimalFormat("##.##");
-
-        if(!airEmissions.isEmpty()) {
-            for (Emission emission : airEmissions) {
-                total += emission.getTotal();
-            }
+        Double x = 0.0;
+        try {
+            EmissionTotal emission  = mEmissionRep.getTodayEmission();
+            x = emission.getTotal();
+        } catch (Exception e) {
+            System.out.println(e.toString());
         }
-
-        if(!busEmissions.isEmpty()) {
-            for(Emission emission : busEmissions) {
-                total += emission.getTotal();
-            }
-        }
-
-        if(!carEmissions.isEmpty()) {
-            for (Emission emission : carEmissions) {
-                total += emission.getTotal();
-
-            }
-        }
-
-        total = total / POUNDS_TO_TONS;
-
-        return Double.valueOf(df.format(total));
+        return x;
     }
 
     @Override

@@ -25,13 +25,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setTitle(R.string.main_screen_title);
         bottomNavigationView = findViewById(R.id.navigation_bar);
 
-        // TODO This clears the database remember to take it off when sending to testing
-        EmissionService emissionService = new EmissionServiceImpl(getApplication());
-        emissionService.deleteAllEmissionsAndRoutes();
-
-        RouteRepository routeRepository = new RouteRepository(getApplication());
-        routeRepository.deleteAll();
-
         //start the app in main screen
         if(savedInstanceState == null) {
             getSupportFragmentManager()
@@ -70,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        //Save the fragment's instance
-        getSupportFragmentManager().putFragment(outState, "transportFragment", fragment);
     }
 
     public void onResume(){

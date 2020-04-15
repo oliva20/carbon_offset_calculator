@@ -7,17 +7,21 @@ import androidx.room.Room;
 import com.example.offsetcalculator.dao.AirEmissionDAO;
 import com.example.offsetcalculator.db.AppDatabase;
 import com.example.offsetcalculator.model.emission.AirEmission;
+import com.example.offsetcalculator.model.emission.CreateDate;
+import com.example.offsetcalculator.model.emission.EmissionTotal;
 
 import java.util.List;
 
 public class AirEmissionRepository {
     private AirEmissionDAO mAirEmissionDao;
     private List<AirEmission> mAllAirEmissions;
+    private EmissionTotalRepository mEmissionTotalRep;
 
     public AirEmissionRepository(Application application) {
         AppDatabase db = Room.databaseBuilder(application, AppDatabase.class, "thinkarbon-db")
                 .allowMainThreadQueries().fallbackToDestructiveMigration()   //Allows room to do operation on main thread
                 .build();
+        mEmissionTotalRep = new EmissionTotalRepository(application);
         mAirEmissionDao = db.getAirEmissionDAO();
         mAllAirEmissions = mAirEmissionDao.getAirEmissions();
     }
@@ -26,8 +30,11 @@ public class AirEmissionRepository {
         return mAllAirEmissions;
     }
 
-    public void insert(AirEmission AirEmission){
-        mAirEmissionDao.insert(AirEmission);
+    public void insert(AirEmission airEmission){
+        CreateDate date = new CreateDate();
+        EmissionTotal e = new EmissionTotal(date.now(), airEmission.getTotal());
+        mEmissionTotalRep.insert(e);
+        mAirEmissionDao.insert(airEmission);
     }
 
     public AirEmission getLastInsertedAirEmission(){

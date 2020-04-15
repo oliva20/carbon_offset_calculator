@@ -5,8 +5,12 @@ import android.app.Application;
 import androidx.room.Room;
 
 import com.example.offsetcalculator.dao.CarEmissionDAO;
+import com.example.offsetcalculator.dao.EmissionTotalDAO;
 import com.example.offsetcalculator.db.AppDatabase;
 import com.example.offsetcalculator.model.emission.CarEmission;
+import com.example.offsetcalculator.model.emission.CreateDate;
+import com.example.offsetcalculator.model.emission.Emission;
+import com.example.offsetcalculator.model.emission.EmissionTotal;
 
 import java.util.List;
 
@@ -14,6 +18,7 @@ public class CarEmissionRepository {
 
     private CarEmissionDAO mCarEmissionDao;
     private List<CarEmission> mAllCarEmissions;
+    private EmissionTotalRepository mEmissionTotalRep;
     private Integer numOfEmissions;
 
     public CarEmissionRepository(Application application) {
@@ -21,6 +26,9 @@ public class CarEmissionRepository {
                 .allowMainThreadQueries().fallbackToDestructiveMigration()   //Allows room to do operation on main thread
                 .build();
         mCarEmissionDao = db.getCarEmissionDAO();
+
+        mEmissionTotalRep = new EmissionTotalRepository(application);
+
         mAllCarEmissions = mCarEmissionDao.getCarEmissions();
     }
 
@@ -29,6 +37,9 @@ public class CarEmissionRepository {
     }
 
     public void insert(CarEmission carEmission){
+        CreateDate date = new CreateDate();
+        EmissionTotal e = new EmissionTotal(date.now(), carEmission.getTotal());
+        mEmissionTotalRep.insert(e);
         mCarEmissionDao.insert(carEmission);
     }
 

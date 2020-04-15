@@ -70,6 +70,8 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
     private boolean isRouteCreated = false; //checks whether user has created a route and can leave the fragment without an alertdialog popping up.
 
 
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,6 +153,10 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
 
                 } else {
                     Log.d("@@@ Button", "Location service has started");
+
+                    if(isRouteCreated) {
+                        alertAndCalcEmission();
+                    }
 
                     mService.startLocationTracking();
 
@@ -237,7 +243,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         try {
             map = getActivity().findViewById(R.id.map1);
             map.setMultiTouchControls(true);
-            map.setMinZoomLevel(10.0);
+            map.getController().setZoom(10.0);
             map.getController().setCenter(currentLocation);
         } catch (Exception e){
             Log.d("Exception", e.toString());
@@ -249,7 +255,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         Paint paintBorder = new Paint();
 
         try {
-            //TODO when starting a new route, it leaves the start marker from the previous route but it blue.
+            //TODO when starting a new route, it leaves the start marker from the previous route but it blue. Sometimes
             map.getOverlays().remove(coordinateMarker);
             map.getOverlays().remove(beginMarker);
             map.getOverlays().remove(endMarker);
@@ -343,6 +349,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
     private void alertAndCalcEmission() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Transport Emission");
         builder.setMessage("Calculate emissions for this route?"); //TODO Hardcoded strings here.
         builder.setCancelable(true);
         builder.setPositiveButton(
@@ -365,7 +372,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
 
         AlertDialog alert = builder.create();
         alert.show();
-
     }
 
 }

@@ -43,6 +43,7 @@ public class MainScreenFragment extends Fragment {
 
     private void displayCarbonEmissions(View view){
 
+        //TODO Strings are hardcoded here
         emissionsNumber = (TextView) getView().findViewById(R.id.tvEmissionsNumber);
         numOfEmiss = (TextView) getView().findViewById(R.id.tvNumOfEmissionsCreated);
 
