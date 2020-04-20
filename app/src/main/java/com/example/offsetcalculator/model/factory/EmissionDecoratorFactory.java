@@ -1,0 +1,72 @@
+package com.example.offsetcalculator.model.factory;
+
+import com.example.offsetcalculator.model.decorator.BaseEmission;
+import com.example.offsetcalculator.model.decorator.BusEmissionDecorator;
+import com.example.offsetcalculator.model.decorator.CarEmissionDecorator;
+import com.example.offsetcalculator.model.decorator.EmissionDecorator;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class EmissionDecoratorFactory {
+
+    private static Map<String, String> factoryMap = null;
+
+    // all you need to do is add another decorator class here
+    // in more sophisticated factories, the classes would be discovered in the class path
+    // by annotations or reflection
+    private static List<String> decoratorTypeNames = Arrays.asList(
+            CarEmissionDecorator.class.getName(),
+            BusEmissionDecorator.class.getName()
+            // add other decorators here
+    );
+
+    private static void init() {
+        // creates new factory map once if not already created
+        if (factoryMap == null)
+            synchronized (EmissionDecoratorFactory.class) {
+                if (factoryMap == null) {
+                    factoryMap = new HashMap<String, String>();
+
+                    for (String className : decoratorTypeNames) {
+                        EmissionDecorator ed;
+                        try {
+                            ed = (EmissionDecorator) Class.forName(className).newInstance();
+                            factoryMap.put(ed.getHumanReadableName(), className);
+                        } catch (Exception e) {
+                            System.out.println(e.toString());
+                            throw new RuntimeException("problem instantiating className=" + className);
+                        }
+
+                    }
+                }
+            }
+
+    }
+
+    public static Set<String> getHumanReadableNames() {
+        init();
+        return factoryMap.keySet();
+    }
+
+    public static EmissionDecorator getDecoForHumanReadableName(String humanReadableName) {
+        init();
+        String className = null;
+        EmissionDecorator ed;
+        try {
+            className = factoryMap.get(humanReadableName);
+            ed = (EmissionDecorator) Class.forName(className).newInstance();
+            ed = ed.getClass().getDeclaredConstructor(BaseEmission.class).newInstance(new BaseEmission());
+            return ed;
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            throw new RuntimeException(
+                    "cannot instantiate class className=" + className + " for humanReadableName=" + humanReadableName);
+        }
+
+    }
+
+}

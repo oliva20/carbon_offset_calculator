@@ -1,10 +1,13 @@
 package com.example.offsetcalculator.model.decorator;
 
 public abstract class EmissionDecorator implements Emission {
-    private final Emission decoratedEmission;
+    private Emission decoratedEmission;
 
     EmissionDecorator(Emission e) {
         this.decoratedEmission = e;
+    }
+
+    EmissionDecorator() {
     }
 
     @Override
@@ -16,4 +19,6 @@ public abstract class EmissionDecorator implements Emission {
     public String getType() {
         return decoratedEmission.getType();
     }
+
+    public abstract String getHumanReadableName();
 }

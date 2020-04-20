@@ -21,6 +21,7 @@ public class Coordinate {
     private Double latitude;
     private Double longitude;
     private String transportType = "foot";
+
     //TODO add an extra field name of the decorator class
 
     public Coordinate(Double latitude, Double longitude, Integer parentRouteId) {
