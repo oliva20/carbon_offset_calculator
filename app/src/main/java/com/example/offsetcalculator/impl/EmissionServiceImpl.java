@@ -4,18 +4,22 @@ import android.app.Application;
 import android.location.Location;
 import android.util.Log;
 
-import com.example.offsetcalculator.model.emission.AirEmission;
-import com.example.offsetcalculator.model.emission.BusEmission;
-import com.example.offsetcalculator.model.emission.CarEmission;
-import com.example.offsetcalculator.model.emission.Emission;
+import com.example.offsetcalculator.model.decorator.BaseEmission;
+import com.example.offsetcalculator.model.decorator.BusEmissionDecorator;
+import com.example.offsetcalculator.model.decorator.CarEmissionDecorator;
+import com.example.offsetcalculator.model.decorator.Emission;
+import com.example.offsetcalculator.model.entity.CarbonEmission;
 import com.example.offsetcalculator.model.route.Coordinate;
 import com.example.offsetcalculator.model.service.EmissionService;
-import com.example.offsetcalculator.rep.AirEmissionRepository;
-import com.example.offsetcalculator.rep.BusEmissionRepository;
-import com.example.offsetcalculator.rep.CarEmissionRepository;
+import com.example.offsetcalculator.rep.EmissionRepository;
 import com.example.offsetcalculator.rep.RouteRepository;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 /*
     To convert a pound measurement to a ton measurement, divide the weight by the conversion ratio. One ton is equal to 2,000 pounds, so use this simple formula to convert:
@@ -25,58 +29,29 @@ import java.util.List;
 public class EmissionServiceImpl implements EmissionService {
 
     private static final Double POUNDS_TO_TONS = 2000.0;
-    private CarEmissionRepository mCarRep;
-    private BusEmissionRepository mBusRep;
-    private AirEmissionRepository mAirRep;
     private RouteRepository mRouteRep;
-
-    private List<AirEmission> airEmissions;
-    private List<BusEmission> busEmissions;
-    private List<CarEmission> carEmissions;
+    private EmissionRepository mEmissionRep;
 
     private Integer numOfEmissions;
 
     public EmissionServiceImpl(Application application) {
-        mAirRep = new AirEmissionRepository(application);
-        mBusRep = new BusEmissionRepository(application);
-        mCarRep = new CarEmissionRepository(application);
         mRouteRep = new RouteRepository(application);
-
-        airEmissions = mAirRep.getAllAirEmissions();
-        busEmissions = mBusRep.getAllBusEmissions();
-        carEmissions = mCarRep.getAllCarEmissions();
-
-        numOfEmissions = mCarRep.getNumOfEmissions() + mAirRep.getNumOfEmissions() + mBusRep.getNumOfEmissions();
+        mEmissionRep = new EmissionRepository(application);
     }
 
     @Override
     public Double getEmissionsTotalDay() {
         //TODO We should use the scaluclate distance method here and s
-        Double total = 0.0; //total in pounds NOT TONS
-        DecimalFormat df = new DecimalFormat("##.##");
-
-        if(!airEmissions.isEmpty()) {
-            for (Emission emission : airEmissions) {
-                total += emission.getTotal();
-            }
+//        Double total = 0.0; //total in pounds NOT TONS
+//        DecimalFormat df = new DecimalFormat("##.##");
+//
+//        total = total / POUNDS_TO_TONS;
+        Double total = 0.0;
+        for(CarbonEmission emission : mEmissionRep.getAllEmissions()) {
+            Log.d("Got emission", emission.toString());
+            total += emission.getEmission();
         }
-
-        if(!busEmissions.isEmpty()) {
-            for(Emission emission : busEmissions) {
-                total += emission.getTotal();
-            }
-        }
-
-        if(!carEmissions.isEmpty()) {
-            for (Emission emission : carEmissions) {
-                total += emission.getTotal();
-
-            }
-        }
-
-        total = total / POUNDS_TO_TONS;
-
-        return Double.valueOf(df.format(total));
+        return total;
     }
 
     @Override
@@ -85,6 +60,8 @@ public class EmissionServiceImpl implements EmissionService {
         //TODO then we insert the new emissions.
         //TODO coordiantes must be called here because they are going to be updated from the transport fragment.
         List<Coordinate> coordinates = mRouteRep.getCoordinatesFromRoute(mRouteRep.getLastInsertedRoute().getId());
+        String datePattern = "dd/MM/yyyy";
+        SimpleDateFormat df = new SimpleDateFormat(datePattern);
 
         for(int i=0; i < coordinates.size(); i++){
             if(i+1 != coordinates.size()){ //if we are not dealing with last the coordinate of the array
@@ -98,18 +75,32 @@ public class EmissionServiceImpl implements EmissionService {
                 loc2.setLatitude(cord2.getLatitude());
                 loc2.setLongitude(cord2.getLongitude());
 
+                //TODO Make it data driven not hard coded.
+                //TODO Emission decorator factory that would return list of decorator in the system.
+                //instead of switch we would use try{ EmissionDecorator.forName("org.solent.CarEmissionDecorator").newInstance(); } catch ...
                 switch (cord.getTransportType()){
-                    case "car":
-                        CarEmission carEmission = new CarEmission(getMiles(loc1.distanceTo(loc2)), 2.0);
-                        mCarRep.insert(carEmission);
+                    case "car": //TODO instead of using a case statemen
+                        Emission e = new CarEmissionDecorator(new BaseEmission());
+                        CarbonEmission ce = new CarbonEmission();
+                        DecimalFormat decimalFormat = new DecimalFormat("##.##");
+                        //TODO conversion is not ok
+                        //round to 2 decimal places
+                        Double totalCarbon = e.calculate(getMiles((double) loc1.distanceTo(loc2)));
+                        ce.setEmission(Double.valueOf(decimalFormat.format(totalCarbon)));
+                        ce.setDate(df.format(new Date()));
+                        mEmissionRep.insert(ce);
+                        Log.d("Inserting car emission", ce.toString());
                         break;
+
                     case "bus":
-                        BusEmission busEmission = new BusEmission(getMiles(loc1.distanceTo(loc2)));
-                        mBusRep.insert(busEmission);
+                        Emission be = new BusEmissionDecorator(new BaseEmission());
+                        CarbonEmission bce = new CarbonEmission();
+                        Double tc = (be.calculate((double) loc1.distanceTo(loc2)) * 100) / 100;
+                        bce.setEmission(tc);
+                        mEmissionRep.insert(bce);
+                        Log.d("Inserting bus emission", bce.toString());
                         break;
                     case "airplane":
-                        AirEmission airEmission = new AirEmission(getMiles(loc1.distanceTo(loc2)));
-                        mAirRep.insert(airEmission);
                         break;
                 }
             }
@@ -124,13 +115,20 @@ public class EmissionServiceImpl implements EmissionService {
 
     @Override
     public void deleteAllEmissionsAndRoutes() {
-        mBusRep.deleteAllEmissions();
-        mCarRep.deleteAllEmissions();
-        mAirRep.deleteAllEmissions();
+        mEmissionRep.deleteAll();
         mRouteRep.deleteAll();
     }
 
-    private Double getMiles(float m) {
+
+    private static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+
+    private Double getMiles(Double m) {
     // miles = meters × 0.000621
         return m * 0.000621;
     }

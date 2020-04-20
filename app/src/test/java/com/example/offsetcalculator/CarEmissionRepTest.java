@@ -3,7 +3,6 @@ package com.example.offsetcalculator;
 import android.app.Application;
 import android.content.Context;
 import com.example.offsetcalculator.model.emission.CarEmission;
-import com.example.offsetcalculator.rep.CarEmissionRepository;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

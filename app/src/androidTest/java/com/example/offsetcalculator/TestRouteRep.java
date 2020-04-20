@@ -1,15 +1,14 @@
 package com.example.offsetcalculator;
 
-import android.app.Application;
 import android.content.Context;
 
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.example.offsetcalculator.db.AppDatabase;
-import com.example.offsetcalculator.model.route.Route;
-import com.example.offsetcalculator.rep.RouteRepository;
+import com.example.offsetcalculator.model.decorator.BaseEmission;
+import com.example.offsetcalculator.model.decorator.CarEmissionDecorator;
+import com.example.offsetcalculator.model.decorator.Emission;
 
 import org.junit.Before;
 
@@ -20,5 +19,11 @@ public class TestRouteRep {
     public void createDb() {
         Context context = ApplicationProvider.getApplicationContext();
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase.class).build();
+    }
+
+    public void test(){
+        Emission e  = new BaseEmission();
+        e = new CarEmissionDecorator(e);
+        e.calculate(100.0);
     }
 }
