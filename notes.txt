@@ -1,6 +1,0 @@
-We need an object (Coordinate) that represents a geopoint. 
- -> We also need a object (Route) that keeps the geopoints together 
- -> Inside this object there should be functionality to calculate the distance between the geopoints. 
- -> Create a RouteDAO  
- -> This will be implemented using a geotools library.  
-
