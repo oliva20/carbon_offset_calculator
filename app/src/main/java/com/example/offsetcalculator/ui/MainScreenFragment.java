@@ -59,12 +59,12 @@ public class MainScreenFragment extends Fragment {
             //            Double num = carRep.getLastInsertedCarEmission().totalEmissionToTons();
             Integer numOfEmissionsRegistered = emissionService.getNumRegisteredEmissions();
             if(num!=null){
-                msgCo2 = "<b>" + num + "</b>" + " Tons CO2e";
+                msgCo2 = "<b>" + num + "</b>" + " Kg CO2e";
                 emissionsNumber.setText(Html.fromHtml(msgCo2));
                 msgEmiss = "<b>Emissisons registered:</b> " + numOfEmissionsRegistered;
                 numOfEmiss.setText(Html.fromHtml(msgEmiss));
             } else {
-                msgCo2 = "<b>" + num + "</b>" + " Tons CO2e";
+                msgCo2 = "<b>" + num + "</b>" + " Kg CO2e";
                 emissionsNumber.setText(Html.fromHtml(msgCo2));
                 msgEmiss = "<b>Emissisons registered:</b> " + numOfEmissionsRegistered;
                 numOfEmiss.setText(Html.fromHtml(msgEmiss));

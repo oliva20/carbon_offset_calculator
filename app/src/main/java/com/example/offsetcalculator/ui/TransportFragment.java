@@ -237,7 +237,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         try {
             map = getActivity().findViewById(R.id.map1);
             map.setMultiTouchControls(true);
-            map.setMinZoomLevel(10.0);
+            map.getController().setZoom(16.0);
             map.getController().setCenter(currentLocation);
         } catch (Exception e){
             Log.d("Exception", e.toString());

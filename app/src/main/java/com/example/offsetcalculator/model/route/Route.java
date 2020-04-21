@@ -1,15 +1,9 @@
 package com.example.offsetcalculator.model.route;
 
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
 
-import com.example.offsetcalculator.converters.TimestampConverter;
-
-import java.sql.Timestamp;
 import java.util.Date;
-import java.util.List;
 
 /** Represents and calculates the route from user coordinates.
  * @author Andre
