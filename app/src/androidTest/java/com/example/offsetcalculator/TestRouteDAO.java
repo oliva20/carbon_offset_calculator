@@ -57,7 +57,6 @@ public class TestRouteDAO {
         db.close();
     }
 
-    //TODO:  Write tests for writeRouteAndRetrieve()
     @Test
     public void writeRouteAndRetrieve() throws Exception {
         //create a route

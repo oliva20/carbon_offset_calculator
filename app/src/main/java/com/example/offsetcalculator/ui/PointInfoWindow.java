@@ -77,7 +77,6 @@ public class PointInfoWindow extends InfoWindow implements AdapterView.OnItemSel
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
         String itemSelected = parent.getItemAtPosition(position).toString();
-        //TODO decorator factory get items, returns a list of tiems. Decorator item get class for item.
         if(itemSelected.equals(activity.getResources().getString(R.string.foot))){
             coordinate.setTransportType("foot"); // DO NOT USE STRING RESOURCES TO SET THE PROP
             coordinate.setTransportType(activity.getResources().getString(R.string.foot));

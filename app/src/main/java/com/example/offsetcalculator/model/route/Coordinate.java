@@ -20,9 +20,7 @@ public class Coordinate {
     private Integer parentRouteId; //route primary key
     private Double latitude;
     private Double longitude;
-    private String transportType = "foot";
-
-    //TODO add an extra field name of the decorator class
+    private String transportType = "foot"; //must be lower case.
 
     public Coordinate(Double latitude, Double longitude, Integer parentRouteId) {
         this.latitude = latitude;
@@ -62,7 +60,9 @@ public class Coordinate {
         this.longitude = longitude;
     }
 
-    public void setTransportType(String transportType){this.transportType = transportType;}
+    public void setTransportType(String transportType){
+        this.transportType = transportType.toLowerCase(); //make sure it is always lower case
+    }
 
     public String getTransportType(){return transportType;}
 

@@ -32,7 +32,6 @@ import java.util.Set;
  */
 public class EmissionServiceImpl implements EmissionService {
 
-    private static final Double POUNDS_TO_TONS = 2000.0;
     private RouteRepository mRouteRep;
     private EmissionRepository mEmissionRep;
     private Integer numOfEmissions;
@@ -44,11 +43,6 @@ public class EmissionServiceImpl implements EmissionService {
 
     @Override
     public Double getEmissionsTotalDay() {
-        //TODO We should use the scaluclate distance method here and s
-//        Double total = 0.0; //total in pounds NOT TONS
-//        DecimalFormat df = new DecimalFormat("##.##");
-//
-//        total = total / POUNDS_TO_TONS;
         Double total = 0.0;
         for(CarbonEmission emission : mEmissionRep.getAllEmissions()) {
             Log.d("Got emission", emission.toString());
@@ -59,9 +53,6 @@ public class EmissionServiceImpl implements EmissionService {
 
     @Override
     public void createEmissionsFromCoordinates() {
-        //TODO this will use routerep to calculate the latest route coordinates and based on their transport type
-        //TODO then we insert the new emissions.
-        //TODO coordiantes must be called here because they are going to be updated from the transport fragment.
         List<Coordinate> coordinates = mRouteRep.getCoordinatesFromRoute(mRouteRep.getLastInsertedRoute().getId());
         String datePattern = "dd/MM/yyyy";
         SimpleDateFormat df = new SimpleDateFormat(datePattern);

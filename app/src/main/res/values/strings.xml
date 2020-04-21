@@ -57,5 +57,7 @@
         <item >@string/airplane</item>
         <item >@string/other</item>
     </string-array>
+    
+    <string name="ask_calculate_emissions">Calculate emissions for this route?</string>
 
 </resources>

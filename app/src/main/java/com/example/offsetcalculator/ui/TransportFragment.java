@@ -93,7 +93,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        //TODO this could be useful to store the zoom of the map
         outState.putDouble("ZOOM", map.getZoomLevelDouble()); //remember the zoom level
     }
 
@@ -125,7 +124,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         super.onStart();
         Intent intent = new Intent(this.getActivity(), LocationService.class);
         getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
-        Log.d("ON START", "trasnport fragment" );
     }
 
     @Override
@@ -140,7 +138,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
                 //TODO: add checks for device api differences here.
                 //@@@ This varies between API level. Only use this with 25 or under
                 if(clicked) {
-                    Log.d("@@@ Button", "Location service has stopped");
                     clicked = false;
 
                     routePoints = mService.stopTrackingAndSave();
@@ -150,8 +147,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
                     drawRoute(); //geopoints must not be null in order to drawroute to work
 
                 } else {
-                    Log.d("@@@ Button", "Location service has started");
-
                     mService.startLocationTracking();
 
                     clicked = true;
@@ -182,6 +177,12 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
             currentLocationMarker = new Marker(map);
             currentLocationMarker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_localization, null));
             currentLocationMarker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
+            currentLocationMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() { //set an on click listener here so it doesn't get confused with the blue markers and crashes the app
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    return false;
+                }
+            });
             map.getOverlays().add(currentLocationMarker);
             map.invalidate(); //This refreshes the map so we can see the location marker moving.
 
@@ -249,7 +250,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         Paint paintBorder = new Paint();
 
         try {
-            //TODO when starting a new route, it leaves the start marker from the previous route but it blue.
             map.getOverlays().remove(coordinateMarker);
             map.getOverlays().remove(beginMarker);
             map.getOverlays().remove(endMarker);
@@ -272,6 +272,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
 
         //this is getting to many coordinates that are duplicated.
         for(final Coordinate coordinate : coordinates) {
+
             Log.d("Loaded coordinate", coordinate.toString());
 
             //maybe refactor this into another function
@@ -312,10 +313,25 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
             Log.d("Start Marker ", routePoints.get(0).toString());
             beginMarker.setPosition(routePoints.get(0));
             beginMarker.setIcon(getActivity().getDrawable(R.drawable.ic_start_point));
+            beginMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    return false;
+                }
+            });
+
 
             Log.d("End Marker ", routePoints.get(routePoints.size() - 1).toString());
             endMarker.setPosition(routePoints.get(routePoints.size() - 1));
             endMarker.setIcon(getActivity().getDrawable(R.drawable.ic_end_point));
+            endMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() { //set an on click listener here so it doesn't get confused with the blue markers and crashes the app
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    return false;
+                }
+            });
+
+
         } else {
             /* Begin marker setup */
             beginMarker = new Marker(map);
@@ -328,10 +344,22 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
             Log.d("Start Marker ", routePoints.get(0).toString());
             beginMarker.setPosition(routePoints.get(0));
             beginMarker.setIcon(getActivity().getResources().getDrawable(R.drawable.ic_start_point));
+            beginMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() { //set an on click listener here so it doesn't get confused with the blue markers and crashes the app
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    return false;
+                }
+            });
 
             Log.d("End Marker ", routePoints.get(routePoints.size() - 1).toString());
             endMarker.setPosition(routePoints.get(routePoints.size() - 1)); //last point in the list might return null.
             endMarker.setIcon(getActivity().getResources().getDrawable(R.drawable.ic_end_point));
+            endMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() { //set an on click listener here so it doesn't get confused with the blue markers and crashes the app
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    return false;
+                }
+            });
         }
 
         line.setPoints(routePoints);
@@ -343,7 +371,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
     private void alertAndCalcEmission() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage("Calculate emissions for this route?"); //TODO Hardcoded strings here.
+        builder.setMessage(getResources().getString(R.string.ask_calculate_emissions));
         builder.setCancelable(true);
         builder.setPositiveButton(
                 "Yes",
