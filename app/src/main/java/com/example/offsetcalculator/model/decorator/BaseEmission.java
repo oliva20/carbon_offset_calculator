@@ -1,10 +1,5 @@
 package com.example.offsetcalculator.model.decorator;
 
-import androidx.annotation.NonNull;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
-//Default emission
 public class BaseEmission implements Emission {
     @Override
     public Double calculate(Double meters) {
@@ -15,5 +10,4 @@ public class BaseEmission implements Emission {
     public String getType() {
         return "Emission";
     }
-
 }

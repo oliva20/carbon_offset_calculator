@@ -1,23 +1,24 @@
 package com.example.offsetcalculator.model.decorator;
 
+import android.util.Log;
+
 //source: https://www.aef.org.uk/downloads/Grams_CO2_transportmodesUK.pdf
 public class BusEmissionDecorator extends EmissionDecorator {
 
     public static final String HUMAN_READABLE_NAME = "bus";
-
-    public BusEmissionDecorator(){
-
-    }
 
     public BusEmissionDecorator(Emission e) {
         super(e);
     }
 
 
-    //TODO not tested
     @Override
-    public Double calculate(Double km) {
-        return super.calculate(km) + km * 0.0891; //bus emission factor.
+    public Double calculate(Double miles) {
+        Log.d("@@@ BusDecorator", "called");
+        Log.d("@@@ BusDecorator Miles", String.valueOf(miles));
+
+        //TODO transform to km and then calculate.
+        return super.calculate(miles) + miles * 0.0891; //bus emission factor.
     }
 
     @Override

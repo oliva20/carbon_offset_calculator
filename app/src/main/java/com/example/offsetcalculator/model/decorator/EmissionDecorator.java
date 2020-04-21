@@ -1,13 +1,11 @@
 package com.example.offsetcalculator.model.decorator;
 
 public abstract class EmissionDecorator implements Emission {
+
     private Emission decoratedEmission;
 
     EmissionDecorator(Emission e) {
         this.decoratedEmission = e;
-    }
-
-    EmissionDecorator() {
     }
 
     @Override

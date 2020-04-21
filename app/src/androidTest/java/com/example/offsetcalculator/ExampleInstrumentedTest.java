@@ -5,7 +5,10 @@ import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.junit.Test;
+import com.example.offsetcalculator.impl.EmissionServiceImpl;
+import com.example.offsetcalculator.model.service.EmissionService;
+
+import org.junit.Before;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
@@ -18,10 +21,12 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
     Context appContext;
-    @Test
-    public void useAppContext() {
+    EmissionService es;
+    @Before
+    public void setup() {
         // Context of the app under test.
          appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.offsetcalculator", appContext.getPackageName());
+         assertEquals("com.example.offsetcalculator", appContext.getPackageName());
     }
+
 }

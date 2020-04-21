@@ -65,6 +65,7 @@ public class EmissionServiceImpl implements EmissionService {
         List<Coordinate> coordinates = mRouteRep.getCoordinatesFromRoute(mRouteRep.getLastInsertedRoute().getId());
         String datePattern = "dd/MM/yyyy";
         SimpleDateFormat df = new SimpleDateFormat(datePattern);
+        DecimalFormat decimalFormat = new DecimalFormat("##.##");
         Set<String> humanReadableNames = EmissionDecoratorFactory.getHumanReadableNames();
 
         for(int i=0; i < coordinates.size(); i++){
@@ -81,20 +82,19 @@ public class EmissionServiceImpl implements EmissionService {
                 loc2.setLongitude(cord2.getLongitude());
 
                 for(String hrn : humanReadableNames ) {
-                    Log.d("@@@ In loop", hrn);
 
-                    if(hrn.equals(cord.getTransportType())) {
-                        Log.d("cord type", cord.getTransportType());
+                    if(hrn.equals(cord.getTransportType())) { //if there is a decorator for the transport type then proceed.
 
+                        Log.d("@@@ CORD TYPE", cord.getTransportType());
                         //this works and gets the car decorator but you must decorate it with the BaseEmission.
-                        EmissionDecorator ed = EmissionDecoratorFactory.getDecoForHumanReadableName(hrn);
+                        Emission ed = EmissionDecoratorFactory.getDecoForHumanReadableName(hrn);
                         CarbonEmission ce = new CarbonEmission();
 
                         Double totalCarbon = ed.calculate(getMiles((double) loc1.distanceTo(loc2)));
-                        Log.d("Total carbon", String.valueOf(totalCarbon));
-                        ce.setEmission(totalCarbon);
+                        ce.setEmission(Double.valueOf(decimalFormat.format(totalCarbon)));
                         ce.setDate(df.format(new Date()));
                         mEmissionRep.insert(ce);
+
                     }
                 }
 
@@ -113,15 +113,6 @@ public class EmissionServiceImpl implements EmissionService {
         mEmissionRep.deleteAll();
         mRouteRep.deleteAll();
     }
-
-
-    private static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-        BigDecimal bd = BigDecimal.valueOf(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
-
 
     private Double getMiles(Double m) {
     // miles = meters × 0.000621

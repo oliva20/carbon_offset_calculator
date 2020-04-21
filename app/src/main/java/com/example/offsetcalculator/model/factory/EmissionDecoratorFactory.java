@@ -1,10 +1,14 @@
 package com.example.offsetcalculator.model.factory;
 
+import android.util.Log;
+
 import com.example.offsetcalculator.model.decorator.BaseEmission;
 import com.example.offsetcalculator.model.decorator.BusEmissionDecorator;
 import com.example.offsetcalculator.model.decorator.CarEmissionDecorator;
+import com.example.offsetcalculator.model.decorator.Emission;
 import com.example.offsetcalculator.model.decorator.EmissionDecorator;
 
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -30,11 +34,12 @@ public class EmissionDecoratorFactory {
             synchronized (EmissionDecoratorFactory.class) {
                 if (factoryMap == null) {
                     factoryMap = new HashMap<String, String>();
-
                     for (String className : decoratorTypeNames) {
                         EmissionDecorator ed;
                         try {
-                            ed = (EmissionDecorator) Class.forName(className).newInstance();
+                            Constructor ct = Class.forName(className).getDeclaredConstructor(Emission.class);
+                            ct.setAccessible(true);
+                            ed = (EmissionDecorator) ct.newInstance(new BaseEmission());
                             factoryMap.put(ed.getHumanReadableName(), className);
                         } catch (Exception e) {
                             System.out.println(e.toString());
@@ -58,9 +63,11 @@ public class EmissionDecoratorFactory {
         EmissionDecorator ed;
         try {
             className = factoryMap.get(humanReadableName);
-            ed = (EmissionDecorator) Class.forName(className).newInstance();
-            ed = ed.getClass().getDeclaredConstructor(BaseEmission.class).newInstance(new BaseEmission());
+            Constructor ct = Class.forName(className).getDeclaredConstructor(Emission.class);
+            ct.setAccessible(true);
+            ed = (EmissionDecorator) ct.newInstance(new BaseEmission());
             return ed;
+
         } catch (Exception e) {
             System.out.println(e.toString());
             throw new RuntimeException(
