@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spinner Diet Activity -->
+    <string-array name="food_types">
+        <item>Vegetables</item>
+        <item>Red meat</item>
+        <item>White meat</item>
+        <item>Fruit</item>
+    </string-array>
+</resources>

@@ -7,6 +7,7 @@ import com.example.offsetcalculator.model.decorator.BusEmissionDecorator;
 import com.example.offsetcalculator.model.decorator.CarEmissionDecorator;
 import com.example.offsetcalculator.model.decorator.Emission;
 import com.example.offsetcalculator.model.decorator.EmissionDecorator;
+import com.example.offsetcalculator.model.decorator.FoodEmissionDecorator;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
@@ -19,12 +20,10 @@ public class EmissionDecoratorFactory {
 
     private static Map<String, String> factoryMap = null;
 
-    // all you need to do is add another decorator class here
-    // in more sophisticated factories, the classes would be discovered in the class path
-    // by annotations or reflection
     private static List<String> decoratorTypeNames = Arrays.asList(
             CarEmissionDecorator.class.getName(),
-            BusEmissionDecorator.class.getName()
+            BusEmissionDecorator.class.getName(),
+            FoodEmissionDecorator.class.getName()
             // add other decorators here
     );
 

@@ -18,9 +18,9 @@
 
         <service android:name=".services.LocationService" />
 
-        <activity android:name=".ui.DietFragment" />
-        <activity android:name=".ui.TransportFragment" />
-        <activity android:name=".ui.HomeEnergyFragment" />
+        <activity android:name=".ui.fragments.DietFragment" />
+        <activity android:name=".ui.fragments.TransportFragment" />
+        <activity android:name=".ui.fragments.HomeEnergyFragment" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

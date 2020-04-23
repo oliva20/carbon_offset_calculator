@@ -8,7 +8,7 @@ import com.example.offsetcalculator.model.decorator.BaseEmission;
 import com.example.offsetcalculator.model.decorator.BusEmissionDecorator;
 import com.example.offsetcalculator.model.decorator.CarEmissionDecorator;
 import com.example.offsetcalculator.model.decorator.Emission;
-import com.example.offsetcalculator.model.decorator.EmissionDecorator;
+import com.example.offsetcalculator.model.decorator.FoodEmissionDecorator;
 import com.example.offsetcalculator.model.entity.CarbonEmission;
 import com.example.offsetcalculator.model.factory.EmissionDecoratorFactory;
 import com.example.offsetcalculator.model.route.Coordinate;
@@ -16,9 +16,6 @@ import com.example.offsetcalculator.model.service.EmissionService;
 import com.example.offsetcalculator.rep.EmissionRepository;
 import com.example.offsetcalculator.rep.RouteRepository;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,10 +41,7 @@ public class EmissionServiceImpl implements EmissionService {
     @Override
     public Double getEmissionsTotalDay() {
         Double total = 0.0;
-        for(CarbonEmission emission : mEmissionRep.getAllEmissions()) {
-            Log.d("Got emission", emission.toString());
-            total += emission.getEmission();
-        }
+        total +=  mEmissionRep.getEmissionFromToday().getEmission();
         return total;
     }
 
@@ -84,7 +78,17 @@ public class EmissionServiceImpl implements EmissionService {
                         Double totalCarbon = ed.calculate(getMiles((double) loc1.distanceTo(loc2)));
                         ce.setEmission(Double.valueOf(decimalFormat.format(totalCarbon)));
                         ce.setDate(df.format(new Date()));
-                        mEmissionRep.insert(ce);
+
+                        //before inserting an new emission check if it exists already for today
+                        if(mEmissionRep.emissionTodayExists()){
+                            CarbonEmission carbonEmission = mEmissionRep.getEmissionFromToday();
+                            Double x  = carbonEmission.getEmission();
+                            Double total = x + ce.getEmission();
+                            mEmissionRep.update(carbonEmission);
+
+                        } else {
+                            mEmissionRep.insert(ce);
+                        }
 
                     }
                 }
@@ -92,6 +96,28 @@ public class EmissionServiceImpl implements EmissionService {
             }
         }
 
+    }
+
+    @Override
+    public void createEmissionForFoodType(String foodType, Double grams) {
+        String datePattern = "dd/MM/yyyy";
+        SimpleDateFormat df = new SimpleDateFormat(datePattern);
+        DecimalFormat decimalFormat = new DecimalFormat("##.##");
+        FoodEmissionDecorator ed = (FoodEmissionDecorator) EmissionDecoratorFactory.getDecoForHumanReadableName("food");
+        //set food type
+        Log.d("@@@ Food service", foodType);
+        ed.setFoodType(foodType); //set foodtype first
+
+        if(mEmissionRep.emissionTodayExists()) {
+            CarbonEmission ce = mEmissionRep.getEmissionFromToday();
+            ce.setEmission(ce.getEmission() + Double.parseDouble(decimalFormat.format(ed.calculate(grams))));
+            mEmissionRep.update(ce);
+        } else {
+            CarbonEmission ce = new CarbonEmission();
+            ce.setDate(df.format(new Date()));
+            ce.setEmission(Double.parseDouble(decimalFormat.format(ed.calculate(grams))));
+            mEmissionRep.insert(ce);
+        }
     }
 
     @Override

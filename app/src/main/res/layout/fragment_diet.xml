@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.DietFragment">
+    tools:context=".ui.fragments.DietFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,37 +13,28 @@
         tools:layout_editor_absoluteY="221dp"
         android:layout_marginTop="70pt">
 
-
-
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_above="@id/edtCar"
                 android:gravity="center_horizontal"
-                android:text="@string/tvDistance"
+                android:text="@string/foodType"
                 android:textSize="25sp"
                 android:textStyle="bold"
                 android:textColor="@color/textColorPrimary"
             />
 
-        <EditText
-                android:id="@+id/edtCar"
-                android:layout_width="209dp"
-                android:layout_height="47dp"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:hint="Km"
-                android:layout_marginTop="5pt"
-                android:inputType="number"
-                android:background="@drawable/edit_text_border"
-                />
+        <Spinner
+            android:id="@+id/spinnerDiet"
+            android:layout_width="209dp"
+            android:layout_height="47dp"
+            android:layout_gravity="center_horizontal"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_above="@id/edtCar"
+            android:layout_above="@id/edtGrams"
             android:gravity="center_horizontal"
-            android:text="@string/tvDate"
+            android:text="@string/quantity"
             android:textSize="25sp"
             android:textStyle="bold"
             android:textColor="@color/textColorPrimary"
@@ -54,21 +44,21 @@
 
 
         <EditText
-            android:id="@+id/edtCar2"
+            android:id="@+id/edtGrams"
             android:layout_width="209dp"
             android:layout_height="47dp"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:hint="dd/mm"
+            android:hint="Ex. 200"
             android:layout_marginTop="5pt"
-            android:inputType="date"
+            android:inputType="number"
             android:background="@drawable/edit_text_border"
             />
 
 
 
         <Button
-            android:id="@+id/button_id"
+            android:id="@+id/diet_btn"
             android:layout_width="209dp"
             android:layout_height="47dp"
             android:layout_gravity="center"

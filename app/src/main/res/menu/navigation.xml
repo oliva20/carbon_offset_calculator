@@ -3,20 +3,20 @@
     <item
         android:id="@+id/action_main"
         android:icon="@drawable/ic_home"
-        android:title="Home"/>
+        android:title="@string/navbar_home"/>
 
     <item
         android:id="@+id/action_transport"
         android:icon="@drawable/ic_transport"
-        android:title="Transport"/>
+        android:title="@string/navbar_transport"/>
 
     <item
         android:id="@+id/action_diet"
         android:icon="@drawable/ic_food"
-        android:title="Diet"/>
+        android:title="@string/navbar_food"/>
 
     <item
         android:id="@+id/action_home"
         android:icon="@drawable/ic_home_energy"
-        android:title="Energy"/>
+        android:title="@string/navbar_energy"/>
 </menu>
