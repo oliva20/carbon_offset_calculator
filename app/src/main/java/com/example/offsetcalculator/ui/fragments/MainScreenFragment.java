@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,18 +17,20 @@ import androidx.fragment.app.Fragment;
 import com.example.offsetcalculator.R;
 import com.example.offsetcalculator.impl.EmissionServiceImpl;
 import com.example.offsetcalculator.model.service.EmissionService;
+import com.example.offsetcalculator.ui.HelpActivity;
 
 import java.text.DecimalFormat;
 
 public class MainScreenFragment extends Fragment {
     private EmissionService emissionService;
     private TextView emissionsNumber;
-
+    private Button btn;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getActivity().setTitle(R.string.main_screen_title);
         emissionService = new EmissionServiceImpl(getActivity().getApplication());
+
         return inflater.inflate(R.layout.fragment_main_screen, container, false);
     }
 
@@ -35,6 +38,13 @@ public class MainScreenFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         displayCarbonEmissions(view);
+        btn = (Button) view.findViewById(R.id.main_btn_help);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), HelpActivity.class));
+            }
+        });
     }
 
     @Override

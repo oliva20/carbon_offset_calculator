@@ -108,13 +108,9 @@ public class PointInfoWindow extends InfoWindow implements AdapterView.OnItemSel
             currentItemPosition = position;
             mMapView.invalidate();
 
-        } else if (itemSelected.equals(activity.getResources().getString(R.string.airplane))) {
-            coordinate.setTransportType("airplane");
-            mRouteRep.updateCoordinate(coordinate);
-            currentItemPosition = position;
-            mMapView.invalidate();
+        }
 
-        } else {
+        else {
           Log.d("Item", "No item selected");
         }
     }

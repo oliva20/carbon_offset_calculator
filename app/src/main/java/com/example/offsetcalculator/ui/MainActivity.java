@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import com.example.offsetcalculator.R;
 import com.example.offsetcalculator.rep.RouteRepository;
 import com.example.offsetcalculator.ui.fragments.DietFragment;
-import com.example.offsetcalculator.ui.fragments.HomeEnergyFragment;
+import com.example.offsetcalculator.ui.fragments.SettingsFragment;
 import com.example.offsetcalculator.ui.fragments.MainScreenFragment;
 import com.example.offsetcalculator.ui.fragments.TransportFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         fragment = new DietFragment();
                         break;
                     case R.id.action_home:
-                        fragment = new HomeEnergyFragment();
+                        fragment = new SettingsFragment();
                         break;
                     case R.id.action_transport:
                         fragment = new TransportFragment();

@@ -24,7 +24,6 @@ import com.example.offsetcalculator.model.service.EmissionService;
 
 public class DietFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-    TextView tv;
     EditText edt;
     Button btn;
     EmissionService emissionService;

@@ -21,11 +21,13 @@
 
         <activity android:name=".ui.fragments.DietFragment" />
         <activity android:name=".ui.fragments.TransportFragment" />
-        <activity android:name=".ui.fragments.HomeEnergyFragment" />
+        <activity android:name=".ui.fragments.SettingsFragment" />
+        <activity android:name=".ui.AboutActivity"/>
+        <activity android:name=".ui.HelpActivity"/>
+
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

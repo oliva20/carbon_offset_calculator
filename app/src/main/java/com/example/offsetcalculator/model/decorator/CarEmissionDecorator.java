@@ -1,8 +1,9 @@
 package com.example.offsetcalculator.model.decorator;
 
 import android.util.Log;
-
-import com.example.offsetcalculator.model.entity.CarbonEmission;
+/*
+* source; https://carbonfund.org/calculation-methods/
+* */
 
 public class CarEmissionDecorator extends EmissionDecorator {
 

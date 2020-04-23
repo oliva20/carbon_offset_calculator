@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.SettingsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="-26dp"
+        tools:layout_editor_absoluteY="221dp"
+        android:layout_marginTop="40pt">
+
+        <!--About  -->
+
+        <TextView
+            android:id="@+id/settings_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginStart="20sp"
+            android:layout_marginLeft="20sp"
+            android:layout_marginRight="20sp"
+            android:clickable="true"
+            android:drawableRight="@drawable/ic_expand"
+            android:text="@string/settings_about_thinkarbon"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="30sp"
+            android:focusable="true" />
+
+
+        <!-- Reduce Emissions  -->
+
+        <TextView
+            android:id="@+id/settings_help"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginStart="20sp"
+            android:layout_marginLeft="20sp"
+            android:layout_marginRight="20sp"
+            android:layout_marginTop="30pt"
+            android:clickable="true"
+            android:drawableRight="@drawable/ic_expand"
+            android:text="@string/reduce_emissions"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="30sp"
+            android:focusable="true" />
+
+        <!--Reduce Emissions -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_marginLeft="20sp"
+            android:text="@string/settings_country"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/textColorPrimary"
+            android:layout_marginTop="30pt"
+            android:layout_marginStart="20sp" />
+
+        <Spinner
+            android:id="@+id/settings_spinner_country"
+            android:layout_width="209dp"
+            android:layout_height="47dp"
+            android:layout_marginLeft="20sp"
+            android:layout_gravity="left"
+            android:layout_marginStart="20sp" />
+
+        <!--Fuel Type-->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_marginLeft="20sp"
+            android:text="@string/settings_type_of_fuel"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/textColorPrimary"
+            android:layout_marginTop="25pt"
+            android:layout_marginStart="20sp" />
+
+        <Spinner
+            android:id="@+id/settings_spinner_fuel_type"
+            android:layout_width="209dp"
+            android:layout_height="47dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="20sp"
+            android:layout_marginStart="20sp" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

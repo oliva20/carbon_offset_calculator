@@ -32,9 +32,6 @@
     </string-array>
 
 
-
-
-
     <string name="title_activity_test">Test</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -50,19 +47,17 @@
     <string name="car">Car</string>
     <string name="bus">Bus</string>
     <string name="bicycle">Bicycle</string>
-    <string name="airplane">Airplane</string>
     <string name="other">Other</string>
 
     <!-- Spinner for the marker bubble -->
     <string-array name="transport_types">
-        <item >@string/foot</item>
-        <item >@string/car</item>
-        <item >@string/bus</item>
-        <item >@string/bicycle</item>
-        <item >@string/airplane</item>
-        <item >@string/other</item>
+        <item>@string/foot</item>
+        <item>@string/car</item>
+        <item>@string/bus</item>
+        <item>@string/bicycle</item>
+        <item>@string/other</item>
     </string-array>
-    
+
     <string name="ask_calculate_emissions">Calculate emissions for this route?</string>
     <string name="foodType">Food type:</string>
     <string name="quantity">Quantity:</string>
@@ -70,10 +65,39 @@
     <string name="navbar_transport">Transport</string>
     <string name="navbar_home">home</string>
     <string name="navbar_energy">Energy</string>
+    <string name="settings_about_thinkarbon">About ThinKarbon</string>
+    <string name="reduce_emissions">Reduce Emissions</string>
+    <string name="settings_type_of_fuel">Fuel Type</string>
+    <string name="settings_country">Country</string>
+    <string name="navbar_settings">Settings</string>
 
 
     <!--    Preferences  -->
     <string-array name="countries">
-        <item></item>
+        <item>United Kingdom</item>
+        <item>Portugal</item>
+        <item>Italy</item>
     </string-array>
+
+    <string-array name="fuelType" >
+        <item>Diesel</item>
+        <item>Gasoline</item>
+    </string-array>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="main_screen_lower_emissions" >You can lower your emissions!</string>
+    <string name="btn_get_help">How?</string>
 </resources>

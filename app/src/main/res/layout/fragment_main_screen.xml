@@ -26,4 +26,28 @@
             android:gravity="center"
             android:textSize="25sp" />
 
+        <TextView
+            android:id="@+id/main_screen_lower_emissions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40sp"
+            android:gravity="center_horizontal"
+            android:text="@string/main_screen_lower_emissions"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/main_btn_help"
+            android:layout_marginTop="15sp"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:background="@drawable/button_border"
+            android:textColor="@color/textColorPrimary"
+            android:layout_width="209dp"
+            android:layout_height="47dp"
+            android:text="@string/btn_get_help"/>
+
 </LinearLayout>
