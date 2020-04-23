@@ -4,14 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.MenuItem;
 
 import com.example.offsetcalculator.R;
-import com.example.offsetcalculator.impl.EmissionServiceImpl;
-import com.example.offsetcalculator.model.service.EmissionService;
 import com.example.offsetcalculator.rep.RouteRepository;
 import com.example.offsetcalculator.ui.fragments.DietFragment;
 import com.example.offsetcalculator.ui.fragments.HomeEnergyFragment;
@@ -29,10 +26,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         setTitle(R.string.main_screen_title);
         bottomNavigationView = findViewById(R.id.navigation_bar);
-
-        // TODO This clears the database remember to take it off when sending to testing
-        EmissionService emissionService = new EmissionServiceImpl(getApplication());
-        emissionService.deleteAllEmissionsAndRoutes();
 
         RouteRepository routeRepository = new RouteRepository(getApplication());
         routeRepository.deleteAll();
