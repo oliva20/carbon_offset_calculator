@@ -1,4 +1,4 @@
-package com.example.offsetcalculator.ui;
+package com.example.offsetcalculator.ui.fragments;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

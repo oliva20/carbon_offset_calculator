@@ -1,5 +1,6 @@
-package com.example.offsetcalculator.ui;
+package com.example.offsetcalculator.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -16,16 +17,18 @@ import com.example.offsetcalculator.R;
 import com.example.offsetcalculator.impl.EmissionServiceImpl;
 import com.example.offsetcalculator.model.service.EmissionService;
 
+import java.text.DecimalFormat;
+
 public class MainScreenFragment extends Fragment {
     private EmissionService emissionService;
     private TextView emissionsNumber;
-    private TextView numOfEmiss;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getActivity().setTitle(R.string.main_screen_title);
         emissionService = new EmissionServiceImpl(getActivity().getApplication());
+
         return inflater.inflate(R.layout.fragment_main_screen, container, false);
     }
 
@@ -42,33 +45,18 @@ public class MainScreenFragment extends Fragment {
     }
 
     private void displayCarbonEmissions(View view){
-
         emissionsNumber = (TextView) getView().findViewById(R.id.tvEmissionsNumber);
-        numOfEmiss = (TextView) getView().findViewById(R.id.tvNumOfEmissionsCreated);
-
-        String msgCo2 = "<b>0.0</b> Tons CO2e";
-        String msgEmiss = "<b>Emissisons registered:</b> ";
+        String msgCo2 = "<b>0.0</b> Kg CO2e";
         emissionsNumber.setText(Html.fromHtml(msgCo2));
-        numOfEmiss.setText(Html.fromHtml(msgEmiss));
-
         try {
-            //get the emissions
-            Double num = emissionService.getEmissionsTotalDay();
 
+            DecimalFormat decimalFormat = new DecimalFormat("##.##");
+            //get the emissions
+            Double num = Double.valueOf(decimalFormat.format(emissionService.getEmissionsTotalDay()));
             Log.d("@@@ NUMBER ", String.valueOf(num));
-            //            Double num = carRep.getLastInsertedCarEmission().totalEmissionToTons();
-            Integer numOfEmissionsRegistered = emissionService.getNumRegisteredEmissions();
-            if(num!=null){
-                msgCo2 = "<b>" + num + "</b>" + " Kg CO2e";
-                emissionsNumber.setText(Html.fromHtml(msgCo2));
-                msgEmiss = "<b>Emissisons registered:</b> " + numOfEmissionsRegistered;
-                numOfEmiss.setText(Html.fromHtml(msgEmiss));
-            } else {
-                msgCo2 = "<b>" + num + "</b>" + " Kg CO2e";
-                emissionsNumber.setText(Html.fromHtml(msgCo2));
-                msgEmiss = "<b>Emissisons registered:</b> " + numOfEmissionsRegistered;
-                numOfEmiss.setText(Html.fromHtml(msgEmiss));
-            }
+            msgCo2 = "<b>" + num + "</b>" + " Kg CO2e";
+            emissionsNumber.setText(Html.fromHtml(msgCo2));
+
         } catch (Exception e) {
             System.out.println(e.toString());
         }

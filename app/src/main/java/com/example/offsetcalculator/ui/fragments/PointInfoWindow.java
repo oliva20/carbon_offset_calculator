@@ -1,4 +1,4 @@
-package com.example.offsetcalculator.ui;
+package com.example.offsetcalculator.ui.fragments;
 
 import android.app.Activity;
 import android.util.Log;

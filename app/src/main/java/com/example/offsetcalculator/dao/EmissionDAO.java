@@ -26,5 +26,8 @@ public interface EmissionDAO {
 
     @Query("DELETE FROM  CarbonEmission")
     void deleteAll();
+
+    @Query("SELECT * FROM CarbonEmission ce WHERE ce.date = :dateToday")
+    CarbonEmission getEmissionFromToday(String dateToday);
 }
 

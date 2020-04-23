@@ -6,7 +6,7 @@
     <string name="food_title">Food Emissions</string>
     <string name="app_name">Carbon Offset Calculator</string>
     <string name="chooseItem">Personal Vehicle</string>
-    <string name="your_total_emissions">Your total emissions is:</string>
+    <string name="your_total_emissions">Today\'s Total Emission</string>
     <string name="textInCircle">10 lbs CO2e</string>
     <string name="tvDistance">Distance: </string>
     <string name="tvDate">Date: </string>
@@ -30,6 +30,11 @@
         <item>Natural Gas</item>
         <item>Oil</item>
     </string-array>
+
+
+
+
+
     <string name="title_activity_test">Test</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -59,5 +64,16 @@
     </string-array>
     
     <string name="ask_calculate_emissions">Calculate emissions for this route?</string>
+    <string name="foodType">Food type:</string>
+    <string name="quantity">Quantity:</string>
+    <string name="navbar_food">Food</string>
+    <string name="navbar_transport">Transport</string>
+    <string name="navbar_home">home</string>
+    <string name="navbar_energy">Energy</string>
 
+
+    <!--    Preferences  -->
+    <string-array name="countries">
+        <item></item>
+    </string-array>
 </resources>

@@ -87,28 +87,6 @@ public class RouteRepository {
             return  mCoodinateDao.findCoordinatesForRoute(routeId);
     }
 
-    public Double calculateDistance(List<Coordinate> coordinates) {
-
-        float total = 0.0f; //holds the total distance betweens pairs of coordinates
-
-        for(int i=0; i < coordinates.size(); i++){
-
-            if(i+1 != coordinates.size()){ //if we are not dealing with last the coordinate of the array
-                Coordinate cord = coordinates.get(i);
-                Location loc1 = new Location("Point A"); //we must translate the coordinate object to location object so that it can be used in fused location client
-                loc1.setLatitude(cord.getLatitude());
-                loc1.setLongitude(cord.getLongitude());
-
-                Coordinate cord2 = coordinates.get(i+1); //could throw an index out of bounds
-                Location loc2 = new Location("Point B");
-                loc2.setLatitude(cord2.getLatitude());
-                loc2.setLongitude(cord2.getLongitude());
-                total = total + loc1.distanceTo(loc2); //use the  distance method in location to get the distance between two points.
-
-            }
-        }
-        return Math.rint(total);
-    }
 
     public Integer generateId(){
         if(getLastInsertedRoute() != null){
