@@ -12,7 +12,7 @@ public class HelpActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
-        setTitle("Reduice your Emissions");
+        setTitle("Reduce your Emissions");
     }
 
 }

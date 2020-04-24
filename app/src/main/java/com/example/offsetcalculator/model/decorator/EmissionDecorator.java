@@ -1,5 +1,7 @@
 package com.example.offsetcalculator.model.decorator;
 
+import android.content.Context;
+
 public abstract class EmissionDecorator implements Emission {
 
     private Emission decoratedEmission;
@@ -9,8 +11,8 @@ public abstract class EmissionDecorator implements Emission {
     }
 
     @Override
-    public Double calculate(Double meters) {
-        return decoratedEmission.calculate(meters);
+    public Double calculate(Double meters, Context ctx) {
+        return decoratedEmission.calculate(meters, ctx);
     }
 
     @Override

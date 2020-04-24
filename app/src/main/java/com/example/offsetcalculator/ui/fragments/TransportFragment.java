@@ -204,6 +204,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onProviderDisabled(String provider) {
             //TODO Here we need to alert the user that they must allow location permission
+            //TODO create an alertdialog for this .
     }
 
     /** Defines callbacks for service binding, passed to bindService() */

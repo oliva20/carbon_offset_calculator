@@ -1,8 +1,10 @@
 package com.example.offsetcalculator.model.decorator;
 
+import android.content.Context;
+
 public class BaseEmission implements Emission {
     @Override
-    public Double calculate(Double meters) {
+    public Double calculate(Double meters, Context ctx) {
         return 0.0;
     }
 

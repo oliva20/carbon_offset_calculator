@@ -32,10 +32,12 @@ public class EmissionServiceImpl implements EmissionService {
     private RouteRepository mRouteRep;
     private EmissionRepository mEmissionRep;
     private Integer numOfEmissions;
+    private Application application;
 
     public EmissionServiceImpl(Application application) {
         mRouteRep = new RouteRepository(application);
         mEmissionRep = new EmissionRepository(application);
+        this.application = application;
     }
 
     @Override
@@ -75,7 +77,7 @@ public class EmissionServiceImpl implements EmissionService {
                         Emission ed = EmissionDecoratorFactory.getDecoForHumanReadableName(hrn);
                         CarbonEmission ce = new CarbonEmission();
 
-                        Double totalCarbon = ed.calculate(getMiles((double) loc1.distanceTo(loc2)));
+                        Double totalCarbon = ed.calculate(getMiles((double) loc1.distanceTo(loc2)), application.getApplicationContext());
                         ce.setEmission(Double.valueOf(decimalFormat.format(totalCarbon)));
                         ce.setDate(df.format(new Date()));
 
@@ -110,12 +112,12 @@ public class EmissionServiceImpl implements EmissionService {
 
         if(mEmissionRep.emissionTodayExists()) {
             CarbonEmission ce = mEmissionRep.getEmissionFromToday();
-            ce.setEmission(ce.getEmission() + Double.parseDouble(decimalFormat.format(ed.calculate(grams))));
+            ce.setEmission(ce.getEmission() + Double.parseDouble(decimalFormat.format(ed.calculate(grams, application.getApplicationContext()))));
             mEmissionRep.update(ce);
         } else {
             CarbonEmission ce = new CarbonEmission();
             ce.setDate(df.format(new Date()));
-            ce.setEmission(Double.parseDouble(decimalFormat.format(ed.calculate(grams))));
+            ce.setEmission(Double.parseDouble(decimalFormat.format(ed.calculate(grams, application.getApplicationContext()))));
             mEmissionRep.insert(ce);
         }
     }

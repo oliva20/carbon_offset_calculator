@@ -66,7 +66,7 @@
     <string name="navbar_home">home</string>
     <string name="navbar_energy">Energy</string>
     <string name="settings_about_thinkarbon">About ThinKarbon</string>
-    <string name="reduce_emissions">Reduce Emissions</string>
+    <string name="reduce_emissions">How to reduce emissions</string>
     <string name="settings_type_of_fuel">Fuel Type</string>
     <string name="settings_country">Country</string>
     <string name="navbar_settings">Settings</string>
@@ -80,8 +80,8 @@
     </string-array>
 
     <string-array name="fuelType" >
-        <item>Diesel</item>
         <item>Gasoline</item>
+        <item>Diesel</item>
     </string-array>
 
     <!-- Preference Titles -->
@@ -100,4 +100,8 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="main_screen_lower_emissions" >You can lower your emissions!</string>
     <string name="btn_get_help">How?</string>
+
+    <!-- Keys -->
+    <string name="countryKey" >com.example.offsetcalculator.country</string>
+    <string name="fuelKey" >com.example.offsetcalculator.fuel</string>
 </resources>

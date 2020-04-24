@@ -1,5 +1,6 @@
 package com.example.offsetcalculator.model.decorator;
 
+import android.content.Context;
 import android.util.Log;
 import android.util.Pair;
 
@@ -46,7 +47,7 @@ public class FoodEmissionDecorator extends EmissionDecorator{
     }
 
     @Override
-    public Double calculate(Double grams) {
+    public Double calculate(Double grams, Context ctx) {
         // we must convert the grams to kilograms
         grams /= 1000;
         double result = 0.0;
@@ -72,7 +73,7 @@ public class FoodEmissionDecorator extends EmissionDecorator{
 
         Log.d("@@@ " + foodType, String.valueOf(result));
 
-        return super.calculate(grams) + result; // returns the result in co2 in kg.
+        return super.calculate(grams, ctx) + result; // returns the result in co2 in kg.
     }
 
     @Override
