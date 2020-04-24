@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,7 @@ import com.example.offsetcalculator.R;
 import com.example.offsetcalculator.model.route.Coordinate;
 import com.example.offsetcalculator.model.route.Route;
 import com.example.offsetcalculator.rep.RouteRepository;
+import com.example.offsetcalculator.ui.fragments.TransportFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -45,7 +47,7 @@ public class LocationService extends Service {
     private final static long UPDATE_INTERVAL = (60 * 1000) * 5;  /* UPDATE EVERY 5 MINS */
     private final static long FASTEST_INTERVAL = 2000; /* 2 seconds */
     private final static double MILES_CONVERSATION = 0.00062137;
-    private final static int COORDINATE_INTERVAL = 5; //every 15 location updates, save one coordinate
+    private final static int COORDINATE_INTERVAL = 15; //every 15 location updates, save one coordinate
 
     private Route route;
     private RouteRepository routeRepository;
@@ -86,11 +88,23 @@ public class LocationService extends Service {
 //                    .setContentText("").build();
 //            startForeground(1, notification);
 //        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { //if the SDK is above oreo
+            System.out.println("@@@ start own foreground");
             startMyOwnForeground();
-        else
-            startForeground(1, new Notification());
+        } else {
+            Intent notificationIntent = new Intent(this, TransportFragment.class);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                    notificationIntent, 0);
+
+            Notification notification = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle("My Awesome App")
+                    .setContentText("Doing some work...")
+                    .setContentIntent(pendingIntent).build();
+
+            startForeground(1337, notification);
+        }
     }
 
     @Override
@@ -188,8 +202,8 @@ public class LocationService extends Service {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void startMyOwnForeground(){
-        String NOTIFICATION_CHANNEL_ID = "com.example.simpleapp";
-        String channelName = "My Background Service";
+        String NOTIFICATION_CHANNEL_ID = "com.example.offsetcalculator";
+        String channelName = "Location Service";
         NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
         chan.setLightColor(Color.BLUE);
         chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
@@ -200,9 +214,10 @@ public class LocationService extends Service {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         Notification notification = notificationBuilder.setOngoing(true)
                 .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
-                .setContentTitle("App is running in background")
+                .setContentTitle("Route tracking has started!")
                 .setPriority(NotificationManager.IMPORTANCE_MIN)
                 .setCategory(Notification.CATEGORY_SERVICE)
+                .setChannelId(NOTIFICATION_CHANNEL_ID)
                 .build();
         startForeground(2, notification);
     }

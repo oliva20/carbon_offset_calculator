@@ -14,7 +14,7 @@
         <org.osmdroid.views.MapView
             android:id="@+id/map1"
             android:layout_width="match_parent"
-            android:layout_height="500dp" />
+            android:layout_height="450dp" />
 
         <Button
             android:id="@+id/start_tracking"

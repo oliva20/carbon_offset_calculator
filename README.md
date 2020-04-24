@@ -4,6 +4,5 @@
 ![screenshot](https://github.com/oliva20/thinkarbon-app/app-screenshot.png)
 
 
-
 For android devices. 
 iOS not supported.

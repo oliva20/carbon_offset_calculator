@@ -138,6 +138,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
                 //TODO: add checks for device api differences here.
                 //@@@ This varies between API level. Only use this with 25 or under
                 if(clicked) {
+
                     clicked = false;
 
                     routePoints = mService.stopTrackingAndSave();
