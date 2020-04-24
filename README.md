@@ -1,12 +1,9 @@
 <h1 align="center"> ThinKarbon </h1> 
 <h2 align="center"> Carbon Offsetting Calculator </h2> 
 
-![screenshot](https://github.com/oliva20/thinkarbon_app/blob/master/app-screenshots/1.png)
+|
+| :--------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------|
+|![screenshot](https://github.com/oliva20/thinkarbon_app/blob/master/app-screenshots/4.png) |  
+![screenshot](https://github.com/oliva20/thinkarbon_app/blob/master/app-screenshots/3.png) |
 
-![screenshot](https://github.com/oliva20/thinkarbon_app/blob/master/app-screenshots/2.png)
-
-![screenshot](https://github.com/oliva20/thinkarbon_app/blob/master/app-screenshots/3.png)
-
-![screenshot](https://github.com/oliva20/thinkarbon_app/blob/master/app-screenshots/4.png)
-
-<h3> ThinKarbon is a carbon offset calculator to help people reduce their carbon emissions and become aware of them in an interactive manner! </h3>
+<p> ThinKarbon is a carbon offset calculator to help people reduce their carbon emissions and become aware of them in an interactive manner! </p>
