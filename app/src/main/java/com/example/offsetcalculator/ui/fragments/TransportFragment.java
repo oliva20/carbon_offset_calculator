@@ -4,13 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.location.Location;
 import android.location.LocationListener;
@@ -76,7 +80,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
 
         //get the current user's location before starting anything so that the map knows where to center
         locationManager=(LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
-
         try {
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,this);
@@ -123,7 +126,12 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
     public void onStart() {
         super.onStart();
         Intent intent = new Intent(this.getActivity(), LocationService.class);
-        getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        //START THE SERVICE
+        //before starting the service we need to check if location access and file storage is permitted by the user. Otherwise it will crash the app.
+        if(checkPermissions())
+            getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        else
+            displayAlertDialog(getResources().getString(R.string.requires_location_storage));
     }
 
     @Override
@@ -134,22 +142,15 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.start_tracking){
-
-                //TODO: add checks for device api differences here.
                 //@@@ This varies between API level. Only use this with 25 or under
                 if(clicked) {
-
                     clicked = false;
-
                     routePoints = mService.stopTrackingAndSave();
-
                     //call the function to change the button style after setting the clicked boolean
                     changeButtonStyle(clicked);
                     drawRoute(); //geopoints must not be null in order to drawroute to work
-
                 } else {
                     mService.startLocationTracking();
-
                     clicked = true;
                     //call the function to change the button style after setting the clicked boolean
                     changeButtonStyle(clicked);
@@ -204,8 +205,7 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onProviderDisabled(String provider) {
-            //TODO Here we need to alert the user that they must allow location permission
-            //TODO create an alertdialog for this .
+
     }
 
     /** Defines callbacks for service binding, passed to bindService() */
@@ -398,4 +398,38 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
 
     }
 
+    private boolean  checkPermissions() {
+        //both permissions for location access and file storage is required for the fragment to run.
+        String p1 = Manifest.permission.ACCESS_COARSE_LOCATION;
+        String p2 = Manifest.permission.ACCESS_FINE_LOCATION;
+        String p3 = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        int res1 = getContext().checkCallingOrSelfPermission(p1);
+        int res2 = getContext().checkCallingOrSelfPermission(p2);
+        int res3 = getContext().checkCallingOrSelfPermission(p3);
+
+        return (res1 == PackageManager.PERMISSION_GRANTED ||
+                res2 == PackageManager.PERMISSION_GRANTED ||
+                res3 == PackageManager.PERMISSION_GRANTED );
+    }
+
+    private void displayAlertDialog(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage(msg);
+
+        builder.setPositiveButton(
+                "Ok",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //got back to main screen fragment.
+                        Fragment fragment = new MainScreenFragment();
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        FragmentTransaction transaction = fm.beginTransaction();
+                        transaction.replace(R.id.fragment_container, fragment);
+                        transaction.commit();
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 }

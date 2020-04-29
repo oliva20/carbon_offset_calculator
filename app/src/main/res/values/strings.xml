@@ -58,6 +58,7 @@
         <item>@string/other</item>
     </string-array>
 
+    <string name="requires_location_storage">ThinKarbon requires location and storage access in order to function. Please allow these in Settings > App > ThinKarbon > Permissions</string>
     <string name="ask_calculate_emissions">Calculate emissions for this route?</string>
     <string name="foodType">Food type:</string>
     <string name="quantity">Quantity:</string>
