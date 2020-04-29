@@ -25,6 +25,7 @@ public class MainScreenFragment extends Fragment {
     private EmissionService emissionService;
     private TextView emissionsNumber;
     private Button btn;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -37,7 +38,6 @@ public class MainScreenFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        displayCarbonEmissions(view);
         btn = (Button) view.findViewById(R.id.main_btn_help);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +45,20 @@ public class MainScreenFragment extends Fragment {
                 startActivity(new Intent(getActivity(), HelpActivity.class));
             }
         });
+
+        displayCarbonEmissions(view);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) { //this method gets called when the fragent is hidden and gets show again
+        super.onHiddenChanged(hidden);
+        displayCarbonEmissions(getView());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        displayCarbonEmissions(getView());
     }
 
     @Override

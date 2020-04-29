@@ -25,9 +25,6 @@ public class SettingsFragment extends Fragment  {
     TextView tvHelp;
     SharedPreferences prefs;
 
-    //TODO write the stuff on about and help add some functionality to the preferences
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

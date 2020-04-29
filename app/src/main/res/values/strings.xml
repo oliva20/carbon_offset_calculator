@@ -4,7 +4,7 @@
     <string name="transport_screen_title">Transport Emissions</string>
     <string name="home_energy_title">Home Energy Emissions</string>
     <string name="food_title">Food Emissions</string>
-    <string name="app_name">Carbon Offset Calculator</string>
+    <string name="app_name">ThinKarbon</string>
     <string name="chooseItem">Personal Vehicle</string>
     <string name="your_total_emissions">Today\'s Total Emission</string>
     <string name="textInCircle">10 lbs CO2e</string>

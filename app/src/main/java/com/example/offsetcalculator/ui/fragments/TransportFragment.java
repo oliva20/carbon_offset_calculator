@@ -73,7 +73,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
 
     private boolean isRouteCreated = false; //checks whether user has created a route and can leave the fragment without an alertdialog popping up.
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,13 +89,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         } catch (SecurityException e) {
             System.out.println(e.toString());
         }
-    }
-
-    //Here we store the variables that we want to keep when the user leaves the fragment
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putDouble("ZOOM", map.getZoomLevelDouble()); //remember the zoom level
     }
 
     @Nullable
@@ -119,12 +111,9 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupMap();
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+        setupMap();
+
         Intent intent = new Intent(this.getActivity(), LocationService.class);
         //START THE SERVICE
         //before starting the service we need to check if location access and file storage is permitted by the user. Otherwise it will crash the app.
@@ -132,6 +121,13 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
             getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
         else
             displayAlertDialog(getResources().getString(R.string.requires_location_storage));
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
     }
 
     @Override
