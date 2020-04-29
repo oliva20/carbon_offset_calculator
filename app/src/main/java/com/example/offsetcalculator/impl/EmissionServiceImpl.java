@@ -1,21 +1,23 @@
 package com.example.offsetcalculator.impl;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.util.Log;
 
-import com.example.offsetcalculator.model.decorator.BaseEmission;
-import com.example.offsetcalculator.model.decorator.BusEmissionDecorator;
-import com.example.offsetcalculator.model.decorator.CarEmissionDecorator;
+import com.example.offsetcalculator.R;
 import com.example.offsetcalculator.model.decorator.Emission;
 import com.example.offsetcalculator.model.decorator.FoodEmissionDecorator;
 import com.example.offsetcalculator.model.entity.CarbonEmission;
+import com.example.offsetcalculator.model.entity.EmissionScale;
 import com.example.offsetcalculator.model.factory.EmissionDecoratorFactory;
 import com.example.offsetcalculator.model.route.Coordinate;
 import com.example.offsetcalculator.model.service.EmissionService;
 import com.example.offsetcalculator.rep.EmissionRepository;
 import com.example.offsetcalculator.rep.RouteRepository;
 
+import java.security.spec.ECField;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,17 +35,27 @@ public class EmissionServiceImpl implements EmissionService {
     private EmissionRepository mEmissionRep;
     private Integer numOfEmissions;
     private Application application;
+    private SharedPreferences prefs;
+    private String country;
 
     public EmissionServiceImpl(Application application) {
         mRouteRep = new RouteRepository(application);
         mEmissionRep = new EmissionRepository(application);
         this.application = application;
+
+        prefs = application.getApplicationContext().getSharedPreferences("com.example.offsetcalculator",
+                Context.MODE_PRIVATE);
+        country = prefs.getString(application.getResources().getString(R.string.countryKey), "united kingdom");
     }
 
     @Override
     public Double getEmissionsTotalDay() {
         Double total = 0.0;
-        total +=  mEmissionRep.getEmissionFromToday().getEmission();
+        try {
+            total += mEmissionRep.getEmissionFromToday().getEmission();
+        } catch (Exception e){
+            System.out.println(e.toString());
+        }
         return total;
     }
 
@@ -120,6 +132,32 @@ public class EmissionServiceImpl implements EmissionService {
             ce.setEmission(Double.parseDouble(decimalFormat.format(ed.calculate(grams, application.getApplicationContext()))));
             mEmissionRep.insert(ce);
         }
+    }
+
+    @Override
+    public EmissionScale compareEmissions() {
+
+        switch (country) {
+            case "united kingdom":
+               if(getEmissionsTotalDay() > (4.12 * 0.10) + 4.12) // if its higher than average by 10%
+                   return EmissionScale.HIGH;
+                if(getEmissionsTotalDay() < 4.12)
+                    return EmissionScale.GOOD;
+                if(getEmissionsTotalDay() >= 4.12)
+                    return EmissionScale.BAD;
+                break;
+            case "portugal": //TODO do only england for now
+                //TODO get the emissions average for the other countries
+                if(getEmissionsTotalDay() > (4.12 / 0.10) + 4.12) // if its higher than average by 10%
+                    return EmissionScale.HIGH;
+                if(getEmissionsTotalDay() < 4.12)
+                    return EmissionScale.GOOD;
+                if(getEmissionsTotalDay() >= 4.12)
+                    return EmissionScale.BAD;
+                break;
+        }
+
+        return EmissionScale.BAD;
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,7 @@ public class SettingsFragment extends Fragment  {
         spinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("@@@", parent.getItemAtPosition(position).toString().toLowerCase());
                 prefs.edit().putString(getResources().getString(R.string.countryKey), parent.getItemAtPosition(position).toString().toLowerCase()).apply();
             }
 
