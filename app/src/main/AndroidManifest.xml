@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.offsetcalculator">
+    package="com.thinkarbon.offsetcalculator">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -14,18 +14,19 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:testOnly="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:icon="@mipmap/ic_launcher"
+        >
 
-        <service android:name=".services.LocationService" />
+        <service android:name="com.thinkarbon.offsetcalculator.services.LocationService" />
 
-        <activity android:name=".ui.fragments.DietFragment" />
-        <activity android:name=".ui.fragments.TransportFragment" />
-        <activity android:name=".ui.fragments.SettingsFragment" />
-        <activity android:name=".ui.AboutActivity"/>
-        <activity android:name=".ui.HelpActivity"/>
+        <activity android:name="com.thinkarbon.offsetcalculator.ui.fragments.DietFragment" />
+        <activity android:name="com.thinkarbon.offsetcalculator.ui.fragments.TransportFragment" />
+        <activity android:name="com.thinkarbon.offsetcalculator.ui.fragments.SettingsFragment" />
+        <activity android:name="com.thinkarbon.offsetcalculator.ui.AboutActivity"/>
+        <activity android:name="com.thinkarbon.offsetcalculator.ui.HelpActivity"/>
 
-        <activity android:name=".ui.MainActivity">
+        <activity android:name="com.thinkarbon.offsetcalculator.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:775250192438:android:89f526454f9f49279bd097",
         "android_client_info": {
-          "package_name": "com.example.offsetcalculator"
+          "package_name": "com.thinkarbon.offsetcalculator"
         }
       },
       "oauth_client": [
