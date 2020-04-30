@@ -29,25 +29,18 @@ public class SettingsFragment extends Fragment  {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        Double a = null;
+        System.out.println(a.toString());
+
         getActivity().setTitle(R.string.settings_title);
 
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         tvAbout = (TextView) view.findViewById(R.id.settings_about);
         tvHelp = (TextView) view.findViewById(R.id.settings_help);
 
-        tvAbout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), AboutActivity.class));
-            }
-        });
+        tvAbout.setOnClickListener(v -> startActivity(new Intent(getActivity(), AboutActivity.class)));
 
-        tvHelp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), HelpActivity.class));
-            }
-        });
+        tvHelp.setOnClickListener(v -> startActivity(new Intent(getActivity(), HelpActivity.class)));
 
 
         //init prefs;
