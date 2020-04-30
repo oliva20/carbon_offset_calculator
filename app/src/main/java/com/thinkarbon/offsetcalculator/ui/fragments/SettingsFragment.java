@@ -29,9 +29,6 @@ public class SettingsFragment extends Fragment  {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        Double a = null;
-        System.out.println(a.toString());
-
         getActivity().setTitle(R.string.settings_title);
 
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
