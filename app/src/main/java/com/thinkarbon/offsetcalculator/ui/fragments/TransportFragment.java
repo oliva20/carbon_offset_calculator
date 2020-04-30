@@ -65,17 +65,17 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
     private ItemizedIconOverlay<OverlayItem> mapPoints; //markers in the map that correspond to different coordinate points taken every so often
     private GeoPoint currentLocation;
     private Polyline line = new Polyline();
+    private List<GeoPoint> routePoints;
+
     private LocationManager locationManager;
     private LocationService mService;
     private boolean mBound = false;
-    private List<GeoPoint> routePoints;
 
     private boolean isRouteCreated = false; //checks whether user has created a route and can leave the fragment without an alertdialog popping up.
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //get the current user's location before starting anything so that the map knows where to center
         locationManager=(LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
         try {
@@ -92,6 +92,9 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        getActivity().setTitle(R.string.transport_screen_title);
+
         // this is for the map to work
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
         routeRepository = new RouteRepository(getActivity().getApplication());
@@ -120,17 +123,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         else
             displayAlertDialog(getResources().getString(R.string.requires_location_storage));
 
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -410,10 +402,12 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
                     public void onClick(DialogInterface dialog, int id) {
                         //got back to main screen fragment.
                         Fragment fragment = new MainScreenFragment();
-                        FragmentManager fm = getActivity().getSupportFragmentManager();
-                        FragmentTransaction transaction = fm.beginTransaction();
-                        transaction.replace(R.id.fragment_container, fragment);
-                        transaction.commit();
+                        FragmentManager fm = getFragmentManager();
+                        //show the fragment instead of replacing, otherwise it will show the fragment on top of this fragment
+                        fm.beginTransaction()
+                                .show(fragment)
+                                .commit();
+
                         dialog.cancel();
                     }
                 });

@@ -28,7 +28,9 @@ public class SettingsFragment extends Fragment  {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        getActivity().setTitle(R.string.home_energy_title);
+
+        getActivity().setTitle(R.string.settings_title);
+
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         tvAbout = (TextView) view.findViewById(R.id.settings_about);
         tvHelp = (TextView) view.findViewById(R.id.settings_help);
@@ -106,7 +108,5 @@ public class SettingsFragment extends Fragment  {
 
         return view;
     }
-
-
 
 }

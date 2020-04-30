@@ -105,4 +105,5 @@
     <!-- Keys -->
     <string name="countryKey" >com.example.offsetcalculator.country</string>
     <string name="fuelKey" >com.example.offsetcalculator.fuel</string>
+    <string name="settings_title">Settings</string>
 </resources>

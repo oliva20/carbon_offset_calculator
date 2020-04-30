@@ -32,7 +32,9 @@ public class MainScreenFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         getActivity().setTitle(R.string.main_screen_title);
+
         emissionService = new EmissionServiceImpl(getActivity().getApplication());
 
         return inflater.inflate(R.layout.fragment_main_screen, container, false);

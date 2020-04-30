@@ -29,7 +29,9 @@ public class DietFragment extends Fragment implements View.OnClickListener, Adap
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         getActivity().setTitle(R.string.food_title);
+
         View view = inflater.inflate(R.layout.fragment_diet, container,false);
         emissionService = new EmissionServiceImpl(getActivity().getApplication());
         /* --------------- spinner --------------------- */
@@ -51,11 +53,6 @@ public class DietFragment extends Fragment implements View.OnClickListener, Adap
         spinner.setOnItemSelectedListener(this);
 
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override

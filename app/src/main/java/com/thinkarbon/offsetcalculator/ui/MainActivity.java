@@ -72,19 +72,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    public void onResume(){
-        super.onResume();
-    }
-
-    @Override
     public void onClick(View v){}
 
     // Replace the switch method
     protected void displayMainScreenFragment() {
+        setTitle(R.string.main_screen_title);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (mainScreenFragment.isAdded()) { // if the fragment is already in container
             ft.show(mainScreenFragment);
@@ -102,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     protected void displayTransportFragment() {
+        setTitle(R.string.transport_screen_title);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (transportFragment.isAdded()) { // if the fragment is already in container
             ft.show(transportFragment);
@@ -119,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     protected void displaySettingsFragment() {
+        setTitle(R.string.settings_title);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (settingsFragment.isAdded()) { // if the fragment is already in container
             ft.show(settingsFragment);
@@ -136,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     protected void displayDietFragment() {
+        setTitle(R.string.food_title);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (dietFragment.isAdded()) { // if the fragment is already in container
             ft.show(dietFragment);
