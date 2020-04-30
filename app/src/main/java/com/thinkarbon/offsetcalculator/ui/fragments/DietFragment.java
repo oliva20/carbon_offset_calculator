@@ -21,7 +21,7 @@ import com.thinkarbon.offsetcalculator.model.service.EmissionService;
 
 public class DietFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-    EditText edt;
+    EditText dietEdit;
     Button btn;
     EmissionService emissionService;
     String itemSelected; //default
@@ -46,7 +46,7 @@ public class DietFragment extends Fragment implements View.OnClickListener, Adap
         spinner.setAdapter(adapter);
         /* --------------- spinner --------------------- */
 
-        edt = (EditText) view.findViewById(R.id.edtGrams);
+        dietEdit = (EditText) view.findViewById(R.id.edtGrams);
         btn = (Button) view.findViewById(R.id.diet_btn);
 
         btn.setOnClickListener(this);
@@ -58,11 +58,14 @@ public class DietFragment extends Fragment implements View.OnClickListener, Adap
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.diet_btn) {
-            System.out.println("@@@ " + edt.getText().toString());
-            if(!edt.getText().toString().equals("")){ // if it isn't empty
+            System.out.println("@@@ " + dietEdit.getText().toString());
+            if(!dietEdit.getText().toString().equals("")){ // if it isn't empty
                 System.out.println("Item selected: " + itemSelected);
-                emissionService.createEmissionForFoodType(itemSelected, Double.valueOf(edt.getText().toString()));
-                edt.getText().clear();
+                double x = Double.parseDouble(dietEdit.getText().toString());
+                System.out.println("@@@ x after inserting: " + x);
+                //TODO this is not giving a double as value fot the edit text
+                emissionService.createEmissionForFoodType(itemSelected, x);
+                dietEdit.getText().clear();
             }
         }
     }

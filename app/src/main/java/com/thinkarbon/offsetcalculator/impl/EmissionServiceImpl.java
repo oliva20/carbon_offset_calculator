@@ -111,6 +111,7 @@ public class EmissionServiceImpl implements EmissionService {
 
     @Override
     public void createEmissionForFoodType(String foodType, Double grams) {
+        System.out.println("@@@ Inside create emissions: grams are " + grams);
         String datePattern = "dd/MM/yyyy";
         SimpleDateFormat df = new SimpleDateFormat(datePattern);
         DecimalFormat decimalFormat = new DecimalFormat("##.##");
@@ -120,11 +121,14 @@ public class EmissionServiceImpl implements EmissionService {
 
         if(mEmissionRep.emissionTodayExists()) {
             CarbonEmission ce = mEmissionRep.getEmissionFromToday();
+            System.out.println("@@@ Inside emission today exists:  grams are " + grams);
+            //TODO here in parseDouble might be returning the error.
             ce.setEmission(ce.getEmission() + Double.parseDouble(decimalFormat.format(ed.calculate(grams, application.getApplicationContext()))));
             mEmissionRep.update(ce);
         } else {
             CarbonEmission ce = new CarbonEmission();
             ce.setDate(df.format(new Date()));
+            System.out.println("@@@ Inside emissions today does not exist: grams are " + grams);
             ce.setEmission(Double.parseDouble(decimalFormat.format(ed.calculate(grams, application.getApplicationContext()))));
             mEmissionRep.insert(ce);
         }

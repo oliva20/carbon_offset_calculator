@@ -357,21 +357,15 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         builder.setCancelable(true);
         builder.setPositiveButton(
                 "Yes",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //no need to pass the coordinates as a param because they are going to be updated.
-                        emissionService.createEmissionsFromCoordinates();
-                        dialog.cancel();
-                    }
+                (dialog, id) -> {
+                    //no need to pass the coordinates as a param because they are going to be updated.
+                    emissionService.createEmissionsFromCoordinates();
+                    dialog.cancel();
                 });
 
         builder.setNegativeButton(
                 "No",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                (dialog, id) -> dialog.cancel());
 
         AlertDialog alert = builder.create();
         alert.show();

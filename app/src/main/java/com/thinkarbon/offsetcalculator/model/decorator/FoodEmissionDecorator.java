@@ -67,8 +67,8 @@ public class FoodEmissionDecorator extends EmissionDecorator{
             throw new RuntimeException("Food type cannot be null, set the foodtype before calculating. Options {fruit, vegetables, redMeat, whiteMeat");
         }
 
-
-        return super.calculate(grams, ctx) + result; // returns the result in co2 in kg.
+        System.out.println(grams);
+        return super.calculate(grams, ctx); // returns the result in co2 in kg.
     }
 
     @Override
