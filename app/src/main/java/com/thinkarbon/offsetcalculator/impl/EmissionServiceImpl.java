@@ -136,7 +136,7 @@ public class EmissionServiceImpl implements EmissionService {
 
         switch (country) {
             case "united kingdom":
-               if(getEmissionsTotalDay() > (4.12 * 0.10) + 4.12) // if its higher than average by 10%
+               if(getEmissionsTotalDay() > (4.12 * 0.20) + 4.12) // if its higher than average by 20%
                    return EmissionScale.HIGH;
                 if(getEmissionsTotalDay() < 4.12)
                     return EmissionScale.GOOD;
@@ -145,7 +145,7 @@ public class EmissionServiceImpl implements EmissionService {
                 break;
             case "portugal": //TODO do only england for now
                 //TODO get the emissions average for the other countries
-                if(getEmissionsTotalDay() > (4.12 / 0.10) + 4.12) // if its higher than average by 10%
+                if(getEmissionsTotalDay() > (4.12 / 0.20) + 4.12) // if its higher than average by 20%
                     return EmissionScale.HIGH;
                 if(getEmissionsTotalDay() < 4.12)
                     return EmissionScale.GOOD;
