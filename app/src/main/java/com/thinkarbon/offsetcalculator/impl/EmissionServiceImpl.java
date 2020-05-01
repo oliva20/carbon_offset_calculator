@@ -16,6 +16,8 @@ import com.thinkarbon.offsetcalculator.model.service.EmissionService;
 import com.thinkarbon.offsetcalculator.rep.EmissionRepository;
 import com.thinkarbon.offsetcalculator.rep.RouteRepository;
 
+import org.decimal4j.util.DoubleRounder;
+
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -62,7 +64,6 @@ public class EmissionServiceImpl implements EmissionService {
         List<Coordinate> coordinates = mRouteRep.getCoordinatesFromRoute(mRouteRep.getLastInsertedRoute().getId());
         String datePattern = "dd/MM/yyyy";
         SimpleDateFormat df = new SimpleDateFormat(datePattern);
-        DecimalFormat decimalFormat = new DecimalFormat("##.##");
         Set<String> humanReadableNames = EmissionDecoratorFactory.getHumanReadableNames();
 
         for(int i=0; i < coordinates.size(); i++){
@@ -87,7 +88,7 @@ public class EmissionServiceImpl implements EmissionService {
                         CarbonEmission ce = new CarbonEmission();
 
                         Double totalCarbon = ed.calculate(getMiles((double) loc1.distanceTo(loc2)), application.getApplicationContext());
-                        ce.setEmission(Double.valueOf(decimalFormat.format(totalCarbon)));
+                        ce.setEmission(DoubleRounder.round(totalCarbon, 2));
                         ce.setDate(df.format(new Date()));
 
                         //before inserting an new emission check if it exists already for today
@@ -114,22 +115,18 @@ public class EmissionServiceImpl implements EmissionService {
         System.out.println("@@@ Inside create emissions: grams are " + grams);
         String datePattern = "dd/MM/yyyy";
         SimpleDateFormat df = new SimpleDateFormat(datePattern);
-        DecimalFormat decimalFormat = new DecimalFormat("##.##");
         FoodEmissionDecorator ed = (FoodEmissionDecorator) EmissionDecoratorFactory.getDecoForHumanReadableName("food");
         //set food type
         ed.setFoodType(foodType); //set foodtype first
 
         if(mEmissionRep.emissionTodayExists()) {
             CarbonEmission ce = mEmissionRep.getEmissionFromToday();
-            System.out.println("@@@ Inside emission today exists:  grams are " + grams);
-            //TODO here in parseDouble might be returning the error.
-            ce.setEmission(ce.getEmission() + Double.parseDouble(decimalFormat.format(ed.calculate(grams, application.getApplicationContext()))));
+            ce.setEmission(ce.getEmission() + DoubleRounder.round(ed.calculate(grams, application.getApplicationContext()), 2));
             mEmissionRep.update(ce);
         } else {
             CarbonEmission ce = new CarbonEmission();
             ce.setDate(df.format(new Date()));
-            System.out.println("@@@ Inside emissions today does not exist: grams are " + grams);
-            ce.setEmission(Double.parseDouble(decimalFormat.format(ed.calculate(grams, application.getApplicationContext()))));
+            ce.setEmission(DoubleRounder.round(ed.calculate(grams, application.getApplicationContext()), 2));
             mEmissionRep.insert(ce);
         }
     }

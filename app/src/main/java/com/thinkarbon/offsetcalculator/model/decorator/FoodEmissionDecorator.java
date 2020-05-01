@@ -68,7 +68,7 @@ public class FoodEmissionDecorator extends EmissionDecorator{
         }
 
         System.out.println(grams);
-        return super.calculate(grams, ctx); // returns the result in co2 in kg.
+        return super.calculate(grams, ctx) + result; // returns the result in co2 in kg.
     }
 
     @Override

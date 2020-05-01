@@ -79,13 +79,17 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         //get the current user's location before starting anything so that the map knows where to center
         locationManager=(LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
         try {
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,this);
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,this);
             if( location != null ) {
                 currentLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
             }
         } catch (SecurityException e) {
             System.out.println(e.toString());
+        }
+
+        if(currentLocation == null) {
+            throw new NullPointerException("Current location is null.");
         }
     }
 
