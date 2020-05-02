@@ -2,6 +2,7 @@ package com.thinkarbon.offsetcalculator.ui.fragments;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -22,6 +23,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,9 +80,19 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         //get the current user's location before starting anything so that the map knows where to center
         locationManager=(LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        Location location;
         try {
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,this);
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                System.out.println("OS is 10");
+                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); //this works for android 8 but not for android 10
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            } else {
+                System.out.println("OS is 8");
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER); //this works for android 8 but not for android 10
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+            }
+
             if( location != null ) {
                 currentLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
             }
@@ -88,9 +100,6 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
             System.out.println(e.toString());
         }
 
-        if(currentLocation == null) {
-            throw new NullPointerException("Current location is null.");
-        }
     }
 
     @Nullable
@@ -122,11 +131,14 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         Intent intent = new Intent(this.getActivity(), LocationService.class);
         //START THE SERVICE
         //before starting the service we need to check if location access and file storage is permitted by the user. Otherwise it will crash the app.
-        if(checkPermissions())
-            getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
-        else
-            displayAlertDialog(getResources().getString(R.string.requires_location_storage));
-
+        try {
+            if (checkPermissions())
+                getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
+            else
+                displayAlertDialog(getResources().getString(R.string.requires_location_storage));
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
     }
 
     @Override
@@ -148,6 +160,20 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
         }
 
      }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) {
+            if(isRouteCreated) {
+                alertAndCalcEmission();
+            }
+        } else {
+            if(!checkPermissions()) {
+                displayAlertDialog(getResources().getString(R.string.requires_location_storage));
+            }
+        }
+    }
 
     @Override
     public void onPause() {
@@ -365,18 +391,24 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
                     //no need to pass the coordinates as a param because they are going to be updated.
                     emissionService.createEmissionsFromCoordinates();
                     dialog.cancel();
+                    isRouteCreated = false;
+                    clearMap();
                 });
 
         builder.setNegativeButton(
                 "No",
-                (dialog, id) -> dialog.cancel());
+                (dialog, id) -> {
+                    dialog.cancel();
+                    isRouteCreated = false;
+                    clearMap();
+                });
 
         AlertDialog alert = builder.create();
         alert.show();
 
     }
 
-    private boolean  checkPermissions() {
+    private boolean checkPermissions() {
         //both permissions for location access and file storage is required for the fragment to run.
         String p1 = Manifest.permission.ACCESS_COARSE_LOCATION;
         String p2 = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -396,20 +428,45 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
 
         builder.setPositiveButton(
                 "Ok",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //got back to main screen fragment.
-                        Fragment fragment = new MainScreenFragment();
-                        FragmentManager fm = getFragmentManager();
-                        //show the fragment instead of replacing, otherwise it will show the fragment on top of this fragment
-                        fm.beginTransaction()
-                                .show(fragment)
-                                .commit();
+                (dialog, id) -> {
+                    FragmentManager fm = getFragmentManager();
+                    //show the fragment instead of replacing, otherwise it will show the fragment on top of this fragment
+                    fm.beginTransaction()
+                            .show(new MainScreenFragment())
+                            .hide(this)
+                            .commit();
 
-                        dialog.cancel();
-                    }
+                    dialog.cancel();
                 });
+
+
+        builder.setOnDismissListener(dialog -> {
+            FragmentManager fm = getFragmentManager();
+            //show the fragment instead of replacing, otherwise it will show the fragment on top of this fragment
+            fm.beginTransaction()
+                    .show(new MainScreenFragment())
+                    .hide(this)
+                    .commit();
+            dialog.cancel();
+        });
+
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+    //this functions will be used to clear everything on the map when user chooses to create emissions or not from the route.
+    private void clearMap() {
+        try {
+            //we must clear the dialogs as well.
+            //make sure to only clear the markers not user's current marker
+            map.getOverlays().clear();
+            coordinateMarker.getInfoWindow().close();
+            //but also set the marker for the user current position right after
+            map.getOverlays().add(currentLocationMarker);
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+
 }

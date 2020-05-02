@@ -18,7 +18,6 @@ import com.thinkarbon.offsetcalculator.rep.RouteRepository;
 
 import org.decimal4j.util.DoubleRounder;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -53,7 +52,7 @@ public class EmissionServiceImpl implements EmissionService {
         Double total = 0.0;
         try {
             total += mEmissionRep.getEmissionFromToday().getEmission();
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.toString());
         }
         return total;
@@ -93,9 +92,12 @@ public class EmissionServiceImpl implements EmissionService {
 
                         //before inserting an new emission check if it exists already for today
                         if(mEmissionRep.emissionTodayExists()){
+                            System.out.println("Inside genearting emissions for coordinates (emission Today exists): ");
+                            System.out.println("Inside genearting emissions for coordinates (emission Today exists): " + totalCarbon.toString());
                             CarbonEmission carbonEmission = mEmissionRep.getEmissionFromToday();
-                            Double x  = carbonEmission.getEmission();
-                            Double total = x + ce.getEmission();
+                            System.out.println("Carbon Emission from today: " + carbonEmission.toString());
+                            carbonEmission.setEmission(carbonEmission.getEmission() + ce.getEmission());
+                            System.out.println("CE emission: " + ce.getEmission());
                             mEmissionRep.update(carbonEmission);
 
                         } else {
@@ -121,7 +123,7 @@ public class EmissionServiceImpl implements EmissionService {
 
         if(mEmissionRep.emissionTodayExists()) {
             CarbonEmission ce = mEmissionRep.getEmissionFromToday();
-            ce.setEmission(ce.getEmission() + DoubleRounder.round(ed.calculate(grams, application.getApplicationContext()), 2));
+            ce.setEmission(DoubleRounder.round(ce.getEmission() + ed.calculate(grams, application.getApplicationContext()), 2));
             mEmissionRep.update(ce);
         } else {
             CarbonEmission ce = new CarbonEmission();

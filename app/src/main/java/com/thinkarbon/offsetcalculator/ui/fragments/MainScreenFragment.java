@@ -22,7 +22,6 @@ import com.thinkarbon.offsetcalculator.impl.EmissionServiceImpl;
 import com.thinkarbon.offsetcalculator.model.service.EmissionService;
 import com.thinkarbon.offsetcalculator.ui.HelpActivity;
 
-import java.text.DecimalFormat;
 // source to compare with average emissions UK https://lginform.local.gov.uk/reports/lgastandard?mod-metric=51&mod-area=E92000001&mod-group=AllRegions_England&mod-type=namedComparisonGroup
 public class MainScreenFragment extends Fragment {
     private EmissionService emissionService;
@@ -56,7 +55,9 @@ public class MainScreenFragment extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) { //this method gets called when the fragent is hidden and gets show again
         super.onHiddenChanged(hidden);
-        displayCarbonEmissions(getView());
+        if(!hidden) {
+            displayCarbonEmissions(getView());
+        }
     }
 
     @Override
@@ -73,7 +74,6 @@ public class MainScreenFragment extends Fragment {
 
     private void displayCarbonEmissions(View view){
         emissionsNumber = (TextView) getView().findViewById(R.id.tvEmissionsNumber);
-        //TODO change the color of the circle
         StateListDrawable drawable = (StateListDrawable) view.findViewById(R.id.tvEmissionsNumber).getBackground();
         DrawableContainer.DrawableContainerState dcs = (DrawableContainer.DrawableContainerState)drawable.getConstantState();
         Drawable[] drawableItems = dcs.getChildren();
@@ -98,9 +98,8 @@ public class MainScreenFragment extends Fragment {
         String msgCo2 = "<b>0.0</b> Kg CO2e";
         emissionsNumber.setText(Html.fromHtml(msgCo2));
         try {
-            DecimalFormat decimalFormat = new DecimalFormat("##.##");
             //get the emissions
-            Double num = Double.valueOf(decimalFormat.format(emissionService.getEmissionsTotalDay()));
+            Double num = emissionService.getEmissionsTotalDay();
             msgCo2 = "<b>" + num + "</b>" + " Kg CO2e";
             emissionsNumber.setText(Html.fromHtml(msgCo2));
         } catch (Exception e) {

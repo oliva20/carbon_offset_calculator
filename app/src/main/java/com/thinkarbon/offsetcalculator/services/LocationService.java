@@ -157,6 +157,8 @@ public class LocationService extends Service {
                             if(!coordinates.contains(coordinate)) {
                                 //here we only want to add the coordinate evey 5 requests. Otherwise there will be too many.
                                 if(count == COORDINATE_INTERVAL) {
+                                    System.out.println("Location has started tracking: ");
+                                    System.out.println("Coordinate: " + coordinate.toString());
                                     coordinates.add(coordinate);
                                     count = 0;
                                 } else {
@@ -167,6 +169,7 @@ public class LocationService extends Service {
                     }
                 };
 
+        // TODO maybe request locations with gps as well.
         mFusedLocationClient.requestLocationUpdates(mLocationRequestHighAccuracy, locationCallback, Looper.myLooper());
 
         //set the global scope list to be equal to the generated list on the method
