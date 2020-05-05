@@ -5,7 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +25,7 @@
                 android:textStyle="bold"
                 android:padding="10dp"
                 android:background="@drawable/button_border"
-                android:layout_margin="9dp"/>
+                android:layout_margin="5dp"/>
 
             <ImageView
                 android:id="@+id/image_about"
@@ -54,9 +56,9 @@
                 android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:text="@string/terms_and_conditions" />
 
     </RelativeLayout>
-
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

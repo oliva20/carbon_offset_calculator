@@ -75,6 +75,18 @@
         \u2022 Head hover to the main screen and hit the help button to find out ways to combat this global issue.
         \u2022 Please note that the calculations are based on an estimate.
     </string>
+
+    <string name="help_meat_text">\u2022 Eating meat contributes considerably to greenhouse gases. In fact 51% of greenhouse gas emissions are derived from
+        livestock and their byproducts. A plant base diet cuts your carbon footprint by 50%! \n
+        \u2022 Take a look at this <a href="https://www.cowspiracy.com/infographic">infographic</a> by Cowspiracy for more facts.</string>
+
+    <string name="help_transport_text">\u2022 Try driving less and using public transport instead. Take your bicycle for a good spin and reduce your carbon emissions while getting some exercise!\n
+        \u2022 Figures show that the average person will lose 13 lbs (5.8 kilograms) in their first year of cycling to work (Source: Outdoor Foundation 2010).</string>
+
+    <string name="offset_text">You can offset your carbon emissions with <a href="https://carbonfund.org/carbon-offsets/">carbonfund.org!</a></string>
+
+    <string name="help_transport_title">Transport</string>
+
     <string name="reduce_emissions">How to reduce emissions</string>
     <string name="settings_type_of_fuel">Fuel Type</string>
     <string name="settings_country">Country</string>
@@ -114,4 +126,5 @@
     <string name="countryKey" >com.example.offsetcalculator.country</string>
     <string name="fuelKey" >com.example.offsetcalculator.fuel</string>
     <string name="settings_title">Settings</string>
+    <string name="help_meat_title">Meat consumption</string>
 </resources>
