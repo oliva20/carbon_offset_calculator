@@ -1,14 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-<!--        TODO Maybe get a go back button here so the user doens't get confused and can go back to where they were-->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="This is the about activity" />
-    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+
+
+            <TextView
+                android:id="@+id/text_about"
+                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/about_thinkarbon_text"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:background="@drawable/button_border"
+                android:layout_margin="9dp"/>
+
+            <ImageView
+                android:id="@+id/image_about"
+                android:layout_below="@+id/text_about"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@mipmap/ic_launcher_foreground"
+                />
+
+                 <TextView
+                android:layout_centerHorizontal="true"
+                android:id="@+id/title_about"
+                android:layout_below="@+id/image_about"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="35sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title" />
+
+                <TextView
+                android:layout_centerHorizontal="true"
+                android:id="@+id/link_terms_conditions"
+                android:layout_below="@+id/title_about"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/terms_and_conditions" />
+
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

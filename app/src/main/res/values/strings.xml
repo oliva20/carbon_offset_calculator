@@ -66,12 +66,20 @@
     <string name="navbar_transport">Transport</string>
     <string name="navbar_home">home</string>
     <string name="navbar_energy">Energy</string>
-    <string name="settings_about_thinkarbon">About ThinKarbon</string>
+    <string name="settings_about_thinkarbon">What is ThinKarbon?</string>
+    <string name="about_thinkarbon_text">
+        \u2022 In the past few years we have seen the effects of climate change and global warming
+        on our planet mainly caused by excessive emissions of greenhouse gases of which CO2. \n\n
+        \u2022 The only to way fight this, is if each individual takes action. ThinKarbon allows you to track
+        your emissions generated from the transport you use and food you consume. \n\n
+        \u2022 Head hover to the main screen and hit the help button to find out ways to combat this global issue.
+        \u2022 Please note that the calculations are based on an estimate.
+    </string>
     <string name="reduce_emissions">How to reduce emissions</string>
     <string name="settings_type_of_fuel">Fuel Type</string>
     <string name="settings_country">Country</string>
     <string name="navbar_settings">Settings</string>
-
+    <string name="terms_and_conditions"><a href="https://raw.githubusercontent.com/oliva20/thinkarbon_app/master/LICENSE">Terms and Conditions</a></string>
 
     <!--    Preferences  -->
     <string-array name="countries">
