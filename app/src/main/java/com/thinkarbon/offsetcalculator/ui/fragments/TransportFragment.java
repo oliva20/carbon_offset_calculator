@@ -2,17 +2,14 @@ package com.thinkarbon.offsetcalculator.ui.fragments;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
@@ -49,7 +46,8 @@ import org.osmdroid.views.overlay.infowindow.InfoWindow;
 
 import java.util.List;
 
-public class TransportFragment extends Fragment implements View.OnClickListener, LocationListener {
+public class TransportFragment extends Fragment 
+    implements View.OnClickListener, LocationListener {
 
     private MapView map;
     private Button btn;
@@ -58,13 +56,15 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
     private RouteRepository routeRepository;
     private EmissionService emissionService;
 
-
-    private Marker currentLocationMarker; //marker responsible for the current location in the map
-    private Marker coordinateMarker; //marker responsible for the current location in the map
+    //marker responsible for the current location in the map
+    private Marker currentLocationMarker; 
+    private Marker coordinateMarker;     
     private Marker beginMarker;
     private Marker endMarker;
 
-    private ItemizedIconOverlay<OverlayItem> mapPoints; //markers in the map that correspond to different coordinate points taken every so often
+    //markers in the map that correspond to different coordinate points 
+    //taken every so often
+    private ItemizedIconOverlay<OverlayItem> mapPoints;    
     private GeoPoint currentLocation;
     private Polyline line = new Polyline();
     private List<GeoPoint> routePoints;
@@ -72,30 +72,44 @@ public class TransportFragment extends Fragment implements View.OnClickListener,
     private LocationManager locationManager;
     private LocationService mService;
     private boolean mBound = false;
-
-    private boolean isRouteCreated = false; //checks whether user has created a route and can leave the fragment without an alertdialog popping up.
+    
+    //checks whether user has created a route and can leave the fragment without
+    //an alertdialog popping up.
+    private boolean isRouteCreated = false; 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //get the current user's location before starting anything so that the map knows where to center
-        locationManager=(LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Location location;
-        try {
+        //get the current user's location before starting anything so that the 
+        //map knows where to center
+        locationManager=(LocationManager)getActivity().
+                getSystemService(Context.LOCATION_SERVICE);
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                System.out.println("OS is 10");
-                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); //this works for android 8 but not for android 10
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-            } else {
-                System.out.println("OS is 8");
-                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER); //this works for android 8 but not for android 10
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-            }
+        Location location;
+
+        try {
+            //if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Log.e("@@@", "No if statements required");
+                locationManager
+                    .requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+                //this works for android 8 but not for android 10
+                location = locationManager
+                    .getLastKnownLocation(LocationManager.GPS_PROVIDER); 
+
+             /*   } else {
+                
+                locationManager
+                    .requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+                location = locationManager
+                    .getLastKnownLocation(LocationManager.GPS_PROVIDER); 
+            } */
 
             if( location != null ) {
                 currentLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
             }
+
         } catch (SecurityException e) {
             System.out.println(e.toString());
         }
