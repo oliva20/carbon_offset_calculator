@@ -89,7 +89,6 @@ public class TransportFragment extends Fragment
 
         try {
             //if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Log.e("@@@", "No if statements required");
                 locationManager
                     .requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
@@ -171,12 +170,6 @@ public class TransportFragment extends Fragment
                     clicked = false;
                     routePoints = mService.stopTrackingAndSave();
                     
-                //@@@     
-                for(GeoPoint g : routePoints) {
-                     System.out.println("@@@ GeoPoint from Transprot: " + g.toString());
-                    }
-
-
                     //call the function to change the button style after 
                     //setting the clicked boolean
 
