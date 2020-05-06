@@ -24,7 +24,9 @@ import java.util.List;
 import java.util.Set;
 
 /*
-    To convert a pound measurement to a ton measurement, divide the weight by the conversion ratio. One ton is equal to 2,000 pounds, so use this simple formula to convert:
+    To convert a pound measurement to a ton measurement, divide the weight by 
+    the conversion ratio. One ton is equal to 2,000 pounds, 
+    so use this simple formula to convert:
     tons = pounds ÷ 2,000
     source: https://www.inchcalculator.com/convert/pound-to-ton/
  */
@@ -42,9 +44,10 @@ public class EmissionServiceImpl implements EmissionService {
         mEmissionRep = new EmissionRepository(application);
         this.application = application;
 
-        prefs = application.getApplicationContext().getSharedPreferences("com.example.offsetcalculator",
-                Context.MODE_PRIVATE);
-        country = prefs.getString(application.getResources().getString(R.string.countryKey), "united kingdom");
+        prefs = application.getApplicationContext().
+            getSharedPreferences("com.example.offsetcalculator", Context.MODE_PRIVATE);
+        country = prefs.getString(application.getResources()
+                .getString(R.string.countryKey), "united kingdom");
     }
 
     @Override
@@ -60,16 +63,20 @@ public class EmissionServiceImpl implements EmissionService {
 
     @Override
     public void createEmissionsFromCoordinates() {
-        List<Coordinate> coordinates = mRouteRep.getCoordinatesFromRoute(mRouteRep.getLastInsertedRoute().getId());
+
+        List<Coordinate> coordinates = mRouteRep
+            .getCoordinatesFromRoute(mRouteRep.getLastInsertedRoute().getId());
+    
         String datePattern = "dd/MM/yyyy";
         SimpleDateFormat df = new SimpleDateFormat(datePattern);
         Set<String> humanReadableNames = EmissionDecoratorFactory.getHumanReadableNames();
 
         for(int i=0; i < coordinates.size(); i++){
-            if(i+1 != coordinates.size()){ //if we are not dealing with last the coordinate of the array
+            if(i+1 != coordinates.size()){ 
+                //if we are not dealing with last the coordinate of the array
 
                 Coordinate cord = coordinates.get(i);
-                Location loc1 = new Location("Point A"); //we must translate the coordinate object to location object so that it can be used in fused location client
+                Location loc1 = new Location("Point A"); 
                 loc1.setLatitude(cord.getLatitude());
                 loc1.setLongitude(cord.getLongitude());
 
@@ -80,24 +87,30 @@ public class EmissionServiceImpl implements EmissionService {
 
                 for(String hrn : humanReadableNames ) {
 
-                    if(hrn.equals(cord.getTransportType())) { //if there is a decorator for the transport type then proceed.
+                    if(hrn.equals(cord.getTransportType())) { 
+                        //if there is a decorator for the transport type then proceed.
 
-                        //this works and gets the car decorator but you must decorate it with the BaseEmission.
-                        Emission ed = EmissionDecoratorFactory.getDecoForHumanReadableName(hrn);
+                        Emission ed = EmissionDecoratorFactory
+                            .getDecoForHumanReadableName(hrn);
                         CarbonEmission ce = new CarbonEmission();
 
-                        Double totalCarbon = ed.calculate(getMiles((double) loc1.distanceTo(loc2)), application.getApplicationContext());
+                        Double totalCarbon = ed.calculate(
+                                getMiles((double) loc1.distanceTo(loc2)), 
+                                                application.getApplicationContext());
+
                         ce.setEmission(DoubleRounder.round(totalCarbon, 2));
                         ce.setDate(df.format(new Date()));
 
-                        //before inserting an new emission check if it exists already for today
+                        //before inserting an new emission check if 
+                        //it exists already for today
+
                         if(mEmissionRep.emissionTodayExists()){
-                            System.out.println("Inside genearting emissions for coordinates (emission Today exists): ");
-                            System.out.println("Inside genearting emissions for coordinates (emission Today exists): " + totalCarbon.toString());
-                            CarbonEmission carbonEmission = mEmissionRep.getEmissionFromToday();
-                            System.out.println("Carbon Emission from today: " + carbonEmission.toString());
-                            carbonEmission.setEmission(carbonEmission.getEmission() + ce.getEmission());
-                            System.out.println("CE emission: " + ce.getEmission());
+                            CarbonEmission carbonEmission = 
+                                mEmissionRep.getEmissionFromToday();
+
+                            carbonEmission.setEmission(
+                                    carbonEmission.getEmission() + ce.getEmission());
+
                             mEmissionRep.update(carbonEmission);
 
                         } else {
@@ -114,21 +127,26 @@ public class EmissionServiceImpl implements EmissionService {
 
     @Override
     public void createEmissionForFoodType(String foodType, Double grams) {
-        System.out.println("@@@ Inside create emissions: grams are " + grams);
         String datePattern = "dd/MM/yyyy";
         SimpleDateFormat df = new SimpleDateFormat(datePattern);
-        FoodEmissionDecorator ed = (FoodEmissionDecorator) EmissionDecoratorFactory.getDecoForHumanReadableName("food");
+        FoodEmissionDecorator ed = (FoodEmissionDecorator) 
+            EmissionDecoratorFactory.getDecoForHumanReadableName("food");
         //set food type
         ed.setFoodType(foodType); //set foodtype first
 
         if(mEmissionRep.emissionTodayExists()) {
+
             CarbonEmission ce = mEmissionRep.getEmissionFromToday();
-            ce.setEmission(DoubleRounder.round(ce.getEmission() + ed.calculate(grams, application.getApplicationContext()), 2));
+            ce.setEmission(DoubleRounder.round(ce.getEmission() + 
+                        ed.calculate(grams, application.getApplicationContext()), 2));
             mEmissionRep.update(ce);
+
         } else {
+            
             CarbonEmission ce = new CarbonEmission();
             ce.setDate(df.format(new Date()));
-            ce.setEmission(DoubleRounder.round(ed.calculate(grams, application.getApplicationContext()), 2));
+            ce.setEmission(DoubleRounder
+                    .round(ed.calculate(grams, application.getApplicationContext()), 2));
             mEmissionRep.insert(ce);
         }
     }
@@ -138,16 +156,17 @@ public class EmissionServiceImpl implements EmissionService {
 
         switch (country) {
             case "united kingdom":
-               if(getEmissionsTotalDay() > (4.12 * 0.20) + 4.12) // if its higher than average by 20%
-                   return EmissionScale.HIGH;
+               if(getEmissionsTotalDay() > (4.12 * 0.20) + 4.12) 
+                   // if its higher than average by 20%
+                    return EmissionScale.HIGH;
                 if(getEmissionsTotalDay() < 4.12)
                     return EmissionScale.GOOD;
                 if(getEmissionsTotalDay() >= 4.12)
                     return EmissionScale.BAD;
                 break;
             case "portugal": //TODO do only england for now
-                //TODO get the emissions average for the other countries
-                if(getEmissionsTotalDay() > (4.12 / 0.20) + 4.12) // if its higher than average by 20%
+                if(getEmissionsTotalDay() > (4.12 / 0.20) + 4.12) 
+                    // if its higher than average by 20%
                     return EmissionScale.HIGH;
                 if(getEmissionsTotalDay() < 4.12)
                     return EmissionScale.GOOD;
@@ -156,7 +175,7 @@ public class EmissionServiceImpl implements EmissionService {
                 break;
         }
 
-        return EmissionScale.BAD;
+        return EmissionScale.GOOD;
     }
 
     @Override

@@ -107,7 +107,8 @@ public class TransportFragment extends Fragment
             } */
 
             if( location != null ) {
-                currentLocation = new GeoPoint(location.getLatitude(), location.getLongitude());
+                currentLocation = new GeoPoint(location.getLatitude(), 
+                        location.getLongitude());
             }
 
         } catch (SecurityException e) {
@@ -118,7 +119,8 @@ public class TransportFragment extends Fragment
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, 
+            @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         getActivity().setTitle(R.string.transport_screen_title);
 
@@ -143,13 +145,19 @@ public class TransportFragment extends Fragment
         setupMap();
 
         Intent intent = new Intent(this.getActivity(), LocationService.class);
-        //START THE SERVICE
-        //before starting the service we need to check if location access and file storage is permitted by the user. Otherwise it will crash the app.
+        
+        //before starting the service we need to check if location 
+        //access and file storage is permitted by the user. 
+        //Otherwise it will crash the app.
+
         try {
             if (checkPermissions())
                 getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
+
             else
-                displayAlertDialog(getResources().getString(R.string.requires_location_storage));
+                displayAlertDialog(getResources()
+                        .getString(R.string.requires_location_storage));
+
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -158,17 +166,30 @@ public class TransportFragment extends Fragment
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.start_tracking){
-                //@@@ This varies between API level. Only use this with 25 or under
+
                 if(clicked) {
                     clicked = false;
                     routePoints = mService.stopTrackingAndSave();
-                    //call the function to change the button style after setting the clicked boolean
+                    
+                //@@@     
+                for(GeoPoint g : routePoints) {
+                     System.out.println("@@@ GeoPoint from Transprot: " + g.toString());
+                    }
+
+
+                    //call the function to change the button style after 
+                    //setting the clicked boolean
+
                     changeButtonStyle(clicked);
-                    drawRoute(); //geopoints must not be null in order to drawroute to work
+
+                    drawRoute(); 
+                    //geopoints must not be null in order to 
+                    //drawroute to work
                 } else {
                     mService.startLocationTracking();
                     clicked = true;
-                    //call the function to change the button style after setting the clicked boolean
+                    //call the function to change the button style after 
+                    //setting the clicked boolean
                     changeButtonStyle(clicked);
                 }
         }
