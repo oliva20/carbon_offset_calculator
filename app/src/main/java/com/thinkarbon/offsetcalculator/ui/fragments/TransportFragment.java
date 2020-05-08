@@ -1,11 +1,5 @@
 package com.thinkarbon.offsetcalculator.ui.fragments;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ComponentName;
@@ -17,6 +11,8 @@ import android.graphics.Paint;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -25,14 +21,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
-import com.thinkarbon.offsetcalculator.BuildConfig;
-import com.thinkarbon.offsetcalculator.R;
-import com.thinkarbon.offsetcalculator.impl.EmissionServiceImpl;
-import com.thinkarbon.offsetcalculator.model.route.Coordinate;
-import com.thinkarbon.offsetcalculator.model.service.EmissionService;
-import com.thinkarbon.offsetcalculator.rep.RouteRepository;
-import com.thinkarbon.offsetcalculator.services.LocationService;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import androidx.core.content.res.ResourcesCompat;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import java.util.List;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
@@ -44,7 +43,13 @@ import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.advancedpolyline.MonochromaticPaintList;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 
-import java.util.List;
+import com.thinkarbon.offsetcalculator.BuildConfig;
+import com.thinkarbon.offsetcalculator.R;
+import com.thinkarbon.offsetcalculator.impl.EmissionServiceImpl;
+import com.thinkarbon.offsetcalculator.model.route.Coordinate;
+import com.thinkarbon.offsetcalculator.model.service.EmissionService;
+import com.thinkarbon.offsetcalculator.rep.RouteRepository;
+import com.thinkarbon.offsetcalculator.services.LocationService;
 
 public class TransportFragment extends Fragment 
     implements View.OnClickListener, LocationListener {
@@ -172,18 +177,23 @@ public class TransportFragment extends Fragment
                     
                     //call the function to change the button style after 
                     //setting the clicked boolean
-
                     changeButtonStyle(clicked);
-
                     drawRoute(); 
                     //geopoints must not be null in order to 
                     //drawroute to work
                 } else {
-                    mService.startLocationTracking();
-                    clicked = true;
-                    //call the function to change the button style after 
-                    //setting the clicked boolean
-                    changeButtonStyle(clicked);
+                    //before allowing to start tracking check if there is an
+                    //internet connection and warn the user that the app be able
+                    //to track coordinates unless there is a connection 
+                    if(isNetworkConnected()){
+                        mService.startLocationTracking();
+                        clicked = true;
+                        changeButtonStyle(clicked);
+                    } else {
+                       Toast.makeText(getContext(), 
+                               "Tracking requires active Internet connection",
+                               Toast.LENGTH_LONG).show();
+                    }
                 }
         }
 
@@ -216,14 +226,18 @@ public class TransportFragment extends Fragment
     //this is used to set the current location the map based on user location
     @Override
     public void onLocationChanged(Location location) {
-        // when you go to another fragment it keeps trying get the map when it doens't exist because we are not in the transport fragment.
+        // when you go to another fragment it keeps trying get the map when it 
+        // doens't exist because we are not in the transport fragment.
         try {
 
             map.getOverlays().remove(currentLocationMarker);
             currentLocationMarker = new Marker(map);
-            currentLocationMarker.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_localization, null));
-            currentLocationMarker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
-            currentLocationMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() { //set an on click listener here so it doesn't get confused with the blue markers and crashes the app
+            currentLocationMarker.setIcon(ResourcesCompat.getDrawable(
+                        getResources(), R.drawable.ic_localization, null));
+            currentLocationMarker.setPosition(new GeoPoint(
+                        location.getLatitude(), location.getLongitude()));
+            currentLocationMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() { 
+                //set an on click listener here so it doesn't get confused with the blue markers and crashes the app
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
                     return false;
@@ -314,7 +328,8 @@ public class TransportFragment extends Fragment
         line.getOutlinePaintLists().add(new MonochromaticPaintList(paintBorder));
 
         //get the coordinates here
-        List<Coordinate> coordinates = routeRepository.getCoordinatesFromRoute(routeRepository.getLastInsertedRoute().getId());
+        List<Coordinate> coordinates = routeRepository.
+            getCoordinatesFromRoute(routeRepository.getLastInsertedRoute().getId());
 
         //this is getting to many coordinates that are duplicated.
         for(final Coordinate coordinate : coordinates) {
@@ -327,15 +342,21 @@ public class TransportFragment extends Fragment
                         coordinateMarker = new Marker(map);
                         //set on event listeners and update the coordinate field of type of transport here.
                         coordinateMarker.setIcon(getActivity().getDrawable(R.drawable.ic_point));
-                        coordinateMarker.setPosition(new GeoPoint(coordinate.getLatitude(), coordinate.getLongitude()));
-                        InfoWindow infoWindow = new PointInfoWindow(R.layout.bonuspack_bubble, map, coordinate, getActivity(), routeRepository);
+                        coordinateMarker.setPosition(new GeoPoint(coordinate.getLatitude(), 
+                                    coordinate.getLongitude()));
+                        InfoWindow infoWindow = new PointInfoWindow(
+                                R.layout.bonuspack_bubble, map, coordinate, 
+                                getActivity(), routeRepository);
                         coordinateMarker.setInfoWindow(infoWindow);
 
                 } else {
                          coordinateMarker = new Marker(map);
-                         coordinateMarker.setIcon(getActivity().getResources().getDrawable(R.drawable.ic_point));
-                         coordinateMarker.setPosition(new GeoPoint(coordinate.getLatitude(), coordinate.getLongitude()));
-                         InfoWindow infoWindow = new PointInfoWindow(R.layout.bonuspack_bubble, map, coordinate, getActivity(), routeRepository);
+                         coordinateMarker.setIcon(getActivity().getResources()
+                                 .getDrawable(R.drawable.ic_point));
+                         coordinateMarker.setPosition(new GeoPoint(coordinate.getLatitude(), 
+                                     coordinate.getLongitude()));
+                         InfoWindow infoWindow = new PointInfoWindow(R.layout.bonuspack_bubble, 
+                                 map, coordinate, getActivity(), routeRepository);
                          coordinateMarker.setInfoWindow(infoWindow);
                 }
 
@@ -366,7 +387,8 @@ public class TransportFragment extends Fragment
 
             endMarker.setPosition(routePoints.get(routePoints.size() - 1));
             endMarker.setIcon(getActivity().getDrawable(R.drawable.ic_end_point));
-            endMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() { //set an on click listener here so it doesn't get confused with the blue markers and crashes the app
+            endMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() { 
+                //set an on click listener here so it doesn't get confused with the blue markers and crashes the app
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
                     return false;
@@ -385,14 +407,16 @@ public class TransportFragment extends Fragment
 
             beginMarker.setPosition(routePoints.get(0));
             beginMarker.setIcon(getActivity().getResources().getDrawable(R.drawable.ic_start_point));
-            beginMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() { //set an on click listener here so it doesn't get confused with the blue markers and crashes the app
+            beginMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() { 
+                //set an on click listener here so it doesn't get confused with the blue markers and crashes the app
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
                     return false;
                 }
             });
-
-            endMarker.setPosition(routePoints.get(routePoints.size() - 1)); //last point in the list might return null.
+    
+            //last point in the list might return null.
+            endMarker.setPosition(routePoints.get(routePoints.size() - 1)); 
             endMarker.setIcon(getActivity().getResources().getDrawable(R.drawable.ic_end_point));
             endMarker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() { //set an on click listener here so it doesn't get confused with the blue markers and crashes the app
                 @Override
@@ -458,7 +482,8 @@ public class TransportFragment extends Fragment
                 "Ok",
                 (dialog, id) -> {
                     FragmentManager fm = getFragmentManager();
-                    //show the fragment instead of replacing, otherwise it will show the fragment on top of this fragment
+                    //show the fragment instead of replacing, otherwise it will 
+                    //show the fragment on top of this fragment
                     fm.beginTransaction()
                             .show(new MainScreenFragment())
                             .hide(this)
@@ -470,7 +495,8 @@ public class TransportFragment extends Fragment
 
         builder.setOnDismissListener(dialog -> {
             FragmentManager fm = getFragmentManager();
-            //show the fragment instead of replacing, otherwise it will show the fragment on top of this fragment
+            //show the fragment instead of replacing, otherwise it will show the 
+            //fragment on top of this fragment
             fm.beginTransaction()
                     .show(new MainScreenFragment())
                     .hide(this)
@@ -482,7 +508,8 @@ public class TransportFragment extends Fragment
         alert.show();
     }
 
-    //this functions will be used to clear everything on the map when user chooses to create emissions or not from the route.
+    //this functions will be used to clear everything on the map when user chooses 
+    //to create emissions or not from the route.
     private void clearMap() {
         try {
             //we must clear the dialogs as well.
@@ -496,5 +523,26 @@ public class TransportFragment extends Fragment
             System.out.println(e.toString());
         }
     }
+    
+    //this checks whether it is connected to a network NOT if it is connected
+    //to the internet
+    ///TODO find a better solution for checking the internet.
+    private boolean isNetworkConnected() {
 
-}
+            ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(
+                                                 Context.CONNECTIVITY_SERVICE);
+            //TODO this class was deperecated in API level 29. 
+            NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+            if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+
+                return true;
+
+            } else {
+
+                return false;
+
+            }
+
+        }
+    }

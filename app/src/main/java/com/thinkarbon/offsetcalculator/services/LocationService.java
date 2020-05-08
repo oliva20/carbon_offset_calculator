@@ -53,7 +53,7 @@ public class LocationService extends Service {
     private List<Coordinate> mCoordinates;
     private LocationCallback locationCallback;
 
-    private int count = 0; //count how many times the locatin has been requested
+    private int count = 0; //count how many times the location has been requested
     private List<GeoPoint> routePoints;
 
     public class LocalBinder extends Binder {
@@ -113,7 +113,6 @@ public class LocationService extends Service {
         // ---------------------------------- LocationRequest ------------------------------------
         // Create the location request to start receiving updates
         LocationRequest mLocationRequestHighAccuracy = new LocationRequest();
-        //@@@ might want to change as it uses a lot of battery
         mLocationRequestHighAccuracy.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequestHighAccuracy.setInterval(UPDATE_INTERVAL);
         mLocationRequestHighAccuracy.setFastestInterval(FASTEST_INTERVAL);
@@ -122,12 +121,12 @@ public class LocationService extends Service {
         // new Google API SDK v11 uses getFusedLocationProviderClient(this)
         if (ActivityCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION) != 
-                                        PackageManager.PERMISSION_GRANTED) {
+                PackageManager.PERMISSION_GRANTED) {
 
             stopSelf();
             return;
 
-        }
+                }
 
         final List<Coordinate> coordinates = new ArrayList<>();
 
@@ -158,7 +157,6 @@ public class LocationService extends Service {
             }
         };
 
-        // TODO maybe request locations with gps as well.
         mFusedLocationClient.requestLocationUpdates(mLocationRequestHighAccuracy, 
                 locationCallback, Looper.myLooper());
 
@@ -195,7 +193,7 @@ public class LocationService extends Service {
         manager.createNotificationChannel(chan);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat
-                                         .Builder(this, NOTIFICATION_CHANNEL_ID);
+            .Builder(this, NOTIFICATION_CHANNEL_ID);
 
         Notification notification = notificationBuilder.setOngoing(true)
             .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
