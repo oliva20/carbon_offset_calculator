@@ -56,10 +56,6 @@ public class LocationService extends Service {
     private int count = 0; //count how many times the locatin has been requested
     private List<GeoPoint> routePoints;
 
-    /**
-     * Class used for the client Binder.  Because we know this service always
-     * runs in the same process as its clients, we don't need to deal with IPC.
-     */
     public class LocalBinder extends Binder {
         public LocationService getService() {
             // Return this instance of LocalService so clients can call public methods
@@ -73,20 +69,6 @@ public class LocationService extends Service {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         routeRepository = new RouteRepository(getApplication());
 
-        //initialize a route here because it needs be initialized before the coordinates this method increments the id
-//        if (Build.VERSION.SDK_INT >= 26) { // android demands that api levels above 26 require that the user is notified with the service.
-//            String CHANNEL_ID = "my_channel_01";
-//            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-//                    "My Channel",
-//                    NotificationManager
-//                            .IMPORTANCE_DEFAULT);
-//            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
-//
-//            Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-//                    .setContentTitle("")
-//                    .setContentText("").build();
-//            startForeground(1, notification);
-//        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { //if the SDK is above oreo
             System.out.println("@@@ start own foreground");
             startMyOwnForeground();
@@ -97,10 +79,10 @@ public class LocationService extends Service {
                     notificationIntent, 0);
 
             Notification notification = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle("My Awesome App")
-                    .setContentText("Doing some work...")
-                    .setContentIntent(pendingIntent).build();
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("ThinKarbon")
+                .setContentText("Ready to track.")
+                .setContentIntent(pendingIntent).build();
 
             startForeground(1337, notification);
         }
@@ -139,38 +121,46 @@ public class LocationService extends Service {
 
         // new Google API SDK v11 uses getFusedLocationProviderClient(this)
         if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    Manifest.permission.ACCESS_FINE_LOCATION) != 
+                                        PackageManager.PERMISSION_GRANTED) {
+
             stopSelf();
             return;
+
         }
 
         final List<Coordinate> coordinates = new ArrayList<>();
 
-        locationCallback = new LocationCallback() {
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        Location location = locationResult.getLastLocation();
-                        if (location != null) {
-                            Coordinate coordinate = new Coordinate(location.getLatitude(), location.getLongitude(), route.getId());
-                            //here we should create a new live list of coordinates being retrived to send to the fragment
-                            routePoints.add(new GeoPoint(location.getLatitude(), location.getLongitude()));
-                            if(!coordinates.contains(coordinate)) {
-                                //here we only want to add the coordinate evey 5 requests. Otherwise there will be too many.
-                                if(count == COORDINATE_INTERVAL) {
-                                    System.out.println("Location has started tracking: ");
-                                    System.out.println("Coordinate: " + coordinate.toString());
-                                    coordinates.add(coordinate);
-                                    count = 0;
-                                } else {
-                                    count++;
-                                }
-                            }
+        locationCallback = new LocationCallback(){
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                Location location = locationResult.getLastLocation();
+                if (location != null) {
+                    Coordinate coordinate = new Coordinate(location.getLatitude(), 
+                            location.getLongitude(), route.getId());
+                    //here we should create a new live list of coordinates 
+                    //being retrived to send to the fragment
+                    routePoints.add(new GeoPoint(location.getLatitude(), 
+                                location.getLongitude()));
+                    if(!coordinates.contains(coordinate)) {
+                        //here we only want to add the coordinate evey 5 requests. 
+                        //Otherwise there will be too many.
+                        if(count == COORDINATE_INTERVAL) {
+                            System.out.println("Location has started tracking: ");
+                            System.out.println("Coordinate: " + coordinate.toString());
+                            coordinates.add(coordinate);
+                            count = 0;
+                        } else {
+                            count++;
                         }
                     }
-                };
+                }
+            }
+        };
 
         // TODO maybe request locations with gps as well.
-        mFusedLocationClient.requestLocationUpdates(mLocationRequestHighAccuracy, locationCallback, Looper.myLooper());
+        mFusedLocationClient.requestLocationUpdates(mLocationRequestHighAccuracy, 
+                locationCallback, Looper.myLooper());
 
         //set the global scope list to be equal to the generated list on the method
         mCoordinates = coordinates;
@@ -194,21 +184,27 @@ public class LocationService extends Service {
     private void startMyOwnForeground(){
         String NOTIFICATION_CHANNEL_ID = "com.example.offsetcalculator";
         String channelName = "Location Service";
-        NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
+        NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, 
+                channelName, NotificationManager.IMPORTANCE_NONE);
         chan.setLightColor(Color.BLUE);
         chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager manager = (NotificationManager) 
+            getSystemService(Context.NOTIFICATION_SERVICE);
+
         assert manager != null;
         manager.createNotificationChannel(chan);
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat
+                                         .Builder(this, NOTIFICATION_CHANNEL_ID);
+
         Notification notification = notificationBuilder.setOngoing(true)
-                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
-                .setContentTitle("Route tracking has started!")
-                .setPriority(NotificationManager.IMPORTANCE_MIN)
-                .setCategory(Notification.CATEGORY_SERVICE)
-                .setChannelId(NOTIFICATION_CHANNEL_ID)
-                .build();
+            .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+            .setContentTitle("Route tracking has started!")
+            .setPriority(NotificationManager.IMPORTANCE_MIN)
+            .setCategory(Notification.CATEGORY_SERVICE)
+            .setChannelId(NOTIFICATION_CHANNEL_ID)
+            .build();
+
         startForeground(2, notification);
     }
 
