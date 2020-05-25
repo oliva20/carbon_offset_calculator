@@ -7,3 +7,6 @@ Main Screen                |  Transport Fragment
 
 <p> ThinKarbon is a carbon offset calculator to help people reduce their carbon emissions and become aware of them in an interactive manner! </p>
 <p>For android only, yet</p> 
+
+
+** If building from the from the command set your ANDROID_SDK_ROOT varianble to the SDK **
