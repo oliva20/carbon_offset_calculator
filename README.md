@@ -4,6 +4,12 @@
 <ul>
   <li>
     <div>
+      <h3>UML folder</h3>
+      <p>Contains diagrams and Adobe XD design</p>
+    </div>
+  </li>
+<li>
+    <div>
       <h3>UI folder</h3>
       <p>Contains all the activites and fragments</p>
     </div>
